@@ -46,30 +46,9 @@ class Chef
         ::Proc.new {|r|
           require 'mixlib/shellout'
           FileUtils.mkdir_p r.path
-          Chef::Log.debug("PATH is #{ENV['PATH']}")
-          cmd = Mixlib::ShellOut.new(%Q{unzip  -j -q -u -o '#{r.release_file}' -d '#{r.path}';})
+          cmd = Chef::ShellOut.new(%Q{unzip  -j -q -u -o '#{r.release_file}' -d '#{r.path}'})
           cmd.run_command
-          puts "error messages" + cmd.stderr
-          # Raise an exception if it didn't exit with 0
           cmd.error!
-#          cmd = Chef::ShellOut.new("unzip", "-q", "-u", "-o", "-j", r.release_file,
- #                                  "-d", r.path, :user => 'root')
-#          cmd = Chef::ShellOut.new("unzip -q -u -o -j
-          #          #{r.release_file} -d #{r.path}")
-#          cmd = Chef::ShellOut.new('unzip')
-#          run_context = Chef::RunContext.new(node, {})
-#          b = Chef::Resource::Script::Bash.new(r.name, run_context)
-#          b.code <<-EOB
-#unzip
-#EOB
-#          b.run_action(:run)
-#          b = bash "foo" do
- #           code "unzip"
-#            action :nothing
-#          end
-#          b.run_action(:run)
-          # cmd.run_command
-#          system("bash -x unzip -j -q -u -o #{r.release_file} -d #{r.path}")
         }
         
       end

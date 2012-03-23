@@ -66,6 +66,7 @@ class Chef
           dest = ::File.join(r.path, r.pick)
           cmd = Chef::ShellOut.new(%Q{tar --no-anchored -O -#{sub_cmd} '#{r.release_file}' #{r.pick} > '#{dest}';})
           cmd.run_command
+          cmd.error!
         }
       end
       
