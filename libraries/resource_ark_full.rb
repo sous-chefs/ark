@@ -31,7 +31,6 @@ class Chef
         super
         @resource_name = :ark
         @prefix_root = "/usr/local"
-        @home_dir = ''
         @action = :install
         @provider = Chef::Provider::Ark
       end
@@ -55,8 +54,8 @@ class Chef
 
       def set_paths
         parse_file_name
-        @path      = ::File.join(@prefix_root, "#{@name}-#{@version}")
-        @home_dir  = ::File.join(@prefix_root, "#{@name}")
+        @path      = ::File.join(@path, "#{@name}-#{@version}")
+        @home_dir  ||= ::File.join(@path, "#{@name}")
         Chef::Log.debug("path is #{@path}")
         @release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{@name}-#{@version}.#{@release_ext}")
       end

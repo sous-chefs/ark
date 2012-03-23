@@ -75,19 +75,20 @@ class Chef
             l.run_action(:create)
           end
         elsif new_resource.append_env_path
-          new_path = "$PATH:#{::File.join(new_resource.path, 'bin').to_s}"
+          new_path = ::File.join(new_resource.path, 'bin')
           Chef::Log.debug("new_path is #{new_path}")
           run_context = Chef::RunContext.new(node, {})
           path = "/etc/profile.d/#{new_resource.name}.sh"
           f = Chef::Resource::File.new(path, run_context)
           f.content <<-EOF
-          export PATH=#{new_path}
+          export PATH=$PATH:#{new_path}
           EOF
           f.mode 0755
           f.owner 'root'
           f.group 'root'
           f.run_action(:create)
-          ENV['PATH'] = new_path
+          ENV['PATH'] = ENV['PATH'] + ':' + ::File.join(new_resource.path, 'bin')
+          Chef::Log.debug("PATH after setting_path  is #{ENV['PATH']}")
         end
       end
       

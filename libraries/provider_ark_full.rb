@@ -24,27 +24,9 @@ class Chef
   class Provider
     class Ark < Chef::Provider::ArkBase
       
-            
       def action_install
-        new_resource.set_paths
-        unless exists?
-          action_download
-          action_unpack
-        else
-          Chef::Log.debug("Ark already exists")
-        end
+        super
         action_link
-        action_set_owner
-        action_install_binaries
-      end
-
-      def action_unpack
-        run_context = Chef::RunContext.new(node, {})
-        d = Chef::Resource::Directory.new(new_resource.path, run_context)
-        d.mode '0755'
-        d.recursive true
-        d.run_action(:create)
-        new_resource.expand_cmd.call(new_resource)
       end
 
       def action_link
@@ -55,57 +37,6 @@ class Chef
           l.run_action(:create)
         end
       end
-
-      def action_set_owner
-        require 'fileutils'
-        FileUtils.chown_R new_resource.owner, new_resource.owner, new_resource.path
-      end
-
-      def action_install_binaries
-        if not new_resource.has_binaries.empty?
-          new_resource.has_binaries.each do |bin|
-            file_name = ::File.join('/usr/local/bin', ::File.basename(bin))
-            run_context = Chef::RunContext.new(node, {})
-            l = Chef::Resource::Link.new(file_name, run_context)
-            
-            l.to ::File.join(new_resource.path, bin)
-            l.run_action(:create)
-          end
-        elsif new_resource.append_env_path
-          new_path = "$PATH:#{::File.join(new_resource.path, 'bin').to_s}"
-          Chef::Log.debug("new_path is #{new_path}")
-          run_context = Chef::RunContext.new(node, {})
-          path = "/etc/profile.d/#{new_resource.name}.sh"
-          f = Chef::Resource::File.new(path, run_context)
-          f.content <<-EOF
-          export PATH=#{new_path}
-          EOF
-          f.mode 0755
-          f.owner 'root'
-          f.group 'root'
-          f.run_action(:create)
-          ENV['PATH'] = new_path
-        end
-      end
-      
-      private
-
-      def exists?
-        if new_resource.stop_file and !(new_resource.stop_file.empty?)
-          if  ::File.exist?(::File.join(new_resource.path,
-                                        new_resource.stop_file))
-            true
-          else
-            false
-          end
-        elsif !::File.exists?(new_resource.path) or
-            ::File.stat("#{new_resource.path}/").nlink == 2
-          false
-        else
-          true
-        end
-      end
-
   
     end
   end

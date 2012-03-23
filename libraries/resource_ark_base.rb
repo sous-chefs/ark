@@ -180,8 +180,17 @@ class Chef
           else
             strip_argument = ""
           end
-          cmd = Chef::ShellOut.new(%Q{tar '#{sub_cmd}' '#{r.release_file}' '#{strip_argument}' -C '#{r.path}';})
-          cmd.run_command
+          run_context = Chef::RunContext.new(node, {})
+          b = Chef::Resource::Script::Bash.new(r.name, run_context)
+          cmd = %Q{tar -#{sub_cmd} #{r.release_file} #{strip_argument} -C #{r.path} }
+          Chef::Log.debug("cmd is #{cmd}")
+          b.flags "-x"
+          b.code <<-EOH
+          tar -#{sub_cmd} #{r.release_file} #{strip_argument} -C #{r.path}
+          EOH
+          b.run_action(:run)
+          #cmd = Chef::ShellOut.new(%Q{tar '#{sub_cmd}' '#{r.release_file}' '#{strip_argument}' -C '#{r.path}';})
+          #cmd.run_command
         }
       end
 
