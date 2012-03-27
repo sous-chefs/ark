@@ -54,8 +54,9 @@ class Chef
 
       def set_paths
         parse_file_name
+        starting_path = @path.clone
         @path      = ::File.join(@path, "#{@name}-#{@version}")
-        @home_dir  ||= ::File.join(@path, "#{@name}")
+        @home_dir  ||= ::File.join(starting_path, "#{@name}")
         Chef::Log.debug("path is #{@path}")
         @release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{@name}-#{@version}.#{@release_ext}")
       end
