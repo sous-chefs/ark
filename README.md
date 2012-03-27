@@ -5,8 +5,7 @@ An '''ark''' is like an archive but '''Kewler''
 
 Does the fetch-unpack-configure-build-install dance. This is a
 modified  verion of Infochimps awesome install_from cookbook
- [http://github.com/infochimps-cookbooks/install_from](install_dir
- "/usr/local/share/tomcat/lib"). The main ark is fairly complex as it
+ [http://github.com/infochimps-cookbooks/install_from]. The main ark is fairly complex as it
  encompasses a lot of functionality. Simpler LWRPs such as ark_put,
  ark_dump, and ark_extract have been added.
 
@@ -18,9 +17,9 @@ the default :path of `/usr/local`, this provider will
 * create a symlink for :home_dir (`/usr/local/pig`) pointing to :path
 * add specified binary commands to the enviroment PATH variable
 
-By default, the ark will not run again if the :install_dir is not
+By default, the ark will not run again if the :path is not
 empty. You can specify a more granular condition by using :stop_file
-whose existence in :install_dir indicates that the ark has already
+whose existence in :path indicates that the ark has already
 been unpacked. This is useful when you use several arks to deposit
 libraries in a common directory like /usr/local/lib/ or /usr/local/share/tomcat/lib
 
@@ -112,10 +111,9 @@ ark
 - checksum: sha256 checksum, used for security 
 - prefix_root: prefix_root for installation, defaults to /usr/local/
 - mode: file mode for app_home, is an integer TODO
-- install_dir: path to extract the ark to, by default is
-  node['ark']['prefix_root']['prefix_install'] or /usr/local/share/<name>-<version>
-- home_dir: symbolic link to the install_dir
-  node['ark']['prefix_root']['prefix_home'] or /usr/local/<name>
+- path: path to extract the ark to, by default is
+  or /usr/local/<name>-<version>
+- home_dir: symbolic link to the path /usr/local/<name>
 - has_binaries: array of binary commands to symlink to
   /usr/local/bin/, you must specify the relative path example: [ 'bin/java', 'bin/javaws' ]
 - append_env_path: boolean, similar to has_binaries but less granular
