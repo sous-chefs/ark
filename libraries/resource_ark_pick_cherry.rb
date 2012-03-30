@@ -40,35 +40,6 @@ class Chef
                       arg,
                       :kind_of => String)
       end
-
-      def set_paths
-        parse_file_name
-        @release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{@name}.#{@release_ext}")
-      end
-
-      def unzip_cmd
-        ::Proc.new {|r|
-          FileUtils.mkdir_p r.path
-          run_context = Chef::RunContext.new(node, {})
-          b = Chef::Resource::Script::Bash.new(r.name, run_context)
-          b.code <<-EOS
-          unzip  -j -o #{r.release_file} "*/#{r.pick}" -d #{r.path}
-          EOS
-          b.run_action(:run)
-         # cmd.run_command
-        }
-      end
-
-      
-      def untar_cmd(sub_cmd)
-        ::Proc.new {|r|
-          FileUtils.mkdir_p r.path
-          dest = ::File.join(r.path, r.pick)
-          cmd = Chef::ShellOut.new(%Q{tar --no-anchored -O -#{sub_cmd} '#{r.release_file}' #{r.pick} > '#{dest}';})
-          cmd.run_command
-          cmd.error!
-        }
-      end
       
     end
   end

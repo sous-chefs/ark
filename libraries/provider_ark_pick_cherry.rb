@@ -26,7 +26,7 @@ class Chef
       class ArkCherryPick < Chef::Provider::ArkBase
       
       def action_install
-        new_resource.set_paths
+        set_paths
         unless exists?
           action_download
           action_unpack
@@ -35,14 +35,37 @@ class Chef
         end
         action_set_owner
       end
-
       
       private
-      
+
+      def set_paths
+        release_ext = parse_file_extension
+        new_resource.release_file = ::File.join(Chef::Config[:file_cache_path],
+                                                "#{new_resource.name}.#{release_ext}")
+      end
+
+      def unzip_cmd
+          FileUtils.mkdir_p new_resource.path
+          b = Chef::Resource::Script::Bash.new(new_resource.name, run_context)
+          b.code <<-EOS
+          unzip  -j -o #{new_resource.release_file} "*/#{new_resource.pick}" -d #{new_resource.path}
+          EOS
+          b.run_action(:run)
+      end
+
+
+      def untar_cmd(sub_cmd)
+        FileUtils.mkdir_p new_resource.path
+        dest = ::File.join(new_resource.path, new_resource.pick)
+        cmd = Chef::ShellOut.new(%Q{tar --no-anchored -O -#{sub_cmd} '#{new_resource.release_file}' #{new_resource.pick} > '#{dest}';})
+        cmd.run_command
+        cmd.error!
+      end
+     
       def exists?
-        stop_file_path = ::File.join(new_resource.path,
+        creates_path = ::File.join(new_resource.path,
                     new_resource.pick)
-        if new_resource.pick and ::File.exist?(stop_file_path)
+        if new_resource.pick and ::File.exist?(creates_path)
             true
         else
           false

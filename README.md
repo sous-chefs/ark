@@ -18,7 +18,7 @@ the default :path of `/usr/local`, this provider will
 * add specified binary commands to the enviroment PATH variable
 
 By default, the ark will not run again if the :path is not
-empty. You can specify a more granular condition by using :stop_file
+empty. You can specify a more granular condition by using :creates
 whose existence in :path indicates that the ark has already
 been unpacked. This is useful when you use several arks to deposit
 libraries in a common directory like /usr/local/lib/ or /usr/local/share/tomcat/lib
@@ -78,9 +78,9 @@ NOTE: This currently only works for zip archives
 - path: path to dump files to 
 - owner: owner of extracted directory, set to "root" by default
 - mode: file mode for app_home, is an integer
-- stop_file: if you are appending files to a given directory, ark
+- creates: if you are appending files to a given directory, ark
   needs a condition to test whether the file has already been
-  extracted. You can specify a stop_file, a file whose existence
+  extracted. You can specify with creates, a file whose existence
   indicates the ark has previously been extracted and does not need to
   be extracted again
 
@@ -176,13 +176,13 @@ the global PATH for all users. The user 'foobar' is the owner of the
      
 
      # strip all directories and dump files into path specified by 
-     # the path attribute, you must specify the stop_file
+     # the path attribute, you must specify the `creates` attribute
      # in order to keep the extraction from running every time
      # the directory path will be created if it doesn't already exist
      ark_dump "my_jars"
        url  "http://example.com/bunch_of_jars.zip"
        path "/usr/local/tomcat/lib"
-       stop_file "mysql.jar"
+       creates "mysql.jar"
        owner "tomcat"       
      end
 

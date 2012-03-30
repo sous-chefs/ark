@@ -31,13 +31,24 @@ class Chef
 
       def action_link
         unless new_resource.home_dir == new_resource.path
-          run_context = Chef::RunContext.new(node, {})
           l = Chef::Resource::Link.new(new_resource.home_dir, run_context)
           l.to new_resource.path
           l.run_action(:create)
         end
       end
-  
+
+      private
+
+      def set_paths
+        release_ext = parse_file_extension
+        starting_path = new_resource.path.clone
+        new_resource.path      = ::File.join(new_resource.path, "#{new_resource.name}-#{new_resource.version}")
+        new_resource.home_dir  ||= ::File.join(starting_path, "#{new_resource.name}")
+        Chef::Log.debug("path is #{new_resource.path}")
+        new_resource.release_file  = ::File.join(Chef::Config[:file_cache_path],
+                                                 "#{new_resource.name}-#{new_resource.version}.#{release_ext}")
+      end
+
     end
   end
 end

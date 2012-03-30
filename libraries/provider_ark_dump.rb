@@ -25,7 +25,7 @@ class Chef
     class ArkDump < Chef::Provider::ArkBase
 
       def action_install
-        new_resource.set_paths
+        set_paths
         unless exists?
           action_download
           action_unpack
@@ -39,15 +39,29 @@ class Chef
       private
       
       def exists?
-        stop_file_path = ::File.join(new_resource.path,
-                    new_resource.stop_file)
-        if new_resource.stop_file and ::File.exist?(stop_file_path)
-            true
-        else
-          false
-        end
+        creates_path = ::File.join(new_resource.path,
+                    new_resource.creates)
+        new_resource.creates and ::File.exist?(creates_path)
       end
 
+      def set_paths
+        release_ext = parse_file_extension
+        new_resource.release_file = ::File.join(Chef::Config[:file_cache_path],
+                                                "#{new_resource.name}.#{release_ext}")
+      end
+
+      def unzip_cmd
+        FileUtils.mkdir_p new_resource.path
+        cmd = Chef::ShellOut.new(%Q{unzip  -j -q -u -o '#{new_resource.release_file}' -d '#{new_resource.path}'})
+        cmd.run_command
+        cmd.error!
+      end
+
+      def untar_cmd(sub_cmd)
+        Chef::Application.fatal!("Cannot yet dump paths for tar archives")
+      end
+
+      
     end
   end
 end

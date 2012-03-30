@@ -29,7 +29,7 @@ class Chef
         @resource_name = :ark_put
         @provider = Chef::Provider::ArkPut
       end
-
+      
     end
   end
 end

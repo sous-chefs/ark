@@ -29,36 +29,12 @@ class Chef
         dont_change_env_path
         @resource_name = :ark_dump
         @provider = Chef::Provider::ArkDump
-      
       end
 
       def dont_change_env_path
         undef append_env_path
         undef has_binaries
       end
-
-      def set_paths
-        parse_file_name
-        @release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{@name}.#{@release_ext}")
-      end
-
-      def unzip_cmd
-        ::Proc.new {|r|
-          require 'mixlib/shellout'
-          FileUtils.mkdir_p r.path
-          cmd = Chef::ShellOut.new(%Q{unzip  -j -q -u -o '#{r.release_file}' -d '#{r.path}'})
-          cmd.run_command
-          cmd.error!
-        }
-        
-      end
-
-      def untar_cmd(sub_cmd)
-        ::Proc.new {|r|
-          Chef::Application.fatal!("Cannot yet dump paths for tar archives")
-        }
-      end
-
       
     end
   end
