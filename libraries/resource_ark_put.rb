@@ -19,6 +19,8 @@
 #
 
 require 'chef/resource'
+require File.expand_path('resource_ark.rb',      File.dirname(__FILE__))
+
 
 class Chef
   class Resource

@@ -19,6 +19,7 @@
 #
 
 require 'chef/provider'
+require File.expand_path('provider_ark.rb',      File.dirname(__FILE__))
 
 class Chef
   class Provider
