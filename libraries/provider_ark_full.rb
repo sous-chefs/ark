@@ -30,6 +30,41 @@ class Chef
         action_link
       end
 
+      def action_configure
+        set_paths
+        action_download
+        action_unpack
+        b = Chef::Resource::Script::Bash.new("configure with autoconf", run_context)
+        b.cwd new_resource.path
+        b.new_resource.environment
+        b.code "./configure #{new_resource.autoconf_opts.join(' ')}"
+        b.not_if{ ::File.exists?(::File.join(new_resource.path, 'config.status')) }
+        b.run_action(:run)
+      end
+      
+      def action_build_with_make
+        set_paths
+        action_download
+        action_unpack
+        b = Chef::Resource::Script::Bash.new("build with make", run_context)
+        b.cwd new_resource.path
+        b.environment  new_resource.environment
+        b.code "make #{new_resource.make_opts.join(' ')}"
+        b.run_action(:run)
+        action_set_owner
+        action_link
+        action_install_binaries
+      end
+      
+      def action_install_with_make
+        action_build_with_make
+        b = Chef::Resource::Script::Bash.new("make install", run_context)
+        b.cwd new_resource.path
+        b.environment new_resource.environment
+        b.code "make install"
+        b.run_action(:run)
+      end
+      
       def action_link
         unless new_resource.home_dir == new_resource.path
           l = Chef::Resource::Link.new(new_resource.home_dir, run_context)

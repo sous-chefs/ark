@@ -109,7 +109,7 @@ ark
   download url from the apache mirrors site
 - version: software version, required
 - checksum: sha256 checksum, used for security 
-- prefix_root: prefix_root for installation, defaults to /usr/local/
+- path: path for installation, defaults to /usr/local/<name>
 - mode: file mode for app_home, is an integer TODO
 - path: path to extract the ark to, by default is
   or /usr/local/<name>-<version>

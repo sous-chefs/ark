@@ -30,10 +30,13 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @resource_name = :ark
-        @prefix_root = "/usr/local"
         @action = :install
         @home_dir = nil
         @provider = Chef::Provider::Ark
+        @environment = {}
+        @allowed_actions.push(:install_with_make)
+        @autoconf_opts = []
+        @make_opts = []
       end
 
       attr_accessor :prefix_root, :home_dir
@@ -52,6 +55,30 @@ class Chef
                       :home_dir,
                       arg,
                       :kind_of => String
+                      )
+      end
+
+      def environment(arg=nil)
+        set_or_return(
+                      :environment,
+                      arg,
+                      :kind_of => Hash
+                      )
+      end
+
+      def autoconf_opts(arg=nil)
+        set_or_return(
+                      :autoconf_opts,
+                      arg,
+                      :kind_of => Array
+                      )
+      end
+
+      def make_opts(arg=nil)
+        set_or_return(
+                      :make_opts,
+                      arg,
+                      :kind_of => Array
                       )
       end
 

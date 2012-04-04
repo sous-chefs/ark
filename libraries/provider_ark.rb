@@ -29,6 +29,7 @@ class Chef
       end
       
       def action_download
+        
         unless new_resource.url =~ /^(http|ftp).*$/
             new_resource.url = set_apache_url(url)
         end
@@ -42,12 +43,8 @@ class Chef
       
       def action_install
         set_paths
-        unless exists?
-          action_download
-          action_unpack
-        else
-          Chef::Log.debug("Ark already exists")
-        end
+        action_download
+        action_unpack
         action_set_owner
         action_install_binaries
       end
@@ -57,7 +54,7 @@ class Chef
         d.mode '0755'
         d.recursive true
         d.run_action(:create)
-        expand_cmd
+        expand_cmd unless exists?
       end
 
       def action_set_owner

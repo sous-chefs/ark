@@ -6,8 +6,17 @@ ark_cherry_pick 'jaxrpc' do
   checksum 'd6b7f7801b02dafad318f2fb9a92cb9a7f0fe000f47590cc74d1c28cc17802f6'
   path '/usr/local/foobar'
   owner 'foobarbaz'
+  ignore_failure true
 end
 
+ark "haproxy" do
+  url  "http://haproxy.1wt.eu/download/1.5/src/snapshot/haproxy-ss-20120403.tar.gz"
+  version "1.5"
+  checksum 'ba0424bf7d23b3a607ee24bbb855bb0ea347d7ffde0bec0cb12a89623cbaf911'
+  make_opts [ 'TARGET=linux26' ]
+  action :install_with_make
+  ignore_failure true
+end
 
 
 # ark "maven" do
