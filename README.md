@@ -122,6 +122,9 @@ ark
   be added to the path. The commands are symbolically linked to
   /usr/bin/* . Examples are mvn, java, javac, etc. This option
   provides more granularity than the boolean option
+- autoconf_opts: an array of command line options for use with the GNU
+  autoconf script
+- make_opts: an array of command line options for use with make
 - owner: owner of extracted directory, set to "root" by default
 
 # Examples
