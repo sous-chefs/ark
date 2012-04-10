@@ -110,7 +110,7 @@ class Chef
         set_or_return(
                       :strip_leading_dir,
                       arg,
-                      :kind_of => String
+                      :kind_of => [TrueClass, FalseClass]
                       )
       end
 

@@ -27,15 +27,12 @@ class Chef
 
       def initialize(name, run_context=nil)
         super
-        dont_change_env_path
         @resource_name = :ark_dump
         @provider = Chef::Provider::ArkDump
       end
 
-      def dont_change_env_path
-        undef append_env_path
-        undef has_binaries
-      end
+      undef append_env_path
+      undef has_binaries
       
     end
   end
