@@ -55,28 +55,20 @@ ark_put
 
 # Attribute Parameters
 
-- url: url for tarball, .tar.gz, .bin (oracle-specific), .war, and .zip
-  currently supported.
-- owner: owner of extracted directory, set to "root" by default
 - path: path to extract to, defaults to 
-- checksum: sha256 checksum, used for security 
 - has_binaries: array of binary commands to symlink to
   /usr/local/bin/, you must specify the relative path example: [ 'bin/java', 'bin/javaws' ]
 - append_env_path: boolean, if true, append the ./bin directory of the
   extracted directory to the global PATH variable for all users
-- mode: file mode for app_home, is an integer
 
-ark_dump
+:dump
 ========
 
 NOTE: This currently only works for zip archives
 
 # Attribute Parameters
 
-- url: url for tarball, .tar.gz, .bin (oracle-specific), .war, and .zip
-  currently supported.
 - path: path to dump files to 
-- owner: owner of extracted directory, set to "root" by default
 - mode: file mode for app_home, is an integer
 - creates: if you are appending files to a given directory, ark
   needs a condition to test whether the file has already been
@@ -89,12 +81,8 @@ ark_cherry_pick
 
 # Attribute Parameters
 
-- url: url for tarball, .tar.gz, .bin (oracle-specific), .war, and .zip
-  currently supported.
-- owner: owner of extracted directory, set to "root" by default
 - path: directory to place file in
-- file: specific file to cherry-pick, defaults to resource name
-- mode: file mode for app_home, is an integer
+- creates: specific file to cherry-pick
 
 
 ark

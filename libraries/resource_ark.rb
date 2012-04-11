@@ -36,7 +36,9 @@ class Chef
         @has_binaries = []
         @release_file = ''
         @creates = nil
+        @mode = 0755
         @allowed_actions.push(:install)
+        @allowed_actions.push(:dump)
         @action = :install
         @provider = Chef::Provider::ArkBase
       end
@@ -111,6 +113,14 @@ class Chef
                       :strip_leading_dir,
                       arg,
                       :kind_of => [TrueClass, FalseClass]
+                      )
+      end
+
+      def mode(arg=nil)
+        set_or_return(
+                      :mode,
+                      arg,
+                      :kind_of => Fixnum                     
                       )
       end
 

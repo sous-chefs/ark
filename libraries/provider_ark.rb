@@ -29,7 +29,6 @@ class Chef
       end
       
       def action_download
-        
         unless new_resource.url =~ /^(http|ftp).*$/
             new_resource.url = set_apache_url(url)
         end
@@ -40,6 +39,13 @@ class Chef
         end
         f.run_action(:create)
       end
+
+      def action_dump
+        set_dump_paths
+        action_download
+        action_dump_contents
+        action_set_owner
+      end
       
       def action_install
         set_paths
@@ -49,17 +55,22 @@ class Chef
         action_install_binaries
       end
 
+      def action_dump_contents
+        chef_mkdir_p new_resource.path
+        cmd = expand_cmd 
+        eval("#{cmd}_dump") unless exists?
+      end
+      
       def action_unpack
-        d = Chef::Resource::Directory.new(new_resource.path, run_context)
-        d.mode '0755'
-        d.recursive true
-        d.run_action(:create)
-        expand_cmd unless exists?
+        chef_mkdir_p new_resource.path
+        cmd = expand_cmd unless exists?
+        eval(cmd)
       end
 
       def action_set_owner
         require 'fileutils'
         FileUtils.chown_R new_resource.owner, new_resource.owner, new_resource.path
+        FileUtils.chmod_R new_resource.mode, new_resource.path
       end
 
       def action_install_binaries
@@ -110,9 +121,9 @@ class Chef
 
       def expand_cmd
         case parse_file_extension
-        when 'tar.gz'  then untar_cmd('xzf')
-        when 'tar.bz2' then untar_cmd('xjf')
-        when /zip|war|jar/ then unzip_cmd
+        when 'tar.gz'  then "tar_xzf" 
+        when 'tar.bz2' then "tar_xjf"
+        when /zip|war|jar/ then "unzip" 
         else raise "Don't know how to expand #{new_resource.url} which has extension '#{release_ext}'"
         end
       end
@@ -123,6 +134,11 @@ class Chef
         Chef::Log.debug("path is #{new_resource.path}")
         new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
       end
+
+      def set_dump_paths
+        release_ext = parse_file_extension
+        new_resource.release_file  = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
+      end      
       
       def parse_file_extension
         release_basename = ::File.basename(new_resource.url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
@@ -139,8 +155,15 @@ class Chef
         url_ref
       end
 
+      def unzip_dump
+        cmd = Chef::ShellOut.new(
+                                 %Q{unzip  -j -q -u -o '#{new_resource.release_file}' -d '#{new_resource.path}'}
+                                 )
+        cmd.run_command
+        cmd.error!
+      end
       
-      def unzip_cmd
+      def unzip
           FileUtils.mkdir_p new_resource.path
           if new_resource.strip_leading_dir
             require 'tmpdir'
@@ -158,6 +181,22 @@ class Chef
           end 
       end
 
+      def tar_xjf
+        untar_cmd("xjf")
+      end
+
+      def tar_xzf
+        untar_cmd("xzf")
+      end
+
+      def tar_xjf_dump
+        Chef::Application.fatal!("Cannot yet dump paths for tar archives")
+      end
+
+      def tar_xzf_dump
+        Chef::Application.fatal!("Cannot yet dump paths for tar archives")
+      end
+      
       def untar_cmd(sub_cmd)
           FileUtils.mkdir_p new_resource.path
           if new_resource.strip_leading_dir
@@ -175,6 +214,12 @@ class Chef
           b.run_action(:run)
       end
 
+      def chef_mkdir_p(dir)
+        d = Chef::Resource::Directory.new(dir, run_context)
+        d.mode '0755'
+        d.recursive true
+        d.run_action(:create)
+      end
     end
   end
 end
