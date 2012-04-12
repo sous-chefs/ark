@@ -32,17 +32,25 @@ class Chef
         @append_env_path = false
         @strip_leading_dir = true
         @checksum = nil
+        @prefix_root = '/usr/local'
+        @home_dir = nil
         @path = '/usr/local'
+        @full_path = nil
         @has_binaries = []
         @release_file = ''
         @creates = nil
         @mode = 0755
-        @allowed_actions.push(:install, :dump, :cherry_pick)
+        @configure_opts = []
+        @autoconf_opts = []
+        @make_opts = []
+        @environment = {}
+        @version = nil
+        @allowed_actions.push(:install, :dump, :cherry_pick, :put, :install_with_make)
         @action = :install
         @provider = Chef::Provider::ArkBase
       end
 
-      attr_accessor :path, :release_file
+      attr_accessor :path, :release_file, :prefix_root, :home_dir
       
       def owner(arg=nil)
         set_or_return(
@@ -62,6 +70,13 @@ class Chef
       def path(arg=nil)
         set_or_return(
                       :path,
+                      arg,
+                      :kind_of => String)
+      end
+
+      def full_path(arg=nil)
+        set_or_return(
+                      :full_path,
                       arg,
                       :kind_of => String)
       end
@@ -122,6 +137,57 @@ class Chef
                       :kind_of => Fixnum                     
                       )
       end
+
+      def prefix_root(arg=nil)
+        set_or_return(
+                      :prefix_root,
+                      arg,
+                      :kind_of => String,
+                      :required => true
+                      )
+      end
+      
+      def version(arg=nil)
+        set_or_return(
+                      :version,
+                      arg,
+                      :kind_of => String,
+                      :required => true
+                      )
+      end
+      
+      def home_dir(arg=nil)
+        set_or_return(
+                      :home_dir,
+                      arg,
+                      :kind_of => String
+                      )
+      end
+
+      def environment(arg=nil)
+        set_or_return(
+                      :environment,
+                      arg,
+                      :kind_of => Hash
+                      )
+      end
+
+      def autoconf_opts(arg=nil)
+        set_or_return(
+                      :autoconf_opts,
+                      arg,
+                      :kind_of => Array
+                      )
+      end
+
+      def make_opts(arg=nil)
+        set_or_return(
+                      :make_opts,
+                      arg,
+                      :kind_of => Array
+                      )
+      end
+
 
 
     end

@@ -47,45 +47,87 @@ class Chef
         action_set_owner new_resource.path
       end
 
-      def action_cherry_pick
-        full_path = ::File.join(new_resource.path, new_resource.creates)
-        set_dump_paths
-        action_download
-        action_cherry_pick_contents
-        action_set_owner full_path
-      end
-
-      def action_put
-        set_dump_paths
-        action_download
-        action_unpack
-        action_set_owner 
-      end
-            
       def action_install
         set_paths
         action_download
         action_unpack
         action_set_owner new_resource.path
         action_install_binaries
+        action_link_paths
       end
 
-      def action_cherry_pick_contents
+      def action_configure
+        set_paths
+        action_download
+        action_unpack
+        b = Chef::Resource::Script::Bash.new("configure with autoconf", run_context)
+        b.cwd new_resource.path
+        b.new_resource.environment
+        b.code "./configure #{new_resource.autoconf_opts.join(' ')}"
+        b.not_if{ ::File.exists?(::File.join(new_resource.path, 'config.status')) }
+        b.run_action(:run)
+      end
+      
+      def action_build_with_make
+        set_paths
+        action_download
+        action_unpack
+        b = Chef::Resource::Script::Bash.new("build with make", run_context)
+        b.cwd new_resource.path
+        b.environment  new_resource.environment
+        b.code "make #{new_resource.make_opts.join(' ')}"
+        b.run_action(:run)
+        action_set_owner new_resource.path
+        action_link_paths
+        action_install_binaries
+      end
+      
+      def action_install_with_make
+        action_build_with_make
+        b = Chef::Resource::Script::Bash.new("make install", run_context)
+        b.cwd new_resource.path
+        b.environment new_resource.environment
+        b.code "make install"
+        b.run_action(:run)
+      end
+      
+      def action_link_paths
+        l = Chef::Resource::Link.new(new_resource.home_dir, run_context)
+        l.to new_resource.path
+        l.run_action(:create)
+      end
+      
+      def action_cherry_pick
+        full_path = ::File.join(new_resource.path, new_resource.creates)
+        set_dump_paths
+        action_download
+        action_cherry_pick_contents full_path
+        action_set_owner full_path
+      end
+
+      def action_put
+        set_put_paths
+        action_download
+        action_unpack 
+        action_set_owner new_resource.path
+      end
+            
+      def action_cherry_pick_contents(full_path)
         chef_mkdir_p new_resource.path
         cmd = expand_cmd 
-        eval("#{cmd}_cherry_pick") unless unpacked?
+        eval("#{cmd}_cherry_pick") unless unpacked?  full_path
       end
       
       def action_dump_contents
         chef_mkdir_p new_resource.path
         cmd = expand_cmd 
-        eval("#{cmd}_dump") unless unpacked?
+        eval("#{cmd}_dump") unless unpacked? new_resource.path
       end
       
       def action_unpack
         chef_mkdir_p new_resource.path
-        cmd = expand_cmd unless unpacked?
-        eval(cmd)
+        cmd = expand_cmd 
+        eval(cmd) unless unpacked? new_resource.path
       end
 
       def action_set_owner(path)
@@ -95,16 +137,15 @@ class Chef
       end
       
       def action_install_binaries
-        if not new_resource.has_binaries.empty?
+        unless new_resource.has_binaries.empty?
           new_resource.has_binaries.each do |bin|
             file_name = ::File.join('/usr/local/bin', ::File.basename(bin))
-            
             l = Chef::Resource::Link.new(file_name, run_context)
-            
             l.to ::File.join(new_resource.path, bin)
             l.run_action(:create)
           end
-        elsif new_resource.append_env_path
+        end
+        if new_resource.append_env_path
           new_path = ::File.join(new_resource.path, 'bin')
           Chef::Log.debug("new_path is #{new_path}")
           
@@ -117,8 +158,7 @@ class Chef
           f.owner 'root'
           f.group 'root'
           f.run_action(:create)
-          ENV['PATH'] = ENV['PATH'] + ':' + ::File.join(new_resource.path, 'bin')
-          Chef::Log.debug("PATH after setting_path  is #{ENV['PATH']}")
+          append_to_env_path
         end
       end
       
@@ -148,6 +188,14 @@ class Chef
       end
 
       def set_paths
+        release_ext = parse_file_extension
+        new_resource.path      = ::File.join(new_resource.prefix_root, "#{new_resource.name}-#{new_resource.version}")
+        new_resource.home_dir = ::File.join(new_resource.prefix_root, "#{new_resource.name}")
+        Chef::Log.debug("path is #{new_resource.path}")
+        new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
+      end
+
+      def set_put_paths
         release_ext = parse_file_extension
         new_resource.path      = ::File.join(new_resource.path, "#{new_resource.name}")
         Chef::Log.debug("path is #{new_resource.path}")
@@ -241,19 +289,19 @@ class Chef
       end
             
       def untar_cmd(sub_cmd)
-          if new_resource.strip_leading_dir
-            strip_argument = "--strip-components=1"
-          else
-            strip_argument = ""
-          end
-          
-          b = Chef::Resource::Script::Bash.new(new_resource.name, run_context)
-          cmd = %Q{tar -#{sub_cmd} #{new_resource.release_file} #{strip_argument} -C #{new_resource.path} }
-          b.flags "-x"
-          b.code <<-EOH
+        if new_resource.strip_leading_dir
+          strip_argument = "--strip-components=1"
+        else
+          strip_argument = ""
+        end
+
+        b = Chef::Resource::Script::Bash.new(new_resource.name, run_context)
+        cmd = %Q{tar -#{sub_cmd} #{new_resource.release_file} #{strip_argument} -C #{new_resource.path} }
+        b.flags "-x"
+        b.code <<-EOH
           tar -#{sub_cmd} #{new_resource.release_file} #{strip_argument} -C #{new_resource.path}
           EOH
-          b.run_action(:run)
+        b.run_action(:run)
       end
 
       def untar_cmd_cherry_pick(sub_cmd)
@@ -269,6 +317,14 @@ class Chef
         d.recursive true
         d.run_action(:create)
       end
+
+      def append_to_env_path
+        bin_path = ::File.join(new_resource.path, 'bin')
+        bin_path_present = ENV['PATH'].scan(bin_path).empty?
+        ENV['PATH'] = ENV['PATH'] + ':' + bin_path unless bin_path_present 
+        Chef::Log.debug("PATH after setting_path  is #{ENV['PATH']}")
+      end
+      
     end
   end
 end
