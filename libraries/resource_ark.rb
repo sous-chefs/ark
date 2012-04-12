@@ -37,8 +37,7 @@ class Chef
         @release_file = ''
         @creates = nil
         @mode = 0755
-        @allowed_actions.push(:install)
-        @allowed_actions.push(:dump)
+        @allowed_actions.push(:install, :dump, :cherry_pick)
         @action = :install
         @provider = Chef::Provider::ArkBase
       end

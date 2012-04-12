@@ -6,13 +6,22 @@ ark_base "liferay_client_dependencies" do
   path '/usr/local/foo'
   creates 'wsdl4j.jar'
   action :dump
-  owner 'root'
+  owner 'foobarbaz'
+end
+
+ark_base 'mysql-connector' do
+  url 'http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.19.tar.gz/from/http://it.mysql.contactlab.it/'
+  checksum '4c79f0ca2617b9561f854743d8fc4bc20c5c3e4cd06954d799db926614e61e62'
+  path '/usr/local/foozball'
+  owner 'foobarbaz'
+  creates "mysql-connector-java-5.1.19-bin.jar"
+  action :cherry_pick
 end
 
 
 # ark_base 'mysql-connector' do
-#   url 'http://gd.tuwien.ac.at/db/mysql/Downloads/Connector-J/mysql-connector-java-5.0.8.tar.gz'
-#   checksum '660a0e2a2c88a5fe65f1c5baadb20535095d367bc3688e7248a622f4e71ad68d'
+#   url 'http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.19.tar.gz/from/http://it.mysql.contactlab.it/'
+#   checksum '4c79f0ca2617b9561f854743d8fc4bc20c5c3e4cd06954d799db926614e61e62'
 #   path '/usr/local/bar'
 #   owner 'foobarbaz'
 #   creates "mysql-connector-java-5.0.8-bin.jar"

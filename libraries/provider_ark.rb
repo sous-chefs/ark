@@ -44,35 +44,56 @@ class Chef
         set_dump_paths
         action_download
         action_dump_contents
-        action_set_owner
+        action_set_owner new_resource.path
       end
-      
+
+      def action_cherry_pick
+        full_path = ::File.join(new_resource.path, new_resource.creates)
+        set_dump_paths
+        action_download
+        action_cherry_pick_contents
+        action_set_owner full_path
+      end
+
+      def action_put
+        set_dump_paths
+        action_download
+        action_unpack
+        action_set_owner 
+      end
+            
       def action_install
         set_paths
         action_download
         action_unpack
-        action_set_owner
+        action_set_owner new_resource.path
         action_install_binaries
       end
 
+      def action_cherry_pick_contents
+        chef_mkdir_p new_resource.path
+        cmd = expand_cmd 
+        eval("#{cmd}_cherry_pick") unless unpacked?
+      end
+      
       def action_dump_contents
         chef_mkdir_p new_resource.path
         cmd = expand_cmd 
-        eval("#{cmd}_dump") unless exists?
+        eval("#{cmd}_dump") unless unpacked?
       end
       
       def action_unpack
         chef_mkdir_p new_resource.path
-        cmd = expand_cmd unless exists?
+        cmd = expand_cmd unless unpacked?
         eval(cmd)
       end
 
-      def action_set_owner
+      def action_set_owner(path)
         require 'fileutils'
-        FileUtils.chown_R new_resource.owner, new_resource.owner, new_resource.path
-        FileUtils.chmod_R new_resource.mode, new_resource.path
+        FileUtils.chown_R new_resource.owner, new_resource.owner, path
+        FileUtils.chmod_R new_resource.mode, path
       end
-
+      
       def action_install_binaries
         if not new_resource.has_binaries.empty?
           new_resource.has_binaries.each do |bin|
@@ -103,28 +124,26 @@ class Chef
       
       private
 
-      def exists?
-        if new_resource.creates and !(new_resource.creates.empty?)
-          if  ::File.exist?(::File.join(new_resource.path,
-                                        new_resource.creates))
-            true
-          else
+      def unpacked?(path)
+        if ::File.directory? path
+          if ::File.stat(path).nlink == 2
             false
+          else
+            true
           end
-        elsif !::File.exists?(new_resource.path) or
-            ::File.stat("#{new_resource.path}/").nlink == 2
-          false
-        else
+        elsif ::File.exists? path
           true
+        else
+          false
         end
       end
-
+      
       def expand_cmd
         case parse_file_extension
         when 'tar.gz'  then "tar_xzf" 
         when 'tar.bz2' then "tar_xjf"
         when /zip|war|jar/ then "unzip" 
-        else raise "Don't know how to expand #{new_resource.url} which has extension '#{release_ext}'"
+        else raise "Don't know how to expand #{new_resource.url}"
         end
       end
 
@@ -141,10 +160,17 @@ class Chef
       end      
       
       def parse_file_extension
-        release_basename = ::File.basename(new_resource.url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
+        # purge any trailing redirect
+        url = new_resource.url.clone
+        url =~ /^http:\/\/.*(.gz|bz2|bin|zip|jar)(\/.*\/)/
+        url.gsub!($2, '') unless $2.nil?
+        # remove tailing query string
+        release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
         # (\?.*)? accounts for a trailing querystring
-        release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar)(\?.*)?}
-        $2
+        Chef::Log.debug("release_basename is #{release_basename}")
+        release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz)(\?.*)?}
+        Chef::Log.debug("file_extension is #{$2}")
+        extension = $2
       end
       
       def set_apache_url(url_ref)
@@ -155,13 +181,6 @@ class Chef
         url_ref
       end
 
-      def unzip_dump
-        cmd = Chef::ShellOut.new(
-                                 %Q{unzip  -j -q -u -o '#{new_resource.release_file}' -d '#{new_resource.path}'}
-                                 )
-        cmd.run_command
-        cmd.error!
-      end
       
       def unzip
           FileUtils.mkdir_p new_resource.path
@@ -181,6 +200,22 @@ class Chef
           end 
       end
 
+      def unzip_dump
+        cmd = Chef::ShellOut.new(
+                                 %Q{unzip  -j -q -u -o '#{new_resource.release_file}' -d '#{new_resource.path}'}
+                                 )
+        cmd.run_command
+        cmd.error!
+      end
+
+      def unzip_cherry_pick
+        b = Chef::Resource::Script::Bash.new(new_resource.name, run_context)
+        b.code <<-EOS
+          unzip  -j -o #{new_resource.release_file} "*/#{new_resource.creates}" -d #{new_resource.path}
+          EOS
+        b.run_action(:run)
+      end
+
       def tar_xjf
         untar_cmd("xjf")
       end
@@ -196,9 +231,16 @@ class Chef
       def tar_xzf_dump
         Chef::Application.fatal!("Cannot yet dump paths for tar archives")
       end
-      
+
+      def tar_xjf_cherry_pick
+        untar_cmd_cherry_pick("xjf")
+      end
+
+      def tar_xzf_cherry_pick
+        untar_cmd_cherry_pick("xzf")
+      end
+            
       def untar_cmd(sub_cmd)
-          FileUtils.mkdir_p new_resource.path
           if new_resource.strip_leading_dir
             strip_argument = "--strip-components=1"
           else
@@ -212,6 +254,13 @@ class Chef
           tar -#{sub_cmd} #{new_resource.release_file} #{strip_argument} -C #{new_resource.path}
           EOH
           b.run_action(:run)
+      end
+
+      def untar_cmd_cherry_pick(sub_cmd)
+        dest = ::File.join(new_resource.path, new_resource.creates)
+        cmd = Chef::ShellOut.new(%Q{tar --no-anchored -O -#{sub_cmd} '#{new_resource.release_file}' #{new_resource.creates} > '#{dest}';})
+        cmd.run_command
+        cmd.error!
       end
 
       def chef_mkdir_p(dir)
