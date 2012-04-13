@@ -22,11 +22,11 @@ require 'chef/resource'
 
 class Chef
   class Resource
-    class ArkBase < Chef::Resource
+    class Ark < Chef::Resource
 
       def initialize(name, run_context=nil)
         super
-        @resource_name = :ark_base
+        @resource_name = :ark
         @owner = 'root'
         @url = nil
         @append_env_path = false
@@ -47,7 +47,7 @@ class Chef
         @version = nil
         @allowed_actions.push(:install, :dump, :cherry_pick, :put, :install_with_make)
         @action = :install
-        @provider = Chef::Provider::ArkBase
+        @provider = Chef::Provider::Ark
       end
 
       attr_accessor :path, :release_file, :prefix_root, :home_dir

@@ -44,7 +44,7 @@ end
 class TestArkInstall < MiniTest::Chef::TestCase
 
   def test_install_dir_exists
-    assert File.exists?("/usr/local/maven-2.2.1") 
+    assert File.exists?("/usr/local/maven-2.2.1")
   end
 
   def test_homedir_symlink
@@ -70,6 +70,6 @@ class TestArkInstall < MiniTest::Chef::TestCase
     assert File.stat("/usr/local/maven-2.2.1").uid == Etc.getpwnam("foobarbaz").uid
     assert File.stat("/usr/local/maven-2.2.1").gid == Etc.getpwnam("foobarbaz").gid
   end
-  
+
 end
 

@@ -22,10 +22,10 @@ require 'chef/provider'
 
 class Chef
   class Provider
-    class ArkBase < Chef::Provider
+    class Ark < Chef::Provider
       
       def load_current_resource
-        @current_resource = Chef::Resource::ArkBase.new(@new_resource.name)
+        @current_resource = Chef::Resource::Ark.new(@new_resource.name)
       end
       
       def action_download
