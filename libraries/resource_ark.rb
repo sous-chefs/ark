@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: ark
-# Resource:: ArkBase
+# Resource:: Ark
 #
 # Author:: Bryan W. Berry <bryan.berry@gmail.com>
 # Copyright 2012, Bryan W. Berry

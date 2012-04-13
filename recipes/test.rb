@@ -44,6 +44,13 @@ ark "tomcat" do
   action :install
 end
 
+ark "fooball" do
+  url 'http://hqlprrepo01.hq.un.fao.org/corporate/foo.tar.gz'
+  version '1'
+  action :install
+  strip_leading_dir false
+end
+
 
 # ark 'mysql-connector' do
 #   url 'http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.19.tar.gz/from/http://it.mysql.contactlab.it/'

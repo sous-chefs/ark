@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: ark
-# Provider:: ArkBase
+# Provider:: Ark
 #
 # Author:: Bryan W. Berry <bryan.berry@gmail.com>
 # Copyright 2012, Bryan W. Berry
@@ -190,7 +190,7 @@ class Chef
       def set_paths
         release_ext = parse_file_extension
         new_resource.path      = ::File.join(new_resource.prefix_root, "#{new_resource.name}-#{new_resource.version}")
-        new_resource.home_dir = ::File.join(new_resource.prefix_root, "#{new_resource.name}")
+        new_resource.home_dir ||= ::File.join(new_resource.prefix_root, "#{new_resource.name}")
         Chef::Log.debug("path is #{new_resource.path}")
         new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
       end
