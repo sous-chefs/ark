@@ -45,7 +45,7 @@ ark "tomcat" do
 end
 
 ark "fooball" do
-  url 'http://hqlprrepo01.hq.un.fao.org/corporate/foo.tar.gz'
+  url 'https://github.com/bryanwb/chef-ark/raw/refactor_actions/files/default/foo.tar.gz'
   version '1'
   action :install
   strip_leading_dir false
