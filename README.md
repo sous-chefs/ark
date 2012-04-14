@@ -191,7 +191,7 @@ the global PATH for all users. The user 'foobar' is the owner of the
      # the path attribute, you must specify the `creates` attribute
      # in order to keep the extraction from running every time
      # the directory path will be created if it doesn't already exist
-     ark "my_jars"
+     ark "my_jars" do
        url  "http://example.com/bunch_of_jars.zip"
        path "/usr/local/tomcat/lib"
        creates "mysql.jar"
