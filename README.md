@@ -1,5 +1,11 @@
 Overview        
 ========
+
+
+'''Notice'''
+The ark_put, ark_dump, ark_cherry_pick have been rolled into the main
+ark library as the actions :put, :dump, and :cherry_pick. Please
+review the README carefully
  
 An '''ark''' is like an archive but '''Kewler''
 
@@ -24,6 +30,9 @@ libraries in a common directory like /usr/local/lib/ or /usr/local/share/tomcat/
 
 At this time ark only handles files available from URLs. It does not
 handle local files.
+
+14 April 2012: The ark API has changed! 
+
 
 Attributes
 ==========
