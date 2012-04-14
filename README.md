@@ -2,7 +2,7 @@ Overview
 ========
 
 
-'''Notice'''
+''Notice''
 The ark_put, ark_dump, ark_cherry_pick have been rolled into the main
 ark library as the actions :put, :dump, and :cherry_pick. Please
 review the README carefully
