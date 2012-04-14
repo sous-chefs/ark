@@ -6,8 +6,7 @@ An '''ark''' is like an archive but '''Kewler''
 Does the fetch-unpack-configure-build-install dance. This is a
 modified  verion of Infochimps awesome install_from cookbook
  [http://github.com/infochimps-cookbooks/install_from]. The main ark is fairly complex as it
- encompasses a lot of functionality. Simpler LWRPs such as ark_put,
- ark_dump, and ark_extract have been added.
+ encompasses a lot of functionality. 
 
 Given a project `pig`, with url `http://apache.org/pig/pig-0.8.0.tar.gz`, and
 the default :path of `/usr/local`, this provider will
@@ -170,10 +169,11 @@ the global PATH for all users. The user 'foobar' is the owner of the
      # install Apache Ivy dependency resolution tool
      # in /home/foobar/ivy 
      # it does strip any leading directory if one exists
-     ark_put "ivy" do
-       path "/home/foobar/
+     ark "ivy" do
+       path "/home/foobar
        url 'http://someurl.example.com/ivy.tar.gz'
        checksum '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
+       action :put
      end
 
      
