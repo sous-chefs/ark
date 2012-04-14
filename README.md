@@ -2,17 +2,19 @@ Overview
 ========
 
 
-''Notice''
+''Notice'' 
+14 April 2012: The ark API has changed! 
+
 The ark_put, ark_dump, ark_cherry_pick have been rolled into the main
 ark library as the actions :put, :dump, and :cherry_pick. Please
 review the README carefully
  
-An '''ark''' is like an archive but '''Kewler''
+An ''ark'' is like an archive but ''Kewler''
 
 Does the fetch-unpack-configure-build-install dance. This is a
 modified  verion of Infochimps awesome install_from cookbook
- [http://github.com/infochimps-cookbooks/install_from]. The main ark is fairly complex as it
- encompasses a lot of functionality. 
+ [http://github.com/infochimps-cookbooks/install_from]. It has been
+ heavily refactored and extended to meet different use cases.
 
 Given a project `pig`, with url `http://apache.org/pig/pig-0.8.0.tar.gz`, and
 the default :path of `/usr/local`, this provider will
@@ -23,15 +25,11 @@ the default :path of `/usr/local`, this provider will
 * add specified binary commands to the enviroment PATH variable
 
 By default, the ark will not run again if the :path is not
-empty. You can specify a more granular condition by using :creates
-whose existence in :path indicates that the ark has already
-been unpacked. This is useful when you use several arks to deposit
-libraries in a common directory like /usr/local/lib/ or /usr/local/share/tomcat/lib
+empty. Ark provides many actions to accommodate different use cases,
+such as :dump, :cherry_pick, :put, and :install_with_make.
 
 At this time ark only handles files available from URLs. It does not
 handle local files.
-
-14 April 2012: The ark API has changed! 
 
 
 Attributes
@@ -47,7 +45,8 @@ Resources/Providers
 
 * ark - does the extract/build/configure dance
 
-# Actions 
+Actions 
+=======
 
 - :install: extracts the file and creates a 'friendly' symbolic link
   to the extracted directory path
@@ -61,10 +60,9 @@ Resources/Providers
   symbolic links
 - :remove: removes the extracted directory and related symlink #TODO
 
-:put
-=======
+# :put
 
-# Relevant Attribute Parameters
+## Relevant Attribute Parameters
 
 - path: path to extract to, defaults to '/usr/local'
 - has_binaries: array of binary commands to symlink to
@@ -72,12 +70,12 @@ Resources/Providers
 - append_env_path: boolean, if true, append the ./bin directory of the
   extracted directory to the global PATH variable for all users
 
-:dump
-========
+# :dump
+
 
 NOTE: This currently only works for zip archives
 
-# Attribute Parameters
+## Relevant Attribute Parameters
 
 - path: path to dump files to 
 - mode: file mode for app_home, is an integer
@@ -87,10 +85,10 @@ NOTE: This currently only works for zip archives
   indicates the ark has previously been extracted and does not need to
   be extracted again
 
-:cherry_pick
-===============
+# :cherry_pick
 
-# Attribute Parameters
+
+## Relevant Attribute Parameters
 
 - path: directory to place file in
 - creates: specific file to cherry-pick

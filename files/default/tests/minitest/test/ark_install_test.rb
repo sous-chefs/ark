@@ -1,18 +1,24 @@
 class TestArkInstall < MiniTest::Chef::TestCase
 
+  def home_dir
+    "/usr/local/maven"
+  end
+
+  def path
+    "/usr/local/maven-2.2.1"
+  end
+  
   def test_install_dir_exists
-    assert File.exists?("/usr/local/maven-2.2.1")
+    assert File.exists?(path)
   end
 
   def test_homedir_symlink
-    link_path = "/usr/local/maven"
-    real_path = "/usr/local/maven-2.2.1"
-    assert File.readlink(link_path) == real_path
+    assert File.readlink(home_dir) == path
   end
 
   def test_has_binaries_mvn
     link_path = "/usr/local/bin/mvn"
-    real_path = "/usr/local/maven-2.2.1/bin/mvn"
+    real_path = "#{path}/bin/mvn"
     assert File.readlink(link_path) == real_path
   end
 
@@ -24,8 +30,8 @@ class TestArkInstall < MiniTest::Chef::TestCase
   
   def test_owner
     require 'etc'
-    assert File.stat("/usr/local/maven-2.2.1").uid == Etc.getpwnam("foobarbaz").uid
-    assert File.stat("/usr/local/maven-2.2.1").gid == Etc.getpwnam("foobarbaz").gid
+    assert File.stat(path).uid == Etc.getpwnam("foobarbaz").uid
+    assert File.stat(path).gid == Etc.getpwnam("foobarbaz").gid
   end
 
   def test_strip_leading_dir
