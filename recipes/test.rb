@@ -44,6 +44,15 @@ ark "tomcat" do
   action :install
 end
 
+ark "tomcat7" do
+  version "7.0.26"
+  url 'http://apache.mirrors.tds.net/tomcat/tomcat-7/v7.0.26/bin/apache-tomcat-7.0.26.tar.gz'
+  checksum '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
+  has_binaries [ 'bin/catalina.sh', 'bin/daemon.sh' ]
+  action :install
+end
+
+
 ark "fooball" do
   url 'https://github.com/bryanwb/chef-ark/raw/refactor_actions/files/default/foo.tar.gz'
   version '1'

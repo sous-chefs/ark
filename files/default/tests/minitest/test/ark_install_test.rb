@@ -38,6 +38,12 @@ class TestArkInstall < MiniTest::Chef::TestCase
     assert File.exists? "/usr/local/fooball/foo_sub"
   end
 
-end
+  def test_multiple_has_binaries
+    real_path = "/usr/local/tomcat7-7.0.26/bin"
+    link_path = '/usr/local/bin'
+    assert File.readlink("#{link_path}/catalina.sh") == "#{real_path}/catalina.sh"
+    assert File.readlink("#{link_path}/daemon.sh") == "#{real_path}/daemon.sh"
+  end
 
+end
 
