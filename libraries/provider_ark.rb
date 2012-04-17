@@ -146,7 +146,7 @@ class Chef
           end
         end
         if new_resource.append_env_path
-          new_path = ::File.join(new_resource.path, 'bin')
+          new_path = ::File.join(new_resource.prefix_bin, 'bin')
           Chef::Log.debug("new_path is #{new_path}")
 
           path = "/etc/profile.d/#{new_resource.name}.sh"
