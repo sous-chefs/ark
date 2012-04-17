@@ -32,9 +32,11 @@ class Chef
         @append_env_path = false
         @strip_leading_dir = true
         @checksum = nil
-        @prefix_root = '/usr/local'
+        @prefix_root = nil
+        @prefix_bin = nil
+        @prefix_home = nil
         @home_dir = nil
-        @path = '/usr/local'
+        @path = nil
         @full_path = nil
         @has_binaries = []
         @release_file = ''
@@ -50,8 +52,8 @@ class Chef
         @provider = Chef::Provider::Ark
       end
 
-      attr_accessor :path, :release_file, :prefix_root, :home_dir
-      
+      attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir
+
       def owner(arg=nil)
         set_or_return(
                       :owner,
@@ -81,7 +83,7 @@ class Chef
                       :kind_of => String)
       end
 
-      
+
       def append_env_path(arg=nil)
         set_or_return(
                       :append_env_path,
@@ -90,7 +92,7 @@ class Chef
                       )
       end
 
-      
+
       def checksum(arg=nil)
         set_or_return(
                       :checksum,
@@ -134,7 +136,7 @@ class Chef
         set_or_return(
                       :mode,
                       arg,
-                      :kind_of => Fixnum                     
+                      :kind_of => Fixnum
                       )
       end
 
@@ -142,11 +144,18 @@ class Chef
         set_or_return(
                       :prefix_root,
                       arg,
-                      :kind_of => String,
-                      :required => true
+                      :kind_of => String
                       )
       end
-      
+
+      def prefix_bin(arg=nil)
+        set_or_return(
+                      :prefix_bin,
+                      arg,
+                      :kind_of => String
+                      )
+      end
+
       def version(arg=nil)
         set_or_return(
                       :version,
@@ -155,7 +164,7 @@ class Chef
                       :required => true
                       )
       end
-      
+
       def home_dir(arg=nil)
         set_or_return(
                       :home_dir,

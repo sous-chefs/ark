@@ -23,11 +23,11 @@ require 'chef/provider'
 class Chef
   class Provider
     class Ark < Chef::Provider
-      
+
       def load_current_resource
         @current_resource = Chef::Resource::Ark.new(@new_resource.name)
       end
-      
+
       def action_download
         unless new_resource.url =~ /^(http|ftp).*$/
             new_resource.url = set_apache_url(url)
@@ -67,7 +67,7 @@ class Chef
         b.not_if{ ::File.exists?(::File.join(new_resource.path, 'config.status')) }
         b.run_action(:run)
       end
-      
+
       def action_build_with_make
         set_paths
         action_download
@@ -81,7 +81,7 @@ class Chef
         action_link_paths
         action_install_binaries
       end
-      
+
       def action_install_with_make
         action_build_with_make
         b = Chef::Resource::Script::Bash.new("make install", run_context)
@@ -90,13 +90,13 @@ class Chef
         b.code "make install"
         b.run_action(:run)
       end
-      
+
       def action_link_paths
         l = Chef::Resource::Link.new(new_resource.home_dir, run_context)
         l.to new_resource.path
         l.run_action(:create)
       end
-      
+
       def action_cherry_pick
         full_path = ::File.join(new_resource.path, new_resource.creates)
         set_dump_paths
@@ -108,25 +108,25 @@ class Chef
       def action_put
         set_put_paths
         action_download
-        action_unpack 
+        action_unpack
         action_set_owner new_resource.path
       end
-            
+
       def action_cherry_pick_contents(full_path)
         chef_mkdir_p new_resource.path
-        cmd = expand_cmd 
+        cmd = expand_cmd
         eval("#{cmd}_cherry_pick") unless unpacked?  full_path
       end
-      
+
       def action_dump_contents
         chef_mkdir_p new_resource.path
-        cmd = expand_cmd 
+        cmd = expand_cmd
         eval("#{cmd}_dump") unless unpacked? new_resource.path
       end
-      
+
       def action_unpack
         chef_mkdir_p new_resource.path
-        cmd = expand_cmd 
+        cmd = expand_cmd
         eval(cmd) unless unpacked? new_resource.path
       end
 
@@ -135,11 +135,11 @@ class Chef
         FileUtils.chown_R new_resource.owner, new_resource.owner, path
         FileUtils.chmod_R new_resource.mode, path
       end
-      
+
       def action_install_binaries
         unless new_resource.has_binaries.empty?
           new_resource.has_binaries.each do |bin|
-            file_name = ::File.join('/usr/local/bin', ::File.basename(bin))
+            file_name = ::File.join(new_resource.prefix_bin, 'bin', ::File.basename(bin))
             l = Chef::Resource::Link.new(file_name, run_context)
             l.to ::File.join(new_resource.path, bin)
             l.run_action(:create)
@@ -148,7 +148,7 @@ class Chef
         if new_resource.append_env_path
           new_path = ::File.join(new_resource.path, 'bin')
           Chef::Log.debug("new_path is #{new_path}")
-          
+
           path = "/etc/profile.d/#{new_resource.name}.sh"
           f = Chef::Resource::File.new(path, run_context)
           f.content <<-EOF
@@ -161,7 +161,7 @@ class Chef
           append_to_env_path
         end
       end
-      
+
       private
 
       def unpacked?(path)
@@ -177,20 +177,25 @@ class Chef
           false
         end
       end
-      
+
       def expand_cmd
         case parse_file_extension
-        when 'tar.gz'  then "tar_xzf" 
+        when 'tar.gz'  then "tar_xzf"
         when 'tar.bz2' then "tar_xjf"
-        when /zip|war|jar/ then "unzip" 
+        when /zip|war|jar/ then "unzip"
         else raise "Don't know how to expand #{new_resource.url}"
         end
       end
 
       def set_paths
         release_ext = parse_file_extension
-        new_resource.path      = ::File.join(new_resource.prefix_root, "#{new_resource.name}-#{new_resource.version}")
-        new_resource.home_dir ||= ::File.join(new_resource.prefix_root, "#{new_resource.name}")
+        prefix_bin  = new_resource.prefix_bin.nil? ? new_resource.run_context.node['ark']['prefix_bin'] : new_resource.prefix_bin
+        prefix_root = new_resource.prefix_root.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.prefix_root
+        default_home_dir = ::File.join(new_resource.run_context.node['ark']['prefix_home'], "#{new_resource.name}")
+        # set effective paths
+        new_resource.prefix_bin = prefix_bin
+        new_resource.path       = ::File.join(prefix_root, "#{new_resource.name}-#{new_resource.version}")
+        new_resource.home_dir ||= default_home_dir
         Chef::Log.debug("path is #{new_resource.path}")
         new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
       end
@@ -205,12 +210,12 @@ class Chef
       def set_dump_paths
         release_ext = parse_file_extension
         new_resource.release_file  = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
-      end      
-      
+      end
+
       def parse_file_extension
         # purge any trailing redirect
         url = new_resource.url.clone
-        url =~ /^http:\/\/.*(.gz|bz2|bin|zip|jar)(\/.*\/)/
+        url =~ /^https?:\/\/.*(.gz|bz2|bin|zip|jar)(\/.*\/)/
         url.gsub!($2, '') unless $2.nil?
         # remove tailing query string
         release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
@@ -220,7 +225,7 @@ class Chef
         Chef::Log.debug("file_extension is #{$2}")
         extension = $2
       end
-      
+
       def set_apache_url(url_ref)
         raise "Missing required resource attribute url" unless url_ref
         url_ref.gsub!(/:name:/,          name.to_s)
@@ -229,7 +234,7 @@ class Chef
         url_ref
       end
 
-      
+
       def unzip
           FileUtils.mkdir_p new_resource.path
           if new_resource.strip_leading_dir
@@ -245,7 +250,7 @@ class Chef
             cmd = Chef::ShellOut.new("unzip  -q -u -o #{new_resource.release_file} -d #{new_resource.path}")
             cmd.run_command
             cmd.error!
-          end 
+          end
       end
 
       def unzip_dump
@@ -287,7 +292,7 @@ class Chef
       def tar_xzf_cherry_pick
         untar_cmd_cherry_pick("xzf")
       end
-            
+
       def untar_cmd(sub_cmd)
         if new_resource.strip_leading_dir
           strip_argument = "--strip-components=1"
@@ -319,12 +324,12 @@ class Chef
       end
 
       def append_to_env_path
-        bin_path = ::File.join(new_resource.path, 'bin')
+        bin_path = ::File.join(new_resource.prefix_bin, 'bin')
         bin_path_present = ENV['PATH'].scan(bin_path).empty?
-        ENV['PATH'] = ENV['PATH'] + ':' + bin_path unless bin_path_present 
+        ENV['PATH'] = ENV['PATH'] + ':' + bin_path unless bin_path_present
         Chef::Log.debug("PATH after setting_path  is #{ENV['PATH']}")
       end
-      
+
     end
   end
 end
