@@ -231,6 +231,7 @@ the global PATH for all users. The user 'foobar' is the owner of the
 
 Author::                Philip (flip) Kromer - Infochimps, Inc (<coders@infochimps.com>)
 Author::                Bryan W. Berry (<bryan.berry@gmail.com>)
+Author::                Denis Barishev (<denis.barishev@gmail.com>)
 Copyright::             2011, Philip (flip) Kromer - Infochimps, Inc
 copyright::             2012, Bryan W. Berry
 
