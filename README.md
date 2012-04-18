@@ -229,11 +229,13 @@ the global PATH for all users. The user 'foobar' is the owner of the
      
 ## License and Author
 
-Author::                Philip (flip) Kromer - Infochimps, Inc (<coders@infochimps.com>)
-Author::                Bryan W. Berry (<bryan.berry@gmail.com>)
-Author::                Denis Barishev (<denis.barishev@gmail.com>)
-Copyright::             2011, Philip (flip) Kromer - Infochimps, Inc
-copyright::             2012, Bryan W. Berry
+Author::                Philip (flip) Kromer - Infochimps, Inc(<coders@infochimps.com>)  
+Author::                Bryan W. Berry (<bryan.berry@gmail.com>)  
+Author::                Denis Barishev (<denis.barishev@gmail.com>)  
+Copyright::             2011, Philip (flip) Kromer - Infochimps, Inc  
+Copyright::             2012, Bryan W. Berry  
+Copyright::             2012, Denis Barishev   
+
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
