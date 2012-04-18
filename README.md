@@ -108,6 +108,11 @@ ark
 - checksum: sha256 checksum, used for security 
 - mode: file mode for app_home, is an integer TODO
 - prefix_root: default prefix_root, for use with :install* actions
+- prefix_home: default directory prefix for a friendly symlink to the path, for
+  example  /usr/local/maven -> /usr/local/maven-2.2.1
+- prefix_bin: default directory to place a symlink to a binary
+  command, example /opt/bin/mvn ->
+  /opt/maven-2.2.1/bin/mvn , where the prefix_bin is "/opt/bin"
 - path: path to extract the ark to, by default is
   /usr/local/<name>-<version> for the :install, :install_with_make actions
   the :install* actions overwrite any user-provided values for :path
@@ -205,6 +210,21 @@ the global PATH for all users. The user 'foobar' is the owner of the
        path '/usr/local/tomcat/lib'
        action :cherry_pick
      end
+
+
+     # build and install haproxy and use alternave values for
+     # prefix_root, prefix_home, and prefix_bin
+     ark "haproxy" do
+       url  "http://haproxy.1wt.eu/download/1.5/src/snapshot/haproxy-ss-20120403.tar.gz"
+       version "1.5"
+       checksum 'ba0424bf7d23b3a607ee24bbb855bb0ea347d7ffde0bec0cb12a89623cbaf911'
+       make_opts [ 'TARGET=linux26' ]
+       prefix_root '/opt'
+       prefix_home '/opt'
+       prefix_bin  '/opt/bin'
+       action :install_with_make
+     end    
+
 
      
 ## License and Author

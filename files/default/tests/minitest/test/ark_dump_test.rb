@@ -14,7 +14,7 @@ class TestArkDump < MiniTest::Chef::TestCase
   
   def test_dump_owner
     require 'etc'
-    assert File.stat(path).uid == Etc.getpwnam(owner).gid
+    assert File.stat(path).uid == Etc.getpwnam(owner).uid
     assert File.stat(path).gid == Etc.getpwnam(owner).gid
   end
  

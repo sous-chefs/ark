@@ -45,5 +45,14 @@ class TestArkInstall < MiniTest::Chef::TestCase
     assert File.readlink("#{link_path}/daemon.sh") == "#{real_path}/daemon.sh"
   end
 
+  def test_alt_prefix_bin
+    link_path = "/opt/maven2"
+    real_path = "/opt/maven2-2.2.1"
+    bin_link_path = "/opt/bin/mvn"
+    bin_real_path = "/opt/maven2-2.2.1/bin/mvn"
+    assert File.readlink("#{link_path}") == "#{real_path}"
+    assert File.readlink("#{bin_link_path}") == "#{bin_real_path}"
+  end
+  
 end
 

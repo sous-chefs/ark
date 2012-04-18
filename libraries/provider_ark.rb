@@ -139,16 +139,15 @@ class Chef
       def action_install_binaries
         unless new_resource.has_binaries.empty?
           new_resource.has_binaries.each do |bin|
-            file_name = ::File.join(new_resource.prefix_bin, 'bin', ::File.basename(bin))
+            file_name = ::File.join(new_resource.prefix_bin, ::File.basename(bin))
             l = Chef::Resource::Link.new(file_name, run_context)
             l.to ::File.join(new_resource.path, bin)
             l.run_action(:create)
           end
         end
         if new_resource.append_env_path
-          new_path = ::File.join(new_resource.prefix_bin, 'bin')
+          new_path = ::File.join(new_resource.path, 'bin')
           Chef::Log.debug("new_path is #{new_path}")
-
           path = "/etc/profile.d/#{new_resource.name}.sh"
           f = Chef::Resource::File.new(path, run_context)
           f.content <<-EOF
@@ -191,7 +190,11 @@ class Chef
         release_ext = parse_file_extension
         prefix_bin  = new_resource.prefix_bin.nil? ? new_resource.run_context.node['ark']['prefix_bin'] : new_resource.prefix_bin
         prefix_root = new_resource.prefix_root.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.prefix_root
-        default_home_dir = ::File.join(new_resource.run_context.node['ark']['prefix_home'], "#{new_resource.name}")
+        if new_resource.prefix_home.nil? 
+          default_home_dir = ::File.join(new_resource.run_context.node['ark']['prefix_home'], "#{new_resource.name}")
+        else
+          default_home_dir =  ::File.join(new_resource.prefix_home, "#{new_resource.name}")
+        end
         # set effective paths
         new_resource.prefix_bin = prefix_bin
         new_resource.path       = ::File.join(prefix_root, "#{new_resource.name}-#{new_resource.version}")
@@ -202,7 +205,8 @@ class Chef
 
       def set_put_paths
         release_ext = parse_file_extension
-        new_resource.path      = ::File.join(new_resource.path, "#{new_resource.name}")
+        path = new_resource.path.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.path
+        new_resource.path      = ::File.join(path, "#{new_resource.name}")
         Chef::Log.debug("path is #{new_resource.path}")
         new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
       end
@@ -324,9 +328,10 @@ class Chef
       end
 
       def append_to_env_path
-        bin_path = ::File.join(new_resource.prefix_bin, 'bin')
-        bin_path_present = ENV['PATH'].scan(bin_path).empty?
-        ENV['PATH'] = ENV['PATH'] + ':' + bin_path unless bin_path_present
+        bin_path = ::File.join(new_resource.path, 'bin')
+        unless ENV['PATH'].scan(bin_path).empty?
+          ENV['PATH'] = ENV['PATH'] + ':' + bin_path
+        end
         Chef::Log.debug("PATH after setting_path  is #{ENV['PATH']}")
       end
 

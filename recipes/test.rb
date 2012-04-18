@@ -69,6 +69,18 @@ ark "haproxy" do
   action :install_with_make
 end
 
+ark "maven2" do
+  url "http://apache.mirrors.tds.net/maven/binaries/apache-maven-2.2.1-bin.tar.gz"
+  checksum  "b9a36559486a862abfc7fb2064fd1429f20333caae95ac51215d06d72c02d376"
+  version '2.2.1'
+  prefix_root "/opt"
+  prefix_home "/opt"
+  prefix_bin "/opt/bin"
+  owner "foobarbaz"
+  has_binaries [ 'bin/mvn' ]
+  action :install
+end
+
 
  
 # ark 'jaxrpc.jar' do
