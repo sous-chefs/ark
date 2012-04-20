@@ -1,5 +1,9 @@
 user 'foobarbaz'
 
+directory "/opt/bin" do
+  recursive true
+end
+
 ark 'mysql-connector-put' do
   url 'http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.19.tar.gz/from/http://it.mysql.contactlab.it/'
   checksum '4c79f0ca2617b9561f854743d8fc4bc20c5c3e4cd06954d799db926614e61e62'
