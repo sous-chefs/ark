@@ -20,3 +20,7 @@
 
 
 package "unzip"
+
+if platform?("freebsd")
+  package "gtar"
+end

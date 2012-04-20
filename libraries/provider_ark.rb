@@ -305,7 +305,7 @@ class Chef
         end
 
         b = Chef::Resource::Script::Bash.new(new_resource.name, run_context)
-        cmd = %Q{tar -#{sub_cmd} #{new_resource.release_file} #{strip_argument} -C #{new_resource.path} }
+        cmd = %Q{#{tar_cmd} -#{sub_cmd} #{new_resource.release_file} #{strip_argument} -C #{new_resource.path} }
         b.flags "-x"
         b.code <<-EOH
           tar -#{sub_cmd} #{new_resource.release_file} #{strip_argument} -C #{new_resource.path}
@@ -315,7 +315,7 @@ class Chef
 
       def untar_cmd_cherry_pick(sub_cmd)
         dest = ::File.join(new_resource.path, new_resource.creates)
-        cmd = Chef::ShellOut.new(%Q{tar --no-anchored -O -#{sub_cmd} '#{new_resource.release_file}' #{new_resource.creates} > '#{dest}';})
+        cmd = Chef::ShellOut.new(%Q{#{tar_cmd} --no-anchored -O -#{sub_cmd} '#{new_resource.release_file}' #{new_resource.creates} > '#{dest}';})
         cmd.run_command
         cmd.error!
       end
@@ -335,6 +335,9 @@ class Chef
         Chef::Log.debug("PATH after setting_path  is #{ENV['PATH']}")
       end
 
+      def tar_cmd
+        platform?("freebsd") ? "gtar" : "tar"
+      end
     end
   end
 end
