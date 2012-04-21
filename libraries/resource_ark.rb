@@ -35,6 +35,7 @@ class Chef
       attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir
 
       attribute :owner, :kind_of => String, :default => 'root'
+      attribute :group, :kind_of => [String, Fixnum], :default => 0
       attribute :url, :kind_of => String, :required => true
       attribute :path, :kind_of => String, :default => nil
       attribute :full_path, :kind_of => String, :default => nil

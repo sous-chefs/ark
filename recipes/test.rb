@@ -8,6 +8,7 @@ ark 'mysql-connector-put' do
   url 'http://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-5.1.19.tar.gz/from/http://it.mysql.contactlab.it/'
   checksum '4c79f0ca2617b9561f854743d8fc4bc20c5c3e4cd06954d799db926614e61e62'
   owner 'foobarbaz'
+  group 'foobarbaz'
   action :put
 end
 
@@ -18,6 +19,7 @@ ark "liferay_client_dependencies" do
   creates 'wsdl4j.jar'
   action :dump
   owner 'foobarbaz'
+  group 'foobarbaz'
 end
 
 ark 'mysql-connector' do
@@ -25,6 +27,7 @@ ark 'mysql-connector' do
   checksum '4c79f0ca2617b9561f854743d8fc4bc20c5c3e4cd06954d799db926614e61e62'
   path '/usr/local/foozball'
   owner 'foobarbaz'
+  group 'foobarbaz'
   creates "mysql-connector-java-5.1.19-bin.jar"
   action :cherry_pick
 end
@@ -36,6 +39,7 @@ ark "maven" do
   version '2.2.1'
   prefix_root "/usr/local"
   owner "foobarbaz"
+  group 'foobarbaz'
   has_binaries [ 'bin/mvn' ]
   action :install
 end
@@ -81,6 +85,7 @@ ark "maven2" do
   prefix_home "/opt"
   prefix_bin "/opt/bin"
   owner "foobarbaz"
+  group 'foobarbaz'
   has_binaries [ 'bin/mvn' ]
   action :install
 end
