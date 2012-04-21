@@ -1,3 +1,5 @@
+unless RUBY_PLATFORM =~ /freebsd/
+
 class TestArkInstallWithMake < MiniTest::Chef::TestCase
 
   def path
@@ -27,5 +29,7 @@ class TestArkInstallWithMake < MiniTest::Chef::TestCase
   def test_bin_executable
     assert File.executable? "#{path}/haproxy"
   end
+
+end
 
 end

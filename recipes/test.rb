@@ -71,7 +71,7 @@ ark "haproxy" do
   checksum 'ba0424bf7d23b3a607ee24bbb855bb0ea347d7ffde0bec0cb12a89623cbaf911'
   make_opts [ 'TARGET=linux26' ]
   action :install_with_make
-end
+end unless node.platform?("freebsd")
 
 ark "maven2" do
   url "http://apache.mirrors.tds.net/maven/binaries/apache-maven-2.2.1-bin.tar.gz"
