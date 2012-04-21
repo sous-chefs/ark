@@ -146,17 +146,6 @@ class Chef
           end
         end
         if new_resource.append_env_path
-          new_path = ::File.join(new_resource.path, 'bin')
-          Chef::Log.debug("new_path is #{new_path}")
-          path = "/etc/profile.d/#{new_resource.name}.sh"
-          f = Chef::Resource::File.new(path, run_context)
-          f.content <<-EOF
-          export PATH=$PATH:#{new_path}
-          EOF
-          f.mode 0755
-          f.owner 'root'
-          f.group 'root'
-          f.run_action(:create)
           append_to_env_path
         end
       end
@@ -328,6 +317,29 @@ class Chef
       end
 
       def append_to_env_path
+        if platform?("freebsd")
+          if new_resource.has_binaries.empty?
+            Chef::Log.warn "#{new_resource} specifies append_env_path but that is unimplemented on FreeBSD; " +
+                            "consider using has_binaries"
+          else
+            Chef::Log.info "#{new_resource} specifies both has_binaries and append_env_path; " +
+                            "the latter is a noop on FreeBSD."
+          end
+          return
+        end
+
+        new_path = ::File.join(new_resource.path, 'bin')
+        Chef::Log.debug("new_path is #{new_path}")
+        path = "/etc/profile.d/#{new_resource.name}.sh"
+        f = Chef::Resource::File.new(path, run_context)
+        f.content <<-EOF
+        export PATH=$PATH:#{new_path}
+        EOF
+        f.mode 0755
+        f.owner 'root'
+        f.group 'root'
+        f.run_action(:create)
+
         bin_path = ::File.join(new_resource.path, 'bin')
         unless ENV['PATH'].scan(bin_path).empty?
           ENV['PATH'] = ENV['PATH'] + ':' + bin_path

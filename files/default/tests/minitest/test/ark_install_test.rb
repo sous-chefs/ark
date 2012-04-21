@@ -23,9 +23,11 @@ class TestArkInstall < MiniTest::Chef::TestCase
   end
 
   def test_append_env_path
-    bin_path = "/usr/local/tomcat-7.0.26/bin"
-    bin_path_present = !ENV['PATH'].scan(bin_path).empty?
-    assert bin_path_present
+    unless RUBY_PLATFORM =~ /freebsd/
+      bin_path = "/usr/local/tomcat-7.0.26/bin"
+      bin_path_present = !ENV['PATH'].scan(bin_path).empty?
+      assert bin_path_present
+    end
   end
   
   def test_owner
