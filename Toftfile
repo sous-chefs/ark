@@ -3,11 +3,9 @@ require 'toft'
 
 include Toft
 
-#n1 =  create_node "n1", {:ip => '192.168.20.2'}
+n1 =  create_node "n1", {:ip => '192.168.20.2'}
 
-#n1.start
-
-n1 = find("n1")
+n1.start
 
 n1.run_chef [ "recipe[chef_handler]", "recipe[minitest-handler::recipes]", "recipe[ark::test]" ]
 
