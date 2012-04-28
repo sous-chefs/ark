@@ -341,7 +341,7 @@ class Chef
         f.run_action(:create)
 
         bin_path = ::File.join(new_resource.path, 'bin')
-        unless ENV['PATH'].scan(bin_path).empty?
+        if ENV['PATH'].scan(bin_path).empty?
           ENV['PATH'] = ENV['PATH'] + ':' + bin_path
         end
         Chef::Log.debug("PATH after setting_path  is #{ENV['PATH']}")

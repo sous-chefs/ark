@@ -1,0 +1,19 @@
+time_start = Time.now
+require 'rubygems'
+require 'toft'
+include Toft
+Toft.cookbook_path = '/home/hitman/chef-repo-opscode/site-cookbooks'
+n1 = create_node "n1", {:ip => '192.168.20.3'}
+n1.start
+n1.run_ssh 'mkdir /tmp/chef-file-cache'
+n1.run_chef [
+            'recipe[chef_handler]',
+            'recipe[minitest-handler]',
+            'recipe[ark]',
+            'recipe[ark::test]'
+            ]
+
+#n1.destroy
+time_end = Time.now
+total_time = time_end - time_start
+puts "Toft ran for #{total_time.to_s} seconds"
