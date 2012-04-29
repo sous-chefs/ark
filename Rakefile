@@ -1,4 +1,4 @@
-task :vagrant_test => [:vagrant_up, :vagrant_provision, :vagrant_destroy] do
+task :vagrant_test => [:vagrant_up, :vagrant_provision] do
   puts "testing with vagrant"
 end
 
