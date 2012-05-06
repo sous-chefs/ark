@@ -52,11 +52,10 @@ ark "foo_append_env" do
   action :install
 end
 
-ark "foo_has_binaries_dont_strip" do
+ark "foo_dont_strip" do
   version "2"
   url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.tar.gz'
   checksum '5996e676f17457c823d86f1605eaa44ca8a81e70d6a0e5f8e45b51e62e0c52e8'
-  has_binaries [ 'bin/do_foo', 'bin/do_more_foo' ]
   strip_leading_dir false
   action :install
 end

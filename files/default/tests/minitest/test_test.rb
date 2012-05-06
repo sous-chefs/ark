@@ -13,7 +13,7 @@ describe_recipe 'ark::test' do
     package("unzip").must_be_installed
   end
 
-  if platform?("freebsd")
+  if RUBY_PLATFORM =~ /freebsd/
     it "installs the gnu tar package on freebsc" do
       package("gtar").must_be_installed
     end
@@ -28,29 +28,30 @@ describe_recipe 'ark::test' do
   end
 
   it "cherrypicks the mysql connector and set the correct owner and group" do
-    file("/usr/local/foozball/foo1.txt").must_have(:owner, "foobarbaz").and(:group, "foobarbaz")
+    file("/usr/local/foo_cherry_pick/foo1.txt").must_have(:owner, "foobarbaz").and(:group, "foobarbaz")
   end
   
   it "creates directory and symlink properly for the full ark install" do
     directory("/usr/local/foo-2").must_have(:owner, "foobarbaz").and(:group, "foobarbaz")
-    link("/usr/local/foo").must_exist_with(:link_type, :symbolic).and(:to, "/usr/local/foo-2")
+    link("/usr/local/foo").must_exist.with(:link_type, :symbolic).and(:to, "/usr/local/foo-2")
   end
 
   it "symlinks multiple binary commands" do
-    link("/usr/local/bin/do_foo").must_exist_with(:link_type, :symbolic).and(:to, "/usr/local/foo-2/bin/do_foo")
-  link("/usr/local/bin/do_more_foo").must_exist_with(:link_type, :symbolic).and(:to, "/usr/local/foo-2/bin/do_more_foo")
+    link("/usr/local/bin/do_foo").must_exist.with(:link_type, :symbolic).and(:to, "/usr/local/foo-2/bin/do_foo")
+  link("/usr/local/bin/do_more_foo").must_exist.with(:link_type, :symbolic).and(:to, "/usr/local/foo-2/bin/do_more_foo")
   end
 
   it "appends to the environment PATH" do
     unless RUBY_PLATFORM =~ /freebsd/
-      file("/etc/profile.d/foo_append_env.sh").must_include '/usr/local/foo_append_env/bin'
-      bin_path_present = !ENV['PATH'].scan(bin_path).empty?
+      file("/etc/profile.d/foo_append_env.sh").must_include '/usr/local/foo_append_env-7.0.26/bin'
+      
+      bin_path_present = !ENV['PATH'].scan( '/usr/local/foo_append_env-7.0.26/bin').empty?
       assert bin_path_present
     end
   end
 
   it "doesn't strip top-level directory if specified" do
-    directory( "/usr/local/foo_has_binaries_dont_strip/foo_sub").must_exist
+    directory( "/usr/local/foo_dont_strip/foo_sub").must_exist
   end
 
   it "successfully compiles haproxy" do
@@ -65,7 +66,7 @@ describe_recipe 'ark::test' do
   end
   
   it "creates an alternate prefix_bin" do
-      link("/opt/bin/do_foo").must_exist_with(:link_type, :symbolic).and(:to, "/opt/foo_alt_bin/bin/do_foo")
+      link("/opt/bin/do_foo").must_exist.with(:link_type, :symbolic).and(:to, "/opt/foo_alt_bin-3/bin/do_foo")
   end
   
 end
