@@ -32,12 +32,14 @@ class Chef
         unless new_resource.url =~ /^(http|ftp).*$/
             new_resource.url = set_apache_url(url)
         end
-        f = Chef::Resource::RemoteFile.new(new_resource.release_file, run_context)
-        f.source new_resource.url
-        if new_resource.checksum
-          f.checksum new_resource.checksum
+        unless unpacked? new_resource.path
+          f = Chef::Resource::RemoteFile.new(new_resource.release_file, run_context)
+          f.source new_resource.url
+          if new_resource.checksum
+            f.checksum new_resource.checksum
+          end
+          f.run_action(:create)
         end
-        f.run_action(:create)
       end
 
       def action_dump
@@ -115,20 +117,29 @@ class Chef
       def action_cherry_pick_contents(full_path)
         chef_mkdir_p new_resource.path
         cmd = expand_cmd
-        eval("#{cmd}_cherry_pick") unless unpacked?  full_path
+        unless unpacked? new_resource.path
+          eval("#{cmd}_cherry_pick")
+          new_resource.updated_by_last_action(true)
+        end
       end
 
       def action_dump_contents
         full_path = ::File.join(new_resource.path, new_resource.creates)
         chef_mkdir_p new_resource.path
         cmd = expand_cmd
-        eval("#{cmd}_dump") unless unpacked? full_path
+        unless unpacked? full_path
+          eval("#{cmd}_dump") 
+          new_resource.updated_by_last_action(true)
+        end
       end
 
       def action_unpack
         chef_mkdir_p new_resource.path
         cmd = expand_cmd
-        eval(cmd) unless unpacked? new_resource.path
+        unless unpacked? new_resource.path
+          eval(cmd)
+          new_resource.updated_by_last_action(true)
+        end
       end
 
       def action_set_owner(path)
@@ -154,13 +165,18 @@ class Chef
       private
 
       def unpacked?(path)
-        if ::File.directory? path
-          if ::File.stat(path).nlink == 2
+        if new_resource.creates
+          full_path = ::File.join(new_resource.path, new_resource.creates)
+        else
+          full_path = path
+        end
+        if ::File.directory? full_path
+          if ::File.stat(full_path).nlink == 2
             false
           else
             true
           end
-        elsif ::File.exists? path
+        elsif ::File.exists? full_path
           true
         else
           false
