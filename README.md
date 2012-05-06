@@ -1,14 +1,14 @@
-Overview        
+Overview
 ========
 
 
-''Notice'' 
-14 April 2012: The ark API has changed! 
+''Notice''
+14 April 2012: The ark API has changed!
 
 The `ark_put`, `ark_dump`, `ark_cherry_pick` have been rolled into the main
 ark library as the actions `:put`, `:dump`, and `:cherry_pick`. Please
 review the README carefully
- 
+
 An ''ark'' is like an archive but ''Kewler''
 
 Does the fetch-unpack-configure-build-install dance. This is a
@@ -50,19 +50,21 @@ Resources/Providers
 
 * `ark` - does the extract/build/configure dance
 
-Actions 
+Actions
 =======
 
-- `:install`: extracts the file and creates a 'friendly' symbolic link
-  to the extracted directory path.
-- `:install_with_make`: extracts the archive to a path, runs `make`, and
-  `make install`. It does _not_ run the configure step at this time.
-- `:dump`: strips all directories from the archive and dumps the
-  contained files into a specified path.
-- `:cherry_pick`: extract a specified file from an archive and places
-  in specified path.
-- `:put`: extract the archive to a specified path, does not create any
-  symbolic links.
+- :install: extracts the file and creates a 'friendly' symbolic link
+  to the extracted directory path
+- :configure: configure ahead of the install action
+- :install_with_make: extracts the archive to a path, runs make, and
+  make install. It does _not_ run the configure step at this time
+- :dump: strips all directories from the archive and dumps the
+  contained files into a specified path
+- :cherry_pick: extract a specified file from an archive and places
+  in specified path
+- :put: extract the archive to a specified path, does not create any
+  symbolic links
+- :remove: removes the extracted directory and related symlink #TODO
 
 # :put
 
@@ -143,7 +145,7 @@ ark
 - `environment`: hash of environment variables to pass to invoked shell
   commands like `tar`, `unzip`, `configure`, and `make`.
 - `strip_leading_dir`: by default, ark strips the leading directory from
-  an archive, which is the default for both `unzip` and `tar` commands 
+  an archive, which is the default for both `unzip` and `tar` commands
 - `autoconf_opts`: an array of command line options for use with the GNU
   `autoconf` script.
   - Example: `[ '--include=/opt/local/include', '--force' ]`
@@ -157,11 +159,11 @@ ark
      # install Apache Ivy dependency resolution tool
      ark "ivy" do
        url 'http://someurl.example.com/ivy.tar.gz'
-       version '2.2.0'        
+       version '2.2.0'
        checksum '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
        action :install
      end
-    
+
 This example copies `ivy.tar.gz` to `/var/cache/chef/ivy-2.2.0.tar.gz`,
 unpacks its contents to `/usr/local/ivy-2.2.0/` -- stripping the
 leading directory, and symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`
@@ -171,7 +173,7 @@ leading directory, and symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`
        url 'http://download.example.com/jdk-7u2-linux-x64.tar.gz'
        version '7.2'
        path "/usr/local/jvm/"
-       home_dir "/usr/local/jvm/default" 
+       home_dir "/usr/local/jvm/default"
        checksum  '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
        append_env_path true
        owner 'foobar'
@@ -195,7 +197,7 @@ the global `PATH` for all users. The user 'foobar' is the owner of the
      end
 
      # install Apache Ivy dependency resolution tool
-     # in /home/foobar/ivy 
+     # in /home/foobar/ivy
      # it does strip any leading directory if one exists
      ark "ivy" do
        path "/home/foobar
@@ -204,9 +206,9 @@ the global `PATH` for all users. The user 'foobar' is the owner of the
        action :put
      end
 
-     
 
-     # strip all directories and dump files into path specified by 
+
+     # strip all directories and dump files into path specified by
      # the path attribute, you must specify the `creates` attribute
      # in order to keep the extraction from running every time
      # the directory path will be created if it doesn't already exist
@@ -214,7 +216,7 @@ the global `PATH` for all users. The user 'foobar' is the owner of the
        url  "http://example.com/bunch_of_jars.zip"
        path "/usr/local/tomcat/lib"
        creates "mysql.jar"
-       owner "tomcat"       
+       owner "tomcat"
        action :dump
      end
 
@@ -239,18 +241,18 @@ the global `PATH` for all users. The user 'foobar' is the owner of the
        prefix_home '/opt'
        prefix_bin  '/opt/bin'
        action :install_with_make
-     end    
+     end
 
 
-     
+
 ## License and Author
 
-Author::                Philip (flip) Kromer - Infochimps, Inc(<coders@infochimps.com>)  
-Author::                Bryan W. Berry (<bryan.berry@gmail.com>)  
-Author::                Denis Barishev (<denis.barishev@gmail.com>)  
-Copyright::             2011, Philip (flip) Kromer - Infochimps, Inc  
-Copyright::             2012, Bryan W. Berry  
-Copyright::             2012, Denis Barishev   
+Author::                Philip (flip) Kromer - Infochimps, Inc(<coders@infochimps.com>)
+Author::                Bryan W. Berry (<bryan.berry@gmail.com>)
+Author::                Denis Barishev (<denis.barishev@gmail.com>)
+Copyright::             2011, Philip (flip) Kromer - Infochimps, Inc
+Copyright::             2012, Bryan W. Berry
+Copyright::             2012, Denis Barishev
 
 
 Licensed under the Apache License, Version 2.0 (the "License");
