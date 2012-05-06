@@ -119,9 +119,10 @@ class Chef
       end
 
       def action_dump_contents
+        full_path = ::File.join(new_resource.path, new_resource.creates)
         chef_mkdir_p new_resource.path
         cmd = expand_cmd
-        eval("#{cmd}_dump") unless unpacked? new_resource.path
+        eval("#{cmd}_dump") unless unpacked? full_path
       end
 
       def action_unpack
