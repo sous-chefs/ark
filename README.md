@@ -50,6 +50,7 @@ Actions
 
 - :install: extracts the file and creates a 'friendly' symbolic link
   to the extracted directory path
+- :configure: configure ahead of the install action
 - :install_with_make: extracts the archive to a path, runs make, and
   make install. It does _not_ run the configure step at this time
 - :dump: strips all directories from the archive and dumps the
