@@ -185,8 +185,8 @@ class Chef
 
       def expand_cmd
         case parse_file_extension
-        when 'tar.gz'  then "tar_xzf"
-        when 'tar.bz2' then "tar_xjf"
+        when /tar.gz|tgz/  then "tar_xzf"
+        when /tar.bz2|tbz/ then "tar_xjf"
         when /zip|war|jar/ then "unzip"
         else raise "Don't know how to expand #{new_resource.url}"
         end
