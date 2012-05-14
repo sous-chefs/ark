@@ -62,10 +62,10 @@ class Chef
         set_paths
         action_download
         action_unpack
-        b = Chef::Resource::Script::Bash.new("configure with autoconf", run_context)
+        b = Chef::Resource::Execute.new("configure with autoconf", run_context)
         b.cwd new_resource.path
-        b.new_resource.environment
-        b.code "./configure #{new_resource.autoconf_opts.join(' ')}"
+        b.environment new_resource.environment
+        b.command "./configure #{new_resource.autoconf_opts.join(' ')}"
         b.not_if{ ::File.exists?(::File.join(new_resource.path, 'config.status')) }
         b.run_action(:run)
       end

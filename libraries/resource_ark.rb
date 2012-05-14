@@ -27,7 +27,7 @@ class Chef
       def initialize(name, run_context=nil)
         super
         @resource_name = :ark
-        @allowed_actions.push(:install, :dump, :cherry_pick, :put, :install_with_make)
+        @allowed_actions.push(:install, :dump, :cherry_pick, :put, :install_with_make, :configure)
         @action = :install
         @provider = Chef::Provider::Ark
       end
