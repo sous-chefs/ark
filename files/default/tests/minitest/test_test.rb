@@ -73,5 +73,9 @@ describe_recipe 'ark::test' do
     file("/usr/local/foo_tbz/foo1.txt").must_exist
     file("/usr/local/foo_tgz/foo1.txt").must_exist
   end
+
+  it "sends notification when resource updated" do
+    file("/tmp/foobarbaz/notification_successful.txt").must_exist
+  end
   
 end
