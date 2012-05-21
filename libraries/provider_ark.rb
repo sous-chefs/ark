@@ -225,13 +225,13 @@ class Chef
       def parse_file_extension
         # purge any trailing redirect
         url = new_resource.url.clone
-        url =~ /^https?:\/\/.*(.gz|bz2|bin|zip|jar)(\/.*\/)/
+        url =~ /^https?:\/\/.*(.gz|bz2|bin|zip|jar|tgz|tbz)(\/.*\/)/
         url.gsub!($2, '') unless $2.nil?
         # remove tailing query string
         release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
         # (\?.*)? accounts for a trailing querystring
         Chef::Log.debug("release_basename is #{release_basename}")
-        release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz)(\?.*)?}
+        release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz|tbz)(\?.*)?}
         Chef::Log.debug("file_extension is #{$2}")
         extension = $2
       end
