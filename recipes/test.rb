@@ -80,3 +80,13 @@ ark "foo_alt_bin" do
   has_binaries [ 'bin/do_foo' ]
   action :install
 end
+
+ark "foo_tbz" do
+  url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.tbz'
+  version '3'
+end
+
+ark "foo_tgz" do
+  url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.tgz'
+  version '3'
+end

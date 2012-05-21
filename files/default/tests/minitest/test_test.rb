@@ -66,7 +66,12 @@ describe_recipe 'ark::test' do
   end
   
   it "creates an alternate prefix_bin" do
-      link("/opt/bin/do_foo").must_exist.with(:link_type, :symbolic).and(:to, "/opt/foo_alt_bin-3/bin/do_foo")
+    link("/opt/bin/do_foo").must_exist.with(:link_type, :symbolic).and(:to, "/opt/foo_alt_bin-3/bin/do_foo")
+  end
+
+  it "properly unpacks .tbz and .tgz archives" do
+    file("/usr/local/foo_tbz/foo1.txt").must_exist
+    file("/usr/local/foo_tgz/foo1.txt").must_exist
   end
   
 end
