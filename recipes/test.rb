@@ -1,3 +1,20 @@
+require 'fileutils'
+
+# remove file so we can test sending notification on its creation
+if ::File.exist? "/tmp/foobarbaz/foo1.txt"
+  FileUtils.rm_f "/tmp/foobarbaz/foo1.txt"
+end
+
+ruby_block "test_notification" do
+  block do
+    if ::File.exist? "/tmp/foobarbaz/foo1.txt"
+      FileUtils.touch "/tmp/foobarbaz/notification_successful.txt"
+    end
+  end
+  action :nothing
+end
+
+
 user 'foobarbaz'
 
 directory "/opt/bin" do
@@ -89,4 +106,12 @@ end
 ark "foo_tgz" do
   url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.tgz'
   version '3'
+end
+
+ark "test notification" do
+  url  'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.zip'
+  path "/tmp/foobarbaz"
+  creates "foo1.txt"
+  action :dump
+  notifies :create, "ruby_block[test_notification]", :immediately
 end
