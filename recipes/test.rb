@@ -77,6 +77,14 @@ ark "foo_dont_strip" do
   action :install
 end
 
+ark "foo_zip_strip" do
+  version "2"
+  url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.zip'
+  checksum 'deea3a324115c9ca0f3078362f807250080bf1b27516f7eca9d34aad863a11e0'
+  action :install
+end
+
+
 ark "haproxy" do
   url  "http://haproxy.1wt.eu/download/1.5/src/snapshot/haproxy-ss-20120403.tar.gz"
   version "1.5"
