@@ -254,6 +254,12 @@ class Chef
             cmd.run_command
             cmd.error!
             subdirectory_children = Dir.glob("#{tmpdir}/**")
+            if subdirectory_children.length == 1
+              subdir = subdirectory_children[0]
+              subdirectory_children = Dir.glob("#{subdir}/**")
+            end
+            require 'pry'
+            binding.pry
             FileUtils.mv subdirectory_children, new_resource.path
             FileUtils.rm_rf tmpdir
           else

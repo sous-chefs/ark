@@ -54,6 +54,11 @@ describe_recipe 'ark::test' do
     directory( "/usr/local/foo_dont_strip/foo_sub").must_exist
   end
 
+  it "does strip for zip file" do
+    file("/usr/local/foo_zip_strip/foo1.txt").must_exist
+  end
+
+  
   it "successfully compiles haproxy" do
     file("/usr/local/haproxy-1.5/haproxy").must_exist
   end
