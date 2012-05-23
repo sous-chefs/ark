@@ -1,14 +1,6 @@
 Overview        
 ========
 
-
-''Notice'' 
-14 April 2012: The ark API has changed! 
-
-The ark_put, ark_dump, ark_cherry_pick have been rolled into the main
-ark library as the actions :put, :dump, and :cherry_pick. Please
-review the README carefully
- 
 An ''ark'' is like an archive but ''Kewler''
 
 Does the fetch-unpack-configure-build-install dance. This is a
@@ -105,7 +97,10 @@ ark
   currently supported. Also supports special syntax
   :name:version:apache_mirror: that will auto-magically construct
   download url from the apache mirrors site
-- version: software version, required
+- version: software version, defaults to "1" if not specified. The :dump, :cherry_pick, and :put actions do not use it
+- extension: The file extension of the file you are trying to
+  download. If not specified, ark tries to determine the file
+  extension by parsing the URL
 - checksum: sha256 checksum, used for security 
 - mode: file mode for app_home, is an integer TODO
 - prefix_root: default prefix_root, for use with :install* actions

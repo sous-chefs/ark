@@ -82,5 +82,9 @@ describe_recipe 'ark::test' do
   it "sends notification when resource updated" do
     file("/tmp/foobarbaz/notification_successful.txt").must_exist
   end
+
+  it "uses autogen.sh to generate configure script" do
+    file("/usr/local/test_autogen-1/configure").must_exist
+  end
   
 end

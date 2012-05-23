@@ -123,3 +123,9 @@ ark "test notification" do
   action :dump
   notifies :create, "ruby_block[test_notification]", :immediately
 end
+
+ark "test_autogen" do
+  url 'https://github.com/zeromq/libzmq/tarball/master'
+  extension "tar.gz"
+  action :configure
+end
