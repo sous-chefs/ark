@@ -1,14 +1,6 @@
 Overview
 ========
 
-
-''Notice''
-14 April 2012: The ark API has changed!
-
-The `ark_put`, `ark_dump`, `ark_cherry_pick` have been rolled into the main
-ark library as the actions `:put`, `:dump`, and `:cherry_pick`. Please
-review the README carefully
-
 An ''ark'' is like an archive but ''Kewler''
 
 Does the fetch-unpack-configure-build-install dance. This is a
@@ -115,6 +107,7 @@ ark
 - `name`: name of the package, defaults to the resource name.
 - `url`: url for tarball, `.tar.gz`, `.bin` (oracle-specific), `.war`, and `.zip`
   currently supported. Also supports special syntax
+<<<<<<< HEAD
   `:name:version:apache_mirror:` that will auto-magically construct
   download url from the apache mirrors site.
 - `version`: software version, required.
@@ -153,6 +146,44 @@ ark
   - Example: `[ '--warn-undefined-variables', '--load-average=2' ]`
 - `owner`: owner of extracted directory.
   - Default: `root`
+=======
+  :name:version:apache_mirror: that will auto-magically construct
+  download url from the apache mirrors site
+- version: software version, defaults to "1" if not specified. The :dump, :cherry_pick, and :put actions do not use it
+- extension: The file extension of the file you are trying to
+  download. If not specified, ark tries to determine the file
+  extension by parsing the URL
+- checksum: sha256 checksum, used for security 
+- mode: file mode for app_home, is an integer TODO
+- prefix_root: default prefix_root, for use with :install* actions
+- prefix_home: default directory prefix for a friendly symlink to the path, for
+  example  /usr/local/maven -> /usr/local/maven-2.2.1
+- prefix_bin: default directory to place a symlink to a binary
+  command, example /opt/bin/mvn ->
+  /opt/maven-2.2.1/bin/mvn , where the prefix_bin is "/opt/bin"
+- path: path to extract the ark to, by default is
+  /usr/local/<name>-<version> for the :install, :install_with_make actions
+  the :install* actions overwrite any user-provided values for :path
+- home_dir: symbolic link to the path :prefix_root/:name-:version,
+  defaults to :prefix_root/:name , , does not apply to :dump, :put, or
+  :cherry_pick actions
+- has_binaries: array of binary commands to symlink to
+  /usr/local/bin/, you must specify the relative path example: [ 'bin/java', 'bin/javaws' ]
+- append_env_path: boolean, similar to has_binaries but less granular
+  - If true, append the ./bin directory of the extracted directory to
+  the PATH environment  variable for all users, does this by placing a file in /etc/profile.d/ which will be read by all users
+  be added to the path. The commands are symbolically linked to
+  /usr/bin/* . Examples are mvn, java, javac, etc. This option
+  provides more granularity than the boolean option
+- environment: hash of environment variables to pass to invoked shell
+  commands like tar, unzip, configure, and make
+- strip_leading_dir: by default, ark strips the leading directory from
+  an archive, which is the default for both unzip and tar commands 
+- autoconf_opts: an array of command line options for use with the GNU
+  autoconf script
+- make_opts: an array of command line options for use with make
+- owner: owner of extracted directory, set to "root" by default
+>>>>>>> add autogen.sh support and extension attribute
 
 # Examples
 

@@ -32,7 +32,7 @@ class Chef
         @provider = Chef::Provider::Ark
       end
 
-      attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir
+      attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir, :extension, :version
 
       attribute :owner, :kind_of => String, :default => 'root'
       attribute :group, :kind_of => [String, Fixnum], :default => 0
@@ -56,6 +56,7 @@ class Chef
       attribute :make_opts, :kind_of => Array, :default => []
       attribute :home_dir, :kind_of => String, :default => nil
       attribute :autoconf_opts, :kind_of => Array, :default => []
+      attribute :extension, :kind_of => String
 
     end
   end

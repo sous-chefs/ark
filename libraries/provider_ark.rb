@@ -58,16 +58,28 @@ class Chef
         action_link_paths
       end
 
+      def action_autogen
+        b = Chef::Resource::Script::Bash.new("autogen.sh to generate configure", run_context)
+        b.cwd new_resource.path
+        b.environment  new_resource.environment
+        b.code "./autogen.sh"
+        b.run_action(:run)
+      end
+      
       def action_configure
         set_paths
         action_download
         action_unpack
-        b = Chef::Resource::Execute.new("configure with autoconf", run_context)
-        b.cwd new_resource.path
-        b.environment new_resource.environment
-        b.command "./configure #{new_resource.autoconf_opts.join(' ')}"
-        b.not_if{ ::File.exists?(::File.join(new_resource.path, 'config.status')) }
-        b.run_action(:run)
+        unless ::File.exists?(::File.join(new_resource.path, 'configure'))
+          action_autogen
+        end
+        unless ::File.exists?(::File.join(new_resource.path, 'config.status')) 
+         b = Chef::Resource::Execute.new("configure with autoconf", run_context)
+          b.cwd new_resource.path
+          b.environment new_resource.environment
+          b.command "./configure #{new_resource.autoconf_opts.join(' ')}"
+          b.run_action(:run)
+        end
       end
 
       def action_build_with_make
@@ -203,6 +215,7 @@ class Chef
         end
         # set effective paths
         new_resource.prefix_bin = prefix_bin
+        new_resource.version ||= "1"  # initialize to one if nil
         new_resource.path       = ::File.join(prefix_root, "#{new_resource.name}-#{new_resource.version}")
         new_resource.home_dir ||= default_home_dir
         Chef::Log.debug("path is #{new_resource.path}")
@@ -223,17 +236,20 @@ class Chef
       end
 
       def parse_file_extension
-        # purge any trailing redirect
-        url = new_resource.url.clone
-        url =~ /^https?:\/\/.*(.gz|bz2|bin|zip|jar|tgz|tbz)(\/.*\/)/
-        url.gsub!($2, '') unless $2.nil?
-        # remove tailing query string
-        release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
-        # (\?.*)? accounts for a trailing querystring
-        Chef::Log.debug("release_basename is #{release_basename}")
-        release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz|tbz)(\?.*)?}
-        Chef::Log.debug("file_extension is #{$2}")
-        extension = $2
+        if new_resource.extension.nil?
+          # purge any trailing redirect
+          url = new_resource.url.clone
+          url =~ /^https?:\/\/.*(.gz|bz2|bin|zip|jar|tgz|tbz)(\/.*\/)/
+          url.gsub!($2, '') unless $2.nil?
+          # remove tailing query string
+          release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
+          # (\?.*)? accounts for a trailing querystring
+          Chef::Log.debug("release_basename is #{release_basename}")
+          release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz|tbz)(\?.*)?}
+          Chef::Log.debug("file_extension is #{$2}")
+          new_resource.extension = $2
+        end
+        new_resource.extension
       end
 
       def set_apache_url(url_ref)
@@ -258,8 +274,6 @@ class Chef
               subdir = subdirectory_children[0]
               subdirectory_children = Dir.glob("#{subdir}/**")
             end
-            require 'pry'
-            binding.pry
             FileUtils.mv subdirectory_children, new_resource.path
             FileUtils.rm_rf tmpdir
           else
