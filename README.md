@@ -250,6 +250,14 @@ the global `PATH` for all users. The user 'foobar' is the owner of the
        action [ :configure, :build_with_make ]
      end
 
+     # you can also pass multiple actions to ark and supply the file extension
+     # in case the file extension can not be determined by the URL
+     ark "test_autogen" do
+       url 'https://github.com/zeromq/libzmq/tarball/master'
+       extension "tar.gz"
+       action [ :configure, :build_with_make ]
+     end    
+
 
 ## License and Author
 
