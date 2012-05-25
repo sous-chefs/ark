@@ -1,5 +1,7 @@
 Overview
-========
+=======
+
+# <a name="title"></a> chef-rvm [![Build Status](https://secure.travis-ci.org/bryanwb/chef-ark.png?branch=master)](http://travis-ci.org/bryanwb/chef-ark)
 
 An ''ark'' is like an archive but ''Kewler''
 
@@ -153,7 +155,7 @@ ark
 - extension: The file extension of the file you are trying to
   download. If not specified, ark tries to determine the file
   extension by parsing the URL
-- checksum: sha256 checksum, used for security 
+- checksum: sha256 checksum, used for security
 - mode: file mode for app_home, is an integer TODO
 - prefix_root: default prefix_root, for use with :install* actions
 - prefix_home: default directory prefix for a friendly symlink to the path, for
@@ -178,7 +180,7 @@ ark
 - environment: hash of environment variables to pass to invoked shell
   commands like tar, unzip, configure, and make
 - strip_leading_dir: by default, ark strips the leading directory from
-  an archive, which is the default for both unzip and tar commands 
+  an archive, which is the default for both unzip and tar commands
 - autoconf_opts: an array of command line options for use with the GNU
   autoconf script
 - make_opts: an array of command line options for use with make
@@ -281,7 +283,7 @@ the global `PATH` for all users. The user 'foobar' is the owner of the
        url 'https://github.com/zeromq/libzmq/tarball/master'
        extension "tar.gz"
        action [ :configure, :build_with_make ]
-     end    
+     end
 
 
 ## License and Author
