@@ -256,7 +256,7 @@ the global `PATH` for all users. The user 'foobar' is the owner of the
        url 'https://github.com/zeromq/libzmq/tarball/master'
        extension "tar.gz"
        action [ :configure, :build_with_make ]
-     end    
+     end
 
 
 ## License and Author
