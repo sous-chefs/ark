@@ -102,9 +102,20 @@ class Chef
         b.cwd new_resource.path
         b.environment new_resource.environment
         b.code "make install"
-        b.run_action(:run)
+        b.run_action(:run) unless 
       end
 
+      # needs a test, start here http://guide.python-distribute.org/quickstart.html
+      def action_setup_py
+        unless new_resource.creates and ::File.extists? new_resource.creates
+          b = Chef::Resource::Script::Bash.new("setup.py", run_context)
+          b.cwd new_resource.path
+          b.environment new_resource.environment
+          b.code "python setup.py install"
+          b.run_action(:run)
+        end
+      end  
+      
       def action_link_paths
         l = Chef::Resource::Link.new(new_resource.home_dir, run_context)
         l.to new_resource.path
