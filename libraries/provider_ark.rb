@@ -102,12 +102,12 @@ class Chef
         b.cwd new_resource.path
         b.environment new_resource.environment
         b.code "make install"
-        b.run_action(:run) unless 
+        b.run_action(:run)
       end
 
       # needs a test, start here http://guide.python-distribute.org/quickstart.html
       def action_setup_py
-        unless new_resource.creates and ::File.extists? new_resource.creates
+        unless new_resource.creates and ::File.exists? new_resource.creates
           b = Chef::Resource::Script::Bash.new("setup.py", run_context)
           b.cwd new_resource.path
           b.environment new_resource.environment
