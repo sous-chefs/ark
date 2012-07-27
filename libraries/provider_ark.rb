@@ -83,26 +83,30 @@ class Chef
       end
 
       def action_build_with_make
-        set_paths
-        action_download
-        action_unpack
-        b = Chef::Resource::Script::Bash.new("build with make", run_context)
-        b.cwd new_resource.path
-        b.environment  new_resource.environment
-        b.code "make #{new_resource.make_opts.join(' ')}"
-        b.run_action(:run)
-        action_set_owner new_resource.path
-        action_link_paths
-        action_install_binaries
+        unless new_resource.creates and ::File.exists? new_resource.creates
+          set_paths
+          action_download
+          action_unpack
+          b = Chef::Resource::Script::Bash.new("build with make", run_context)
+          b.cwd new_resource.path
+          b.environment  new_resource.environment
+          b.code "make #{new_resource.make_opts.join(' ')}"
+          b.run_action(:run)
+          action_set_owner new_resource.path
+          action_link_paths
+          action_install_binaries
+        end
       end
 
       def action_install_with_make
-        action_build_with_make
-        b = Chef::Resource::Script::Bash.new("make install", run_context)
-        b.cwd new_resource.path
-        b.environment new_resource.environment
-        b.code "make install"
-        b.run_action(:run)
+        unless new_resource.creates and ::File.exists? new_resource.creates
+          action_build_with_make
+          b = Chef::Resource::Script::Bash.new("make install", run_context)
+          b.cwd new_resource.path
+          b.environment new_resource.environment
+          b.code "make install"
+          b.run_action(:run)
+        end
       end
 
       # needs a test, start here http://guide.python-distribute.org/quickstart.html
@@ -305,7 +309,12 @@ class Chef
       def unzip_cherry_pick
         b = Chef::Resource::Script::Bash.new(new_resource.name, run_context)
         b.code <<-EOS
-          unzip  -j -o #{new_resource.release_file} "*/#{new_resource.creates}" -d #{new_resource.path}
+          unzip  -t #{new_resource.release_file} "*/#{new_resource.creates}"
+          if [ $? -eq 11 ] ; then
+            unzip  -j -o #{new_resource.release_file} "#{new_resource.creates}" -d #{new_resource.path}
+          else
+            unzip  -j -o #{new_resource.release_file} "*/#{new_resource.creates}" -d #{new_resource.path}
+          fi
           EOS
         b.run_action(:run)
       end
