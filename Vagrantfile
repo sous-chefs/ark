@@ -1,44 +1,51 @@
+distros = {
+  :lucid32 => {
+    :url    => 'https://opscode-vm.s3.amazonaws.com/vagrant/boxes/opscode-ubuntu-10.04-i386.box',
+    :recipe => "openjdk",
+    :run_list => [ "apt" ]
+  },
+  :centos6_3_32 => {
+    :url      => 'https://opscode-vm.s3.amazonaws.com/vagrant/boxes/opscode-centos-6.3-i386.box',
+    :recipe =>  "openjdk" 
+  },
+  :debian_squeeze_32 => {
+    :url => 'http://mathie-vagrant-boxes.s3.amazonaws.com/debian_squeeze_32.box',
+    :recipe => "openjdk",
+    :run_list => [ "apt" ]
+  },
+  :precise32 => {
+    :url => 'https://opscode-vm.s3.amazonaws.com/vagrant/boxes/opscode-ubuntu-12.04-i386.box',
+    :recipe => "openjdk",
+    :run_list => [ "apt" ]
+  }
+}
+
 Vagrant::Config.run do |config|
 
-  config.vm.define :oneiric do |dist_config|
-    dist_config.vm.box     = "ubuntu-1110-server-amd64"
-    dist_config.vm.box_url = "http://timhuegdon.com/vagrant-boxes/ubuntu-11.10.box"
-    dist_config.vm.network :bridged
-    
-    dist_config.vm.provision :chef_solo do |chef|
+  distros.each_pair do |name,options|
+    config.vm.define name do |dist_config|
+      dist_config.vm.box       = name.to_s
+      dist_config.vm.box_url   = options[:url]
+      
+      dist_config.vm.customize do |vm|
+        vm.name        = name.to_s
+        vm.memory_size = 1024
+      end
 
-      chef.cookbooks_path = ["/home/hitman/chef-repo-opscode/site-cookbooks/",
-                             "/home/hitman/chef-repo-opscode/cookbooks/"
-                            ]
+      dist_config.vm.provision :chef_solo do |chef|
 
-      chef.log_level      = :debug
+        chef.cookbooks_path    = [ '/tmp/ark-cookbooks' ]
+        chef.provisioning_path = '/etc/vagrant-chef'
+        chef.log_level         = :debug
+	chef.add_recipe     "minitest-handler"
+        chef.add_recipe     "ark"
+	chef.add_recipe     "ark::test"
 
-      chef.add_recipe     "chef_handler"
-      chef.add_recipe     "minitest-handler"
-      chef.add_recipe     "ark"
-      chef.add_recipe     "ark::test"
+        if options[:run_list]
+          options[:run_list].each {|recipe| chef.run_list.insert(0, recipe) }
+        end
 
-    end
-  end
-
-  config.vm.define :centos6 do |dist_config|
-    dist_config.vm.box     = "centos6"
-    dist_config.vm.box_url = "http://dl.dropbox.com/u/9227672/CentOS-6.0-x86_64-netboot-4.1.6.box"
-    dist_config.vm.network :bridged
-    
-    dist_config.vm.provision :chef_solo do |chef|
-
-      chef.cookbooks_path = ["/home/hitman/chef-repo-opscode/site-cookbooks/",
-                             "/home/hitman/chef-repo-opscode/cookbooks/"
-                            ]
-
-      chef.log_level      = :debug
-
-      chef.add_recipe     "chef_handler"
-      chef.add_recipe     "minitest-handler"
-      chef.add_recipe     "ark"
-      chef.add_recipe     "ark::test"
-
+      end
     end
   end
 end
