@@ -109,16 +109,36 @@ class Chef
         end
       end
 
-      # needs a test, start here http://guide.python-distribute.org/quickstart.html
-      def action_setup_py
+
+      #TODO needs a test, start here http://guide.python-distribute.org/quickstart.html
+      def action_setup_py_build
         unless new_resource.creates and ::File.exists? new_resource.creates
-          b = Chef::Resource::Script::Bash.new("setup.py", run_context)
+          set_paths
+          action_download
+          action_unpack
+          b = Chef::Resource::Script::Bash.new("setup.py build", run_context)
+          b.cwd new_resource.path
+          b.environment new_resource.environment
+          b.code "python setup.py build"
+          b.run_action(:run)
+        end
+      end  
+
+      #TODO needs a test, start here http://guide.python-distribute.org/quickstart.html
+      def action_setup_py_install
+        unless new_resource.creates and ::File.exists? new_resource.creates
+          set_paths
+          action_download
+          action_unpack
+          b = Chef::Resource::Script::Bash.new("setup.py install", run_context)
           b.cwd new_resource.path
           b.environment new_resource.environment
           b.code "python setup.py install"
           b.run_action(:run)
         end
       end  
+
+      alias action_setup_py action_setup_py_install
       
       def action_link_paths
         l = Chef::Resource::Link.new(new_resource.home_dir, run_context)
