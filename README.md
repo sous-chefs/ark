@@ -58,6 +58,10 @@ Actions
 - :put: extract the archive to a specified path, does not create any
   symbolic links
 - :remove: removes the extracted directory and related symlink #TODO
+- :setup_py_build: runs the command "python setup.py build" in the
+  extracted directory
+- :setup_py_install:  runs the comand "python setup.py install" in the
+  extracted directory
 
 # :put
 
