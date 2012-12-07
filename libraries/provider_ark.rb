@@ -381,7 +381,7 @@ class Chef
 
       def untar_cmd_cherry_pick(sub_cmd)
         dest = ::File.join(new_resource.path, new_resource.creates)
-        cmd = Chef::ShellOut.new(%Q{#{tar_cmd} --no-anchored -O -#{sub_cmd} '#{new_resource.release_file}' #{new_resource.creates} > '#{dest}';})
+        cmd = Chef::ShellOut.new(%Q{#{tar_cmd} -#{sub_cmd} '#{new_resource.release_file}' -C '#{new_resource.path}' #{new_resource.creates};})
         cmd.run_command
         cmd.error!
       end
