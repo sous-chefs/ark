@@ -118,7 +118,7 @@ Attribute Parameters
   and `.zip` currently supported. Also supports special syntax
   `:name:version:apache_mirror:` that will auto-magically construct
   download url from the apache mirrors site.
-- `version`: software version, required.
+- `version`: software version, defaults to `1`.
 - `checksum`: sha256 checksum, used for security .
 - `mode`: file mode for `app_home`, is an integer.
 - `prefix_root`: default `prefix_root`, for use with `:install*`
