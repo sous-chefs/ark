@@ -1,3 +1,8 @@
+## 0.0.17
+
+* [COOK-2026] - Allow cherry_pick action to be used for directories as
+  well as files
+
 ## 0.0.16
 
 * [COOK-1593] - README formatting updates for better display on
