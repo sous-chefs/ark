@@ -405,7 +405,7 @@ class Chef
           return
         end
 
-        new_path = ::File.join(new_resource.path, 'bin')
+        new_path = ::File.join(new_resource.home_dir, 'bin')
         Chef::Log.debug("new_path is #{new_path}")
         path = "/etc/profile.d/#{new_resource.name}.sh"
         f = Chef::Resource::File.new(path, run_context)
