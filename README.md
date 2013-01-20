@@ -93,8 +93,6 @@ NOTE: This currently only works for zip archives
 ### Attribute Parameters for :dump
 
 - `path`: path to dump files to.
-- `mode`: file mode for `app_home`, as an integer.
-  - Example: `0775`
 - `creates`: if you are appending files to a given directory, ark
   needs a condition to test whether the file has already been
   extracted. You can specify with creates, a file whose existence
@@ -120,7 +118,6 @@ Attribute Parameters
   download url from the apache mirrors site.
 - `version`: software version, defaults to `1`.
 - `checksum`: sha256 checksum, used for security .
-- `mode`: file mode for `app_home`, is an integer.
 - `prefix_root`: default `prefix_root`, for use with `:install*`
   actions.
 - `prefix_home`: default directory prefix for a friendly symlink to

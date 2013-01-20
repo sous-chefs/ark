@@ -192,7 +192,6 @@ class Chef
       def action_set_owner(path)
         require 'fileutils'
         FileUtils.chown_R new_resource.owner, new_resource.group, path
-        FileUtils.chmod_R new_resource.mode, path
       end
 
       def action_install_binaries

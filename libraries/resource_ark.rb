@@ -45,7 +45,6 @@ class Chef
       attribute :creates, :kind_of => String, :default => nil
       attribute :release_file, :kind_of => String, :default => ''
       attribute :strip_leading_dir, :kind_of => [TrueClass, FalseClass], :default => true
-      attribute :mode, :kind_of => Fixnum, :default => 0755
       attribute :prefix_root, :kind_of => String, :default => nil
       attribute :prefix_home, :kind_of => String, :default => nil
       attribute :prefix_bin, :kind_of => String, :default => nil
