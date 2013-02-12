@@ -1,3 +1,5 @@
+require 'berkshelf/vagrant'
+
 distros = {
   :lucid32 => {
     :url    => 'https://opscode-vm.s3.amazonaws.com/vagrant/boxes/opscode-ubuntu-10.04-i386.box',
@@ -6,7 +8,7 @@ distros = {
   },
   :centos6_3_32 => {
     :url      => 'https://opscode-vm.s3.amazonaws.com/vagrant/boxes/opscode-centos-6.3-i386.box',
-    :recipe =>  "openjdk" 
+    :recipe =>  "openjdk"
   },
   :debian_squeeze_32 => {
     :url => 'http://mathie-vagrant-boxes.s3.amazonaws.com/debian_squeeze_32.box',
@@ -34,12 +36,10 @@ Vagrant::Config.run do |config|
 
       dist_config.vm.provision :chef_solo do |chef|
 
-        chef.cookbooks_path    = [ '/tmp/ark-cookbooks' ]
-        chef.provisioning_path = '/etc/vagrant-chef'
-        chef.log_level         = :debug
-	chef.add_recipe     "minitest-handler"
+        chef.log_level      = :debug
+        chef.add_recipe     "minitest-handler"
         chef.add_recipe     "ark"
-	chef.add_recipe     "ark::test"
+        chef.add_recipe     "ark::test"
 
         if options[:run_list]
           options[:run_list].each {|recipe| chef.run_list.insert(0, recipe) }
