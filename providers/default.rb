@@ -295,7 +295,7 @@ def unzip
     if new_resource.strip_leading_dir
       require 'tmpdir'
       tmpdir = Dir.mktmpdir
-      cmd = Chef::ShellOut.new("unzip  -q -u -o '#{new_resource.release_file}' -d '#{tmpdir}'")
+      cmd = Mixlib::ShellOut.new("unzip  -q -u -o '#{new_resource.release_file}' -d '#{tmpdir}'")
       cmd.run_command
       cmd.error!
       subdirectory_children = Dir.glob("#{tmpdir}/**")
@@ -306,14 +306,14 @@ def unzip
       FileUtils.mv subdirectory_children, new_resource.path
       FileUtils.rm_rf tmpdir
     else
-      cmd = Chef::ShellOut.new("unzip  -q -u -o #{new_resource.release_file} -d #{new_resource.path}")
+      cmd = Mixlib::ShellOut.new("unzip  -q -u -o #{new_resource.release_file} -d #{new_resource.path}")
       cmd.run_command
       cmd.error!
     end
 end
 
 def unzip_dump
-  cmd = Chef::ShellOut.new(
+  cmd = Mixlib::ShellOut.new(
                            %Q{unzip  -j -q -u -o '#{new_resource.release_file}' -d '#{new_resource.path}'}
                            )
   cmd.run_command
@@ -375,7 +375,7 @@ end
 
 def untar_cmd_cherry_pick(sub_cmd)
   dest = ::File.join(new_resource.path, new_resource.creates)
-  cmd = Chef::ShellOut.new(%Q{#{tar_cmd} -#{sub_cmd} '#{new_resource.release_file}' -C '#{new_resource.path}' #{new_resource.creates};})
+  cmd = Mixlib::ShellOut.new(%Q{#{tar_cmd} -#{sub_cmd} '#{new_resource.release_file}' -C '#{new_resource.path}' #{new_resource.creates};})
   cmd.run_command
   cmd.error!
 end
