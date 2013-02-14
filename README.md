@@ -271,12 +271,15 @@ user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
 License and Author
 ==================
 
-- Author: Philip (flip) Kromer - Infochimps, Inc(<coders@infochimps.com>)
-- Author: Bryan W. Berry (<bryan.berry@gmail.com>)
-- Author: Denis Barishev (<denis.barishev@gmail.com>)
+- Author: Philip (flip) Kromer - Infochimps,
+  Inc(<coders@infochimps.com>)  
+- Author: Bryan W. Berry (<bryan.berry@gmail.com>)  
+- Author: Denis Barishev (<denis.barishev@gmail.com>)  
+- Author: Elliot Pahl (<elliot.pahl@gmail.com>)  
 - Copyright: 2011, Philip (flip) Kromer - Infochimps, Inc
 - Copyright: 2012, Bryan W. Berry
 - Copyright: 2012, Denis Barishev
+- Copyright: 2013, Elliot Pahl
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
