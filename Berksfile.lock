@@ -1,0 +1,4 @@
+cookbook 'ark', :path => '/home/berryb/pr/ark'
+cookbook 'java', :locked_version => '1.6.0'
+cookbook 'minitest-handler', :git => 'https://github.com/btm/minitest-handler-cookbook.git', :ref => 'bd4faf6601c515ad8d9fc7d17de782be450c5029'
+cookbook 'chef_handler', :locked_version => '1.0.6'
