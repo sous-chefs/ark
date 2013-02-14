@@ -45,7 +45,7 @@ ark 'cherry_pick_test' do
   path '/usr/local/foo_cherry_pick'
   owner 'foobarbaz'
   group 'foobarbaz'
-  creates "foo_sub/foo1.txt"
+  creates "foo1.txt"
   action :cherry_pick
 end
 

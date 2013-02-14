@@ -1,3 +1,5 @@
 *~
 .vagrant
 tmp
+tmp
+.kitchen
