@@ -29,14 +29,19 @@ class Chef
       end
 
       def action_download
-        unless new_resource.url =~ /^(http|ftp).*$/
-            new_resource.url = set_apache_url(url)
+        unless new_resource.url =~ /^(http|ftp|file).*$/
+          new_resource.url = set_apache_url(url)
         end
         unless unpacked? new_resource.path
-          f = Chef::Resource::RemoteFile.new(new_resource.release_file, run_context)
-          f.source new_resource.url
-          if new_resource.checksum
-            f.checksum new_resource.checksum
+          if new_resource.url =~ /^file/
+            f = Chef::Resource::Link.new(new_resource.release_file, run_context)
+            f.to URI.parse(new_resource.url).path
+          else
+            f = Chef::Resource::RemoteFile.new(new_resource.release_file, run_context)
+            f.source new_resource.url
+            if new_resource.checksum
+              f.checksum new_resource.checksum
+            end
           end
           f.run_action(:create)
         end
