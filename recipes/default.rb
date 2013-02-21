@@ -20,6 +20,9 @@
 
 
 package "unzip"
+package "libtool"
+package "autoconf"
+package "autogen"
 
 if platform?("freebsd")
   package "gtar"
