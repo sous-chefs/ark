@@ -1,3 +1,7 @@
+## 0.1.0:
+
+* [COOK-2335] - ark resource broken on Chef 11
+
 ## 0.0.17
 
 * [COOK-2026] - Allow cherry_pick action to be used for directories as
