@@ -1,6 +1,14 @@
-*~
 .vagrant
-tmp
+Berksfile.lock
 Gemfile.lock
-.kitchen/
+*~
+*#
+.#*
+\#*#
+.*.sw[a-z]
+*.un~
+.bundle
+.cache
+.kitchen
+bin
 .kitchen.local.yml
