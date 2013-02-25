@@ -22,7 +22,7 @@
 package "unzip"
 package "libtool"
 package "autoconf"
-package "autogen"
+package "autogen" unless platform_family?("rhel", "fedora")
 
 if platform?("freebsd")
   package "gtar"
