@@ -2,3 +2,5 @@
 .vagrant
 tmp
 Gemfile.lock
+.kitchen/
+.kitchen.local.yml
