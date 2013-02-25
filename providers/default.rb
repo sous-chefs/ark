@@ -67,7 +67,7 @@ def action_configure
   unless ::File.exists?(::File.join(new_resource.path, 'configure'))
     action_autogen
   end
-  unless ::File.exists?(::File.join(new_resource.path, 'config.status')) 
+  unless ::File.exists?(::File.join(new_resource.path, 'config.status'))
    b = Chef::Resource::Execute.new("configure with autoconf", run_context)
     b.cwd new_resource.path
     b.environment new_resource.environment
@@ -116,7 +116,7 @@ def action_setup_py_build
     b.code "python setup.py build"
     b.run_action(:run)
   end
-end  
+end
 
 #TODO needs a test, start here http://guide.python-distribute.org/quickstart.html
 def action_setup_py_install
@@ -130,7 +130,7 @@ def action_setup_py_install
     b.code "python setup.py install"
     b.run_action(:run)
   end
-end  
+end
 
 alias action_setup_py action_setup_py_install
 
@@ -169,7 +169,7 @@ def action_dump_contents
   chef_mkdir_p new_resource.path
   cmd = expand_cmd
   unless unpacked? full_path
-    eval("#{cmd}_dump") 
+    eval("#{cmd}_dump")
     new_resource.updated_by_last_action(true)
   end
 end
@@ -185,7 +185,9 @@ end
 
 def action_set_owner(path)
   require 'fileutils'
+  Chef::Log.debug("Setting owner/group on #{path} to #{new_resource.owner}:#{new_resource.group}")
   FileUtils.chown_R new_resource.owner, new_resource.group, path
+  Chef::Log.debug("Setting mode on #{path} to #{new_resource.mode}")
   FileUtils.chmod_R new_resource.mode, path
 end
 
@@ -237,7 +239,7 @@ def set_paths
   release_ext = parse_file_extension
   prefix_bin  = new_resource.prefix_bin.nil? ? new_resource.run_context.node['ark']['prefix_bin'] : new_resource.prefix_bin
   prefix_root = new_resource.prefix_root.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.prefix_root
-  if new_resource.prefix_home.nil? 
+  if new_resource.prefix_home.nil?
     default_home_dir = ::File.join(new_resource.run_context.node['ark']['prefix_home'], "#{new_resource.name}")
   else
     default_home_dir =  ::File.join(new_resource.prefix_home, "#{new_resource.name}")
@@ -421,4 +423,3 @@ end
 def tar_cmd
   platform?("freebsd") ? "gtar" : "tar"
 end
-
