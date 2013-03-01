@@ -1,4 +1,4 @@
-require 'fileutils'
+# require 'fileutils'
 
 # remove file so we can test sending notification on its creation
 if ::File.exist? "/tmp/foobarbaz/foo1.txt"
@@ -14,11 +14,21 @@ ruby_block "test_notification" do
   action :nothing
 end
 
-
 user 'foobarbaz'
 
 directory "/opt/bin" do
   recursive true
+end
+
+ark "foo" do
+  url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.tar.gz'
+  checksum '5996e676f17457c823d86f1605eaa44ca8a81e70d6a0e5f8e45b51e62e0c52e8'
+  version '2'
+  prefix_root "/usr/local"
+  owner "foobarbaz"
+  group 'foobarbaz'
+  has_binaries [ 'bin/do_foo', 'bin/do_more_foo' ]
+  action :install
 end
 
 ark 'test_put' do
@@ -34,9 +44,9 @@ ark "test_dump" do
   checksum 'deea3a324115c9ca0f3078362f807250080bf1b27516f7eca9d34aad863a11e0'
   path '/usr/local/foo_dump'
   creates 'foo1.txt'
-  action :dump
   owner 'foobarbaz'
   group 'foobarbaz'
+  action :dump
 end
 
 ark 'cherry_pick_test' do
@@ -47,18 +57,6 @@ ark 'cherry_pick_test' do
   group 'foobarbaz'
   creates "foo_sub/foo1.txt"
   action :cherry_pick
-end
-
-
-ark "foo" do
-  url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.tar.gz'
-  checksum '5996e676f17457c823d86f1605eaa44ca8a81e70d6a0e5f8e45b51e62e0c52e8'
-  version '2'
-  prefix_root "/usr/local"
-  owner "foobarbaz"
-  group 'foobarbaz'
-  has_binaries [ 'bin/do_foo', 'bin/do_more_foo' ]
-  action :install
 end
 
 ark "foo_append_env" do
@@ -83,7 +81,6 @@ ark "foo_zip_strip" do
   checksum 'deea3a324115c9ca0f3078362f807250080bf1b27516f7eca9d34aad863a11e0'
   action :install
 end
-
 
 ark "haproxy" do
   url  "http://haproxy.1wt.eu/download/1.5/src/snapshot/haproxy-ss-20120403.tar.gz"
