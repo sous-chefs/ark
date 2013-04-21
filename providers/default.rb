@@ -305,7 +305,10 @@ def unzip
         subdir = subdirectory_children[0]
         subdirectory_children = Dir.glob("#{subdir}/**")
       end
-      FileUtils.mv subdirectory_children, new_resource.path
+      subdirectory_children.each do |source|
+        Chef::Log.info("move #{source} --> #{new_resource.path}")
+        system('mv', source, new_resource.path)
+      end    
       FileUtils.rm_rf tmpdir
     else
       cmd = Mixlib::ShellOut.new("unzip  -q -u -o #{new_resource.release_file} -d #{new_resource.path}")
