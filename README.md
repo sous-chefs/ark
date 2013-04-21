@@ -155,6 +155,8 @@ Attribute Parameters
 - `autoconf_opts`: an array of command line options for use with the
   GNU `autoconf` script.
   - Example: `[ '--include=/opt/local/include', '--force' ]`
+- `before_make_cmd`: An optional command to run before the `make`
+  command.
 - `make_opts`: an array of command line options for use with `make`.
   - Example: `[ '--warn-undefined-variables', '--load-average=2' ]`
 - `owner`: owner of extracted directory.
