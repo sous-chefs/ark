@@ -79,6 +79,10 @@ describe_recipe 'ark::test' do
     file("/usr/local/foo_tgz/foo1.txt").must_exist
   end
 
+  it "properly unpacks .tar.xz archives" do
+        file("/usr/local/foo_tar_xz/foo1.txt").must_exist
+  end
+
   it "sends notification when resource updated" do
     file("/tmp/foobarbaz/notification_successful.txt").must_exist
   end

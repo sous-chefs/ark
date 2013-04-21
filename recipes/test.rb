@@ -116,6 +116,11 @@ ark "foo_tgz" do
   version '3'
 end
 
+ark "foo_tar_xz" do
+  url 'https://github.com/opscode-cookbooks/chef-ark/raw/master/files/default/foo.tar.xz'
+  version '3'
+end
+
 ark "test notification" do
   url  'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.zip'
   path "/tmp/foobarbaz"

@@ -230,6 +230,7 @@ def expand_cmd
   case parse_file_extension
   when /tar.gz|tgz/  then "tar_xzf"
   when /tar.bz2|tbz/ then "tar_xjf"
+  when /tar.xz|txz/  then "tar_xJf"
   when /zip|war|jar/ then "unzip"
   else raise "Don't know how to expand #{new_resource.url}"
   end
@@ -270,13 +271,13 @@ def parse_file_extension
   if new_resource.extension.nil?
     # purge any trailing redirect
     url = new_resource.url.clone
-    url =~ /^https?:\/\/.*(.gz|bz2|bin|zip|jar|tgz|tbz)(\/.*\/)/
+    url =~ /^https?:\/\/.*(.gz|bz2|xz|bin|zip|jar|tgz|tbz|txz)(\/.*\/)/
     url.gsub!($2, '') unless $2.nil?
     # remove tailing query string
     release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
     # (\?.*)? accounts for a trailing querystring
     Chef::Log.debug("release_basename is #{release_basename}")
-    release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz|tbz)(\?.*)?}
+    release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|tar\.xz|zip|war|jar|tgz|tbz|txz)(\?.*)?}
     Chef::Log.debug("file_extension is #{$2}")
     new_resource.extension = $2
   end
@@ -339,11 +340,19 @@ def tar_xjf
   untar_cmd("xjf")
 end
 
+def tar_xJf
+  untar_cmd("xJf")
+end
+
 def tar_xzf
   untar_cmd("xzf")
 end
 
 def tar_xjf_dump
+  Chef::Application.fatal!("Cannot yet dump paths for tar archives")
+end
+
+def tar_xJf_dump
   Chef::Application.fatal!("Cannot yet dump paths for tar archives")
 end
 
@@ -353,6 +362,10 @@ end
 
 def tar_xjf_cherry_pick
   untar_cmd_cherry_pick("xjf")
+end
+
+def tar_xJf_cherry_pick
+  untar_cmd_cherry_pick("xJf")
 end
 
 def tar_xzf_cherry_pick
