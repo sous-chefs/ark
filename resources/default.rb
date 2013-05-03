@@ -47,8 +47,8 @@ attribute :version, :kind_of => String, :default => nil
 attribute :home_dir, :kind_of => String, :default => nil
 attribute :environment, :kind_of => Hash, :default => {}
 attribute :autoconf_opts, :kind_of => Array, :default => []
+attribute :before_make_cmd, :kind_of => String, :default => nil
 attribute :make_opts, :kind_of => Array, :default => []
 attribute :home_dir, :kind_of => String, :default => nil
 attribute :autoconf_opts, :kind_of => Array, :default => []
 attribute :extension, :kind_of => String
-

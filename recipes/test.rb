@@ -90,6 +90,7 @@ ark "haproxy" do
   version "1.5"
   checksum 'ba0424bf7d23b3a607ee24bbb855bb0ea347d7ffde0bec0cb12a89623cbaf911'
   make_opts [ 'TARGET=linux26' ]
+  before_make_cmd "touch foobarbaz"
   action :install_with_make
 end unless platform?("freebsd")
 

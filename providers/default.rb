@@ -81,6 +81,7 @@ def action_build_with_make
     set_paths
     action_download
     action_unpack
+    before_make_cmd
     b = Chef::Resource::Script::Bash.new("build with make", run_context)
     b.cwd new_resource.path
     b.environment  new_resource.environment
@@ -223,6 +224,16 @@ def unpacked?(path)
     true
   else
     false
+  end
+end
+
+def before_make_cmd
+  if new_resource.before_make_cmd
+    b = Chef::Resource::Script::Bash.new("Before make command", run_context)
+    b.cwd new_resource.path
+    b.environment new_resource.environment
+    b.code new_resource.before_make_cmd
+    b.run_action(:run)
   end
 end
 

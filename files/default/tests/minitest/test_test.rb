@@ -87,4 +87,7 @@ describe_recipe 'ark::test' do
     file("/usr/local/test_autogen-1/configure").must_exist
   end
 
+  it "runs the user-supplied before_make_cmd" do
+    file("/usr/local/haproxy-1.5/fobarbaz").must_exist
+  end
 end
