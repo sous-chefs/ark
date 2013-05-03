@@ -81,7 +81,10 @@ Extract the archive to a specified path, does not create any symbolic links.
 - `has_binaries`: array of binary commands to symlink into `/usr/local/bin/`,
   you must specify the relative path.
   - Example: `[ 'bin/java', 'bin/javaws' ]`
-- `append_env_path`: boolean, if true, append the `./bin` directory of the
+- `append_env_path`: [DEPRECATED: see env_path] boolean, if true,
+  append the `./bin` directory of the extracted directory to the
+  global `PATH` variable for all users.
+- `env_path`: symbol, :append or :prepend the `./bin` directory of the
   extracted directory to the global `PATH` variable for all users.
 
 ## :dump
@@ -140,13 +143,15 @@ Attribute Parameters
 - `has_binaries`: array of binary commands to symlink into
   `/usr/local/bin/`, you must specify the relative path.
   - Example: `[ 'bin/java', 'bin/javaws' ]`
-- `append_env_path`: boolean, similar to `has_binaries` but less
-  granular. If true, append the `./bin` directory of the extracted
-  directory to. the `PATH` environment variable for all users, by
-  placing a file in `/etc/profile.d/`. The commands are symbolically
-  linked into `/usr/bin/*`. This option provides more granularity than
-  the boolean option.
+- `append_env_path`: [DEPRECATED: see env_path] boolean, similar to
+  `has_binaries` but less granular. If true, append the `./bin`
+  directory of the extracted directory to. the `PATH` environment
+  variable for all users, by placing a file in `/etc/profile.d/`. The
+  commands are symbolically linked into `/usr/bin/*`. This option
+  provides more granularity than the boolean option.
   - Example: `mvn`, `java`, `javac`, etc.
+- `env_path`: symbol, :append or :prepend the `./bin` directory of the
+  extracted directory to the global `PATH` variable for all users.
 - `environment`: hash of environment variables to pass to invoked
   shell commands like `tar`, `unzip`, `configure`, and `make`.
 - `strip_leading_dir`: by default, ark strips the leading directory
@@ -181,7 +186,7 @@ symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`
        path "/usr/local/jvm/"
        home_dir "/usr/local/jvm/default"
        checksum  '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
-       append_env_path true
+       env_path :append
        owner 'foobar'
      end
 

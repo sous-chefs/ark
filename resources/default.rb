@@ -33,7 +33,8 @@ attribute :group, :kind_of => [String, Fixnum], :default => 0
 attribute :url, :kind_of => String, :required => true
 attribute :path, :kind_of => String, :default => nil
 attribute :full_path, :kind_of => String, :default => nil
-attribute :append_env_path, :kind_of => [TrueClass, FalseClass], :default => false
+attribute :append_env_path, :kind_of => [TrueClass, FalseClass], :default => false # deprecated in favor of env_path
+attribute :env_path,        :kind_of => Symbol,                  :default => nil   # replacement for :append_env_path
 attribute :checksum, :regex => /^[a-zA-Z0-9]{64}$/, :default => nil
 attribute :has_binaries, :kind_of => Array, :default => []
 attribute :creates, :kind_of => String, :default => nil

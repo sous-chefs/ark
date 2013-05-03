@@ -200,8 +200,10 @@ def action_install_binaries
       l.run_action(:create)
     end
   end
-  if new_resource.append_env_path
-    append_to_env_path
+  if new_resource.env_path == :append || new_resource.append_env_path
+    env_path :append
+  elsif new_resource.env_path == :prepend
+    env_path :prepend
   end
 end
 
@@ -389,7 +391,7 @@ def chef_mkdir_p(dir)
   d.run_action(:create)
 end
 
-def append_to_env_path
+def env_path(position = :append)
   if platform?("freebsd")
     if new_resource.has_binaries.empty?
       Chef::Log.warn "#{new_resource} specifies append_env_path but that is unimplemented on FreeBSD; " +
@@ -405,9 +407,11 @@ def append_to_env_path
   Chef::Log.debug("new_path is #{new_path}")
   path = "/etc/profile.d/#{new_resource.name}.sh"
   f = Chef::Resource::File.new(path, run_context)
-  f.content <<-EOF
-  export PATH=$PATH:#{new_path}
-  EOF
+  if position == :append
+    f.content "export PATH=\"$PATH:#{new_path}\""
+  elsif position == :prepend
+    f.content "export PATH=\"#{new_path}:$PATH\""
+  end
   f.mode 0755
   f.owner 'root'
   f.group 'root'
