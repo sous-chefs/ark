@@ -214,7 +214,7 @@ def unpacked?(path)
     full_path = path
   end
   if ::File.directory? full_path
-    if ::File.stat(full_path).nlink == 2
+    if ::Dir["#{full_path}/*"].empty? 
       false
     else
       true
