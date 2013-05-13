@@ -123,7 +123,9 @@ module Opscode
 
       def set_put_paths
         release_ext = parse_file_extension
+        prefix_bin  = new_resource.prefix_bin.nil? ? new_resource.run_context.node['ark']['prefix_bin'] : new_resource.prefix_bin
         path = new_resource.path.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.path
+        new_resource.prefix_bin = prefix_bin
         new_resource.path      = ::File.join(path, new_resource.name)
         Chef::Log.debug("DEBUG: path is #{new_resource.path}")
         new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
