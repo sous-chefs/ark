@@ -28,12 +28,12 @@ def parse_file_extension
   new_resource.extension
 end
 
-def unpack_command 
-  case unpack_type    
+def unpack_command
+  case unpack_type
   when "tar_xzf"
     cmd = node['ark']['tar']
     cmd = cmd + " xzf "
-    cmd = cmd + "#{new_resource.release_file}"
+    cmd = cmd + new_resource.release_file
     cmd = cmd + tar_strip_args
   when "tar_xjf"
     cmd = node['ark']['tar']
@@ -53,7 +53,7 @@ def unzip_command
     tmpdir = Dir.mktmpdir
     cmd = "unzip -q -u -o #{new_resource.release_file} -d #{tmpdir}"
     cmd = cmd + "; rsync -a #{tmpdir}/*/ #{new_resource.path}"
-    cmd = cmd + "; rm -rf  #{tmpdir}"    
+    cmd = cmd + "; rm -rf  #{tmpdir}"
   else
     cmd = "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
   end
@@ -74,7 +74,7 @@ end
 
 def cherry_pick_command
   cmd = node['ark']['tar']
-  
+
   case unpack_type
   when "tar_xzf"
     cmd = cmd + " xzf "
@@ -103,9 +103,9 @@ def set_paths
   prefix_bin  = new_resource.prefix_bin.nil? ? new_resource.run_context.node['ark']['prefix_bin'] : new_resource.prefix_bin
   prefix_root = new_resource.prefix_root.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.prefix_root
   if new_resource.prefix_home.nil?
-    default_home_dir = ::File.join(new_resource.run_context.node['ark']['prefix_home'], "#{new_resource.name}")
+    default_home_dir = ::File.join(new_resource.run_context.node['ark']['prefix_home'], new_resource.name)
   else
-    default_home_dir =  ::File.join(new_resource.prefix_home, "#{new_resource.name}")
+    default_home_dir =  ::File.join(new_resource.prefix_home, new_resource.name)
   end
   # set effective paths
   new_resource.prefix_bin = prefix_bin
@@ -119,7 +119,7 @@ end
 def set_put_paths
   release_ext = parse_file_extension
   path = new_resource.path.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.path
-  new_resource.path      = ::File.join(path, "#{new_resource.name}")
+  new_resource.path      = ::File.join(path, new_resource.name)
   Chef::Log.debug("DEBUG: path is #{new_resource.path}")
   new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
 end
