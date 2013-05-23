@@ -1,4 +1,4 @@
-# <a name="title"></a> chef-ark [![Build Status](https://secure.travis-ci.org/bryanwb/chef-ark.png?branch=master)](http://travis-ci.org/bryanwb/chef-ark)
+# <a name="title"></a> chef-ark [![Build Status](https://secure.travis-ci.org/opscode-cookbooks/ark.png?branch=master)](https://travis-ci.org/opscode-cookbooks/ark)
 
 Overview
 ========
