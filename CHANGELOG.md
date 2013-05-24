@@ -1,3 +1,11 @@
+## 0.2.2:
+
+Update the README to reflect the requirement for Chef 11 to use the
+ark resource (`use_inline_resources`).
+
+Making this a release so it will also appear on the community site
+page.
+
 ## 0.2.0:
 
 ### Bug
