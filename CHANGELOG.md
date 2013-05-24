@@ -1,3 +1,13 @@
+## 0.2.0:
+
+### Bug
+
+- [COOK-2772]: Ark cookbook has foodcritic failures in provides/default.rb
+
+### Improvement
+
+- [COOK-2520]: Refactor ark providers to use the '`use_inline_resources`' LWRP DSL feature
+
 ## 0.1.0:
 
 * [COOK-2335] - ark resource broken on Chef 11
