@@ -92,7 +92,7 @@ action :install do
     block do
       ENV['PATH'] = bin_path + ':' + ENV['PATH']
     end
-    only_if{ ENV['PATH'].scan(bin_path).empty? }
+    only_if{ new_resource.append_env_path and ENV['PATH'].scan(bin_path).empty? }
   end
 end
 
