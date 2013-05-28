@@ -86,9 +86,9 @@ action :install do
   end
 
   # Add to path for the current chef-client converge.
+  bin_path = ::File.join(new_resource.path, 'bin')
   ruby_block "adding path to chef-client ENV['PATH']" do
     block do
-      bin_path = ::File.join(new_resource.path, 'bin')
       ENV['PATH'] = bin_path + ':' + ENV['PATH']
     end
     only_if{ ENV['PATH'].scan(bin_path).empty? }
