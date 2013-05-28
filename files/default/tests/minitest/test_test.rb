@@ -28,7 +28,7 @@ describe_recipe 'ark::test' do
   end
 
   it "cherrypicks the mysql connector and set the correct owner and group" do
-    file("/usr/local/foo_cherry_pick/foo_sub/foo1.txt").must_have(:owner, "foobarbaz").and(:group, "foobarbaz")
+    file("/usr/local/foo_cherry_pick/foo1.txt").must_have(:owner, "foobarbaz").and(:group, "foobarbaz")
   end
 
   it "creates directory and symlink properly for the full ark install" do
