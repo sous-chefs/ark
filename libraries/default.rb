@@ -82,13 +82,13 @@ def cherry_pick_command(file)
     cmd = cmd + " -C"
     cmd = cmd + " #{new_resource.path}"
     cmd = cmd + " #{file}"
-    cmd = cmd + tar_strip_args
+    cmd = cmd + " --strip-components=#{strip_count(file)}"
   when "tar_xjf"
     cmd = cmd + "xjf #{new_resource.release_file}"
     cmd = cmd + "-C #{new_resource.path} #{file}"
-    cmd = cmd + tar_strip_args
+    cmd = cmd + " --strip-components=#{strip_count(file)}"
   when "unzip"
-    cmd =  "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ;"
+    cmd =  "unzip -t #{new_resource.release_file} \"*/#{file}\" ;"
     cmd = cmd + "if [ $? -eq 11 ] ; then "
     cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"#{file}\" -d #{new_resource.path} "
     cmd = cmd + "else "
@@ -97,6 +97,10 @@ def cherry_pick_command(file)
   end
   Chef::Log.debug("DEBUG: cmd: #{cmd}")
   cmd
+end
+
+def strip_count(path)
+  File.split(path)[0].split("/").reject(&:empty?).size
 end
 
 def set_paths
@@ -141,22 +145,3 @@ end
 def tar_strip_args
   new_resource.strip_leading_dir ? " --strip-components=1" : ""
 end
-
-# def unpacked?(path)
-#   if new_resource.creates
-#     full_path = ::File.join(new_resource.path, new_resource.creates)
-#   else
-#     full_path = path
-#   end
-#   if ::File.directory? full_path
-#     if ::File.stat(full_path).nlink == 2
-#       false
-#     else
-#       true
-#     end
-#   elsif ::File.exists? full_path
-#     true
-#   else
-#     false
-#   end
-# end

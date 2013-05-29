@@ -174,7 +174,8 @@ end
 #####################
 action :cherry_pick do
   set_dump_paths
-  Chef::Log.debug("DEBUG: new_resource.creates #{new_resource.creates}")
+
+  Chef::Log.debug("DEBUG: new_resource.file #{new_resource.file}")
 
   directory new_resource.path do
     recursive true
@@ -192,8 +193,8 @@ action :cherry_pick do
 
   ruby_block "cherry_pick files" do
     block do
-      Array(new_resource.creates).each do |file|
-        file_path = ::File.join(new_resource.path, file)
+      Array(new_resource.files).each do |file|
+        file_path = ::File.join(new_resource.path, ::File.basename(file))
 
         # extract file
         c = Chef::Resource::Execute.new("cherry_pick #{file} from #{new_resource.release_file}", run_context)
@@ -278,13 +279,7 @@ action :install_with_make do
     environment new_resource.environment
     action :nothing
   end
-
-  # unless new_resource.creates and ::File.exists? new_resource.creates
-  # end
 end
-
-
-
 
 action :configure do
   set_paths

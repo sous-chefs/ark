@@ -36,7 +36,8 @@ attribute :full_path, :kind_of => String, :default => nil
 attribute :append_env_path, :kind_of => [TrueClass, FalseClass], :default => false
 attribute :checksum, :regex => /^[a-zA-Z0-9]{64}$/, :default => nil
 attribute :has_binaries, :kind_of => Array, :default => []
-attribute :creates, :kind_of => [String, Array], :default => nil
+attribute :creates, :kind_of => String, :default => nil
+attribute :files, :kind_of => [String, Array], :default => nil
 attribute :release_file, :kind_of => String, :default => ''
 attribute :strip_leading_dir, :kind_of => [TrueClass, FalseClass], :default => true
 attribute :mode, :kind_of => Fixnum, :default => 0755
