@@ -126,10 +126,22 @@ NOTE: This currently only works for zip archives
 
 Extract a specified file from an archive and places in specified path.
 
+For example,
+
+    ark "maven" do
+      url 'http://someurl.example.com/maven-2.2.1.tar.gz'
+      file '/opt/maven-2.2.1/bin/mvn'
+      path '/usr/local/bin'
+      action :cherry_pick
+    end
+
+This will take the `mvn` file from the archive and place it in the path `/usr/local/bin`.
+So the final path would be `/usr/local/bin/mvn`
+
 ### Relevant Attribute Parameters for :cherry_pick
 
 - `path`: directory to place file in.
-- `creates`: specific file to cherry-pick.
+- `file`: specific file to cherry-pick.
 
 Attribute Parameters
 --------------------
