@@ -20,7 +20,7 @@
 # limitations under the License.
 #
 
-use_inline_resources
+use_inline_resources if Gem::Version.new(Chef::VERSION) >= Gem::Version.new('11')
 
 # From resources/default.rb
 # :install, :put, :dump, :cherry_pick, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py
