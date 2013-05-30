@@ -72,7 +72,7 @@ def dump_command
   cmd
 end
 
-def cherry_pick_command
+def cherry_pick_command(file)
   cmd = node['ark']['tar']
 
   case unpack_type
@@ -81,18 +81,18 @@ def cherry_pick_command
     cmd = cmd + " #{new_resource.release_file}"
     cmd = cmd + " -C"
     cmd = cmd + " #{new_resource.path}"
-    cmd = cmd + " #{new_resource.creates}"
+    cmd = cmd + " #{file}"
     cmd = cmd + tar_strip_args
   when "tar_xjf"
     cmd = cmd + "xjf #{new_resource.release_file}"
-    cmd = cmd + "-C #{new_resource.path} #{new_resource.creates}"
+    cmd = cmd + "-C #{new_resource.path} #{file}"
     cmd = cmd + tar_strip_args
   when "unzip"
     cmd =  "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ;"
     cmd = cmd + "if [ $? -eq 11 ] ; then "
-    cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} "
+    cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"#{file}\" -d #{new_resource.path} "
     cmd = cmd + "else "
-    cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path} ;"
+    cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"*/#{file}\" -d #{new_resource.path} ;"
     cmd = cmd + "fi"
   end
   Chef::Log.debug("DEBUG: cmd: #{cmd}")

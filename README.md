@@ -124,12 +124,12 @@ NOTE: This currently only works for zip archives
 
 ## :cherry_pick
 
-Extract a specified file from an archive and places in specified path.
+Extract specified files from an archive and places in specified path.
 
 ### Relevant Attribute Parameters for :cherry_pick
 
 - `path`: directory to place file in.
-- `creates`: specific file to cherry-pick.
+- `creates`: specific files to cherry-pick.
 
 Attribute Parameters
 --------------------
@@ -248,13 +248,20 @@ user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
        action :dump
      end
 
-     # extract specific files from a tarball, currently only handles
-     # one named file
+     # extract specific files from a tarball
 
      ark 'mysql-connector-java' do
        url 'http://oracle.com/mysql-connector.zip'
        creates 'mysql-connector-java-5.0.8-bin.jar'
        path '/usr/local/tomcat/lib'
+       action :cherry_pick
+     end
+
+     ark 'slf4j' do
+       url "http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz"
+       creates ["slf4j-1.7.5/slf4j-jdk14-1.7.5.jar", "slf4j-1.7.5/log4j-over-slf4j-1.7.5.jar"]
+       path ::File.join(node["tomcat"]["home"],"lib")
+       strip_leading_dir false
        action :cherry_pick
      end
 
