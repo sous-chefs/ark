@@ -92,7 +92,8 @@ def cherry_pick_command
     cmd = cmd + "if [ $? -eq 11 ] ; then "
     cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} "
     cmd = cmd + "else "
-    cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path}"
+    cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path} ;"
+    cmd = cmd + "fi"
   end
   Chef::Log.debug("DEBUG: cmd: #{cmd}")
   cmd

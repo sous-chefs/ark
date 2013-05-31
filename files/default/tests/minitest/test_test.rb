@@ -31,6 +31,10 @@ describe_recipe 'ark::test' do
     file("/usr/local/foo_cherry_pick/foo_sub/foo1.txt").must_have(:owner, "foobarbaz").and(:group, "foobarbaz")
   end
 
+  it "cherrypicks the file from a zip" do
+    file("/usr/local/foo_cherry_pick_from_zip/foo1.txt").must_exist
+  end
+
   it "creates directory and symlink properly for the full ark install" do
     directory("/usr/local/foo-2").must_have(:owner, "foobarbaz").and(:group, "foobarbaz")
     link("/usr/local/foo").must_exist.with(:link_type, :symbolic).and(:to, "/usr/local/foo-2")
