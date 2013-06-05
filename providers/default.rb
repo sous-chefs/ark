@@ -173,7 +173,7 @@ end
 # action :cherry_pick
 #####################
 action :cherry_pick do
-  set_dump_paths
+  set_cherry_pick_paths
 
   Chef::Log.debug("DEBUG: new_resource.file #{new_resource.file}")
 

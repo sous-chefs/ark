@@ -134,6 +134,14 @@ def set_dump_paths
   new_resource.release_file  = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
 end
 
+def set_cherry_pick_paths
+  set_dump_paths
+  unless new_resource.files
+    Chef::Log.info("Deprecated use of action 'creates' for cherry_pick. Use 'files' instead")
+    new_resource.files = new_resource.creates
+  end
+end
+
 def set_apache_url(url_ref)
   raise "Missing required resource attribute url" unless url_ref
   url_ref.gsub!(/:name:/,          name.to_s)
