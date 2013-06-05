@@ -175,8 +175,6 @@ end
 action :cherry_pick do
   set_cherry_pick_paths
 
-  Chef::Log.debug("DEBUG: new_resource.file #{new_resource.file}")
-
   directory new_resource.path do
     recursive true
     action :create
