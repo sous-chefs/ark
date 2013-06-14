@@ -174,12 +174,13 @@ end
 #####################
 action :cherry_pick do
   set_dump_paths
-  Chef::Log.debug("DEBUG: new_resource.creates #{new_resource.creates}")
+
+  Chef::Log.debug("DEBUG: new_resource.file #{new_resource.file}")
 
   directory new_resource.path do
     recursive true
     action :create
-    notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
+    notifies :run, "execute[cherry_pick #{new_resource.file} from #{new_resource.release_file}]"
   end
 
   # download
@@ -187,20 +188,21 @@ action :cherry_pick do
     source new_resource.url
     if new_resource.checksum then checksum new_resource.checksum end
     action :create
-    notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
+    notifies :run, "execute[cherry_pick #{new_resource.file} from #{new_resource.release_file}]"
   end
 
-  execute "cherry_pick #{new_resource.creates} from #{new_resource.release_file}" do
+  file_path = ::File.join(new_resource.path, ::File.basename(new_resource.file))
+  execute "cherry_pick #{new_resource.file} from #{new_resource.release_file}" do
     Chef::Log.debug("DEBUG: unpack_type: #{unpack_type}")
     command cherry_pick_command
-    creates "#{new_resource.path}/#{new_resource.creates}"
-    notifies :run, "execute[set owner on #{new_resource.path}]"
+    creates file_path
+    notifies :run, "execute[set owner on #{file_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
-    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+  execute "set owner on #{file_path}" do
+    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{file_path}"
     action :nothing
   end
 end
@@ -240,7 +242,7 @@ action :install_with_make do
 
   execute "autogen #{new_resource.path}" do
     command "./autogen.sh"
-    only_if "test -f ./autogen.sh"
+    only_if { ::File.exist? "#{new_resource.path}/autogen.sh" }
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
@@ -249,7 +251,7 @@ action :install_with_make do
 
   execute "configure #{new_resource.path}" do
     command "./configure #{new_resource.autoconf_opts.join(' ')}"
-    only_if "test -f ./configure"
+    only_if { ::File.exist? "#{new_resource.path}/configure" }
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
@@ -268,13 +270,7 @@ action :install_with_make do
     environment new_resource.environment
     action :nothing
   end
-
-  # unless new_resource.creates and ::File.exists? new_resource.creates
-  # end
 end
-
-
-
 
 action :configure do
   set_paths
@@ -305,7 +301,7 @@ action :configure do
 
   execute "autogen #{new_resource.path}" do
     command "./autogen.sh"
-    only_if "test -f ./autogen.sh"
+    only_if { ::File.exist? "#{new_resource.path}/autogen.sh" }
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
@@ -314,7 +310,7 @@ action :configure do
 
   execute "configure #{new_resource.path}" do
     command "./configure #{new_resource.autoconf_opts.join(' ')}"
-    only_if "test -f ./configure"
+    only_if { ::File.exist? "#{new_resource.path}/configure" }
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
