@@ -173,13 +173,12 @@ end
 # action :cherry_pick
 #####################
 action :cherry_pick do
-  set_dump_paths
-  Chef::Log.debug("DEBUG: new_resource.creates #{new_resource.creates}")
+  set_cherry_pick_paths
 
   directory new_resource.path do
     recursive true
     action :create
-    notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
+    notifies :create, "ruby_block[cherry_pick files]"
   end
 
   # download
@@ -187,20 +186,30 @@ action :cherry_pick do
     source new_resource.url
     if new_resource.checksum then checksum new_resource.checksum end
     action :create
-    notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
+    notifies :create, "ruby_block[cherry_pick files]"
   end
 
-  execute "cherry_pick #{new_resource.creates} from #{new_resource.release_file}" do
-    Chef::Log.debug("DEBUG: unpack_type: #{unpack_type}")
-    command cherry_pick_command
-    creates "#{new_resource.path}/#{new_resource.creates}"
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    action :nothing
-  end
+  ruby_block "cherry_pick files" do
+    block do
+      Array(new_resource.files).each do |file|
+        file_path = ::File.join(new_resource.path, ::File.basename(file))
 
-  # set_owner
-  execute "set owner on #{new_resource.path}" do
-    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+        # extract file
+        c = Chef::Resource::Execute.new("cherry_pick #{file} from #{new_resource.release_file}", run_context)
+        Chef::Log.debug("DEBUG: unpack_type: #{unpack_type}")
+        c.command cherry_pick_command(file)
+        c.creates file_path
+        c.run_action(:run)
+
+        # set_owner
+        f = Chef::Resource::File.new("set owner on #{file}", run_context)
+        f.path file_path
+        f.owner new_resource.owner
+        f.group new_resource.group
+        f.mode new_resource.mode
+        f.run_action(:create)
+      end
+    end
     action :nothing
   end
 end
@@ -268,13 +277,7 @@ action :install_with_make do
     environment new_resource.environment
     action :nothing
   end
-
-  # unless new_resource.creates and ::File.exists? new_resource.creates
-  # end
 end
-
-
-
 
 action :configure do
   set_paths

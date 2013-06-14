@@ -26,7 +26,7 @@ def initialize(name, run_context=nil)
   @provider = Chef::Provider::Ark
 end
 
-attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir, :extension, :version
+attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir, :extension, :version, :files
 
 attribute :owner, :kind_of => String, :default => 'root'
 attribute :group, :kind_of => [String, Fixnum], :default => 0
@@ -37,6 +37,7 @@ attribute :append_env_path, :kind_of => [TrueClass, FalseClass], :default => fal
 attribute :checksum, :regex => /^[a-zA-Z0-9]{64}$/, :default => nil
 attribute :has_binaries, :kind_of => Array, :default => []
 attribute :creates, :kind_of => String, :default => nil
+attribute :files, :kind_of => [String, Array], :default => nil
 attribute :release_file, :kind_of => String, :default => ''
 attribute :strip_leading_dir, :kind_of => [TrueClass, FalseClass], :default => true
 attribute :mode, :kind_of => Fixnum, :default => 0755

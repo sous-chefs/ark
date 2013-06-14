@@ -55,15 +55,15 @@ ark 'cherry_pick_test' do
   path '/usr/local/foo_cherry_pick'
   owner 'foobarbaz'
   group 'foobarbaz'
-  creates "foo_sub/foo1.txt"
+  file "foo_sub/foo1.txt"
   action :cherry_pick
 end
 
 ark 'cherry_pick_with_zip' do
-  url  'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.zip'
+  url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.zip'
   checksum 'deea3a324115c9ca0f3078362f807250080bf1b27516f7eca9d34aad863a11e0'
   path '/usr/local/foo_cherry_pick_from_zip'
-  creates "foo_sub/foo1.txt"
+  file "foo_sub/foo1.txt"
   action :cherry_pick
 end
 

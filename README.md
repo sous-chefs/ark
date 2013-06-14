@@ -124,12 +124,24 @@ NOTE: This currently only works for zip archives
 
 ## :cherry_pick
 
-Extract a specified file from an archive and places in specified path.
+Extract specified files from an archive and places in specified path.
+
+For example,
+
+    ark "maven" do
+      url 'http://someurl.example.com/maven-2.2.1.tar.gz'
+      files '/opt/maven-2.2.1/bin/mvn'
+      path '/usr/local/bin'
+      action :cherry_pick
+    end
+
+This will take the `mvn` file from the archive and place it in the path `/usr/local/bin`.
+So the final path would be `/usr/local/bin/mvn`
 
 ### Relevant Attribute Parameters for :cherry_pick
 
 - `path`: directory to place file in.
-- `creates`: specific file to cherry-pick.
+- `files`: specific files to cherry-pick.
 
 Attribute Parameters
 --------------------
@@ -248,13 +260,19 @@ user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
        action :dump
      end
 
-     # extract specific files from a tarball, currently only handles
-     # one named file
+     # extract specific files from a tarball
 
      ark 'mysql-connector-java' do
        url 'http://oracle.com/mysql-connector.zip'
-       creates 'mysql-connector-java-5.0.8-bin.jar'
+       files 'mysql-connector-java-5.0.8-bin.jar'
        path '/usr/local/tomcat/lib'
+       action :cherry_pick
+     end
+
+     ark 'slf4j' do
+       url "http://www.slf4j.org/dist/slf4j-1.7.5.tar.gz"
+       files ["slf4j-1.7.5/slf4j-jdk14-1.7.5.jar", "slf4j-1.7.5/log4j-over-slf4j-1.7.5.jar"]
+       path ::File.join(node["tomcat"]["home"],"lib")
        action :cherry_pick
      end
 
