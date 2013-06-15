@@ -1,3 +1,16 @@
+## v0.3.0:
+
+### Improvement
+
+- [COOK-3087]: Can't use ark with chef < 11
+
+### Bug
+
+- [COOK-3064]: `only_if` statements in ark's `install_with_make` and
+  configure actions are not testing for file existence correctly.
+- [COOK-3067]: ark kitchen test for `cherry_pick` is expecting the
+  binary to be in the same parent folder as in the archive.
+
 ## v0.2.4:
 
 ### Bug
