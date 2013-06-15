@@ -240,7 +240,7 @@ action :install_with_make do
 
   execute "autogen #{new_resource.path}" do
     command "./autogen.sh"
-    only_if "test -f ./autogen.sh"
+    only_if { ::File.exist? "#{new_resource.path}/autogen.sh" }
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
@@ -249,7 +249,7 @@ action :install_with_make do
 
   execute "configure #{new_resource.path}" do
     command "./configure #{new_resource.autoconf_opts.join(' ')}"
-    only_if "test -f ./configure"
+    only_if { ::File.exist? "#{new_resource.path}/configure" }
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
@@ -305,7 +305,7 @@ action :configure do
 
   execute "autogen #{new_resource.path}" do
     command "./autogen.sh"
-    only_if "test -f ./autogen.sh"
+    only_if { ::File.exist? "#{new_resource.path}/autogen.sh" }
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
@@ -314,7 +314,7 @@ action :configure do
 
   execute "configure #{new_resource.path}" do
     command "./configure #{new_resource.autoconf_opts.join(' ')}"
-    only_if "test -f ./configure"
+    only_if { ::File.exist? "#{new_resource.path}/configure" }
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
