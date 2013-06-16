@@ -55,7 +55,7 @@ Customize the attributes to suit site specific conventions and
 defaults.
 
 * `node['ark']['apache_mirror']` - if the URL is an apache mirror,
-  usethe attribute as the default.
+  use the attribute as the default.
 * `node['ark']['prefix_root']` - default base location if the
   `prefix_root` is not passed into the resource.
 * `node['ark']['prefix_bin']` - default binary location if the
@@ -89,20 +89,14 @@ Actions
 - `:setup_py_install`: runs the comand "python setup.py install" in
   the extracted directory
 
-## :put
+## :cherry_pick
 
-Extract the archive to a specified path, does not create any symbolic
-links.
+Extract a specified file from an archive and places in specified path.
 
-### Attribute Parameters for :put
+### Relevant Attribute Parameters for :cherry_pick
 
-- `path`: path to extract to.
-  - Default: `/usr/local`
-- `has_binaries`: array of binary commands to symlink into
-  `/usr/local/bin/`, you must specify the relative path.
-  - Example: `[ 'bin/java', 'bin/javaws' ]`
-- `append_env_path`: boolean, if true, append the `./bin` directory of
-  the extracted directory to the global `PATH` variable for all users.
+- `path`: directory to place file in.
+- `creates`: specific file to cherry-pick.
 
 ## :dump
 
@@ -122,14 +116,20 @@ NOTE: This currently only works for zip archives
   indicates the ark has previously been extracted and does not need to
   be extracted again.
 
-## :cherry_pick
+## :put
 
-Extract a specified file from an archive and places in specified path.
+Extract the archive to a specified path, does not create any symbolic
+links.
 
-### Relevant Attribute Parameters for :cherry_pick
+### Attribute Parameters for :put
 
-- `path`: directory to place file in.
-- `creates`: specific file to cherry-pick.
+- `path`: path to extract to.
+  - Default: `/usr/local`
+- `has_binaries`: array of binary commands to symlink into
+  `/usr/local/bin/`, you must specify the relative path.
+  - Example: `[ 'bin/java', 'bin/javaws' ]`
+- `append_env_path`: boolean, if true, append the `./bin` directory of
+  the extracted directory to the global `PATH` variable for all users.
 
 Attribute Parameters
 --------------------
@@ -183,6 +183,11 @@ Attribute Parameters
 
 ### Examples
 
+This example copies `ivy.tar.gz` to
+`/var/cache/chef/ivy-2.2.0.tar.gz`, unpacks its contents to
+`/usr/local/ivy-2.2.0/` -- stripping the leading directory, and
+symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`
+
      # install Apache Ivy dependency resolution tool
      ark "ivy" do
        url 'http://someurl.example.com/ivy.tar.gz'
@@ -191,10 +196,12 @@ Attribute Parameters
        action :install
      end
 
-This example copies `ivy.tar.gz` to
-`/var/cache/chef/ivy-2.2.0.tar.gz`, unpacks its contents to
-`/usr/local/ivy-2.2.0/` -- stripping the leading directory, and
-symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`
+This example copies `jdk-7u2-linux-x64.tar.gz` to
+`/var/cache/chef/jdk-7.2.tar.gz`, unpacks its contents to
+`/usr/local/jvm/jdk-7.2/` -- stripping the leading directory, symlinks
+`/usr/local/jvm/default` to `/usr/local/jvm/jdk-7.2`, and adds
+`/usr/local/jvm/jdk-7.2/bin/` to the global `PATH` for all users. The
+user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory:
 
      ark 'jdk' do
        url 'http://download.example.com/jdk-7u2-linux-x64.tar.gz'
@@ -206,17 +213,9 @@ symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`
        owner 'foobar'
      end
 
-This example copies `jdk-7u2-linux-x64.tar.gz` to
-`/var/cache/chef/jdk-7.2.tar.gz`, unpacks its contents to
-`/usr/local/jvm/jdk-7.2/` -- stripping the leading directory, symlinks
-`/usr/local/jvm/default` to `/usr/local/jvm/jdk-7.2`, and adds
-`/usr/local/jvm/jdk-7.2/bin/` to the global `PATH` for all users. The
-user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
-
-     # install Apache Ivy dependency resolution tool
-     # in <path>/resource_name in this case
-     # /usr/local/ivy, no symlink created
-     # it strips any leading directory if one exists in the tarball
+Install Apache Ivy dependency resolution tool in <path>/resource_name in this case
+`/usr/local/ivy`, do not symlink, and strip any leading directory if one
+exists in the tarball:
 
      ark "ivy" do
         url 'http://someurl.example.com/ivy.tar.gz'
@@ -224,9 +223,8 @@ user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
         action :put
      end
 
-     # install Apache Ivy dependency resolution tool
-     # in /home/foobar/ivy
-     # it does strip any leading directory if one exists
+Install Apache Ivy dependency resolution tool in /home/foobar/ivy, strip any
+leading directory if one exists:
 
      ark "ivy" do
        path "/home/foobar
@@ -235,10 +233,9 @@ user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
        action :put
      end
 
-    # strip all directories and dump files into path specified by
-     # the path attribute, you must specify the `creates` attribute
-     # in order to keep the extraction from running every time
-     # the directory path will be created if it doesn't already exist
+ Strip all directories and dump files into path specified by the path attribute.
+ You must specify the `creates` attribute in order to keep the extraction from
+ running every time. The directory path will be created if it doesn't already exist:
 
      ark "my_jars" do
        url  "http://example.com/bunch_of_jars.zip"
@@ -248,8 +245,7 @@ user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
        action :dump
      end
 
-     # extract specific files from a tarball, currently only handles
-     # one named file
+Extract specific files from a tarball (currently only handles one named file):
 
      ark 'mysql-connector-java' do
        url 'http://oracle.com/mysql-connector.zip'
@@ -258,8 +254,7 @@ user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
        action :cherry_pick
      end
 
-     # build and install haproxy and use alternave values for
-     # prefix_root, prefix_home, and prefix_bin
+Build and install haproxy and use alternave values for `prefix_root`, `prefix_home`, and `prefix_bin`:
 
      ark "haproxy" do
        url  "http://haproxy.1wt.eu/download/1.5/src/snapshot/haproxy-ss-20120403.tar.gz"
@@ -272,17 +267,9 @@ user 'foobar' is the owner of the `/usr/local/jvm/jdk-7.2` directory
        action :install_with_make
      end
 
-     # you can also pass multiple actions to ark and supply the file extension
-     # in case the file extension can not be determined by the URL
+You can also pass multiple actions to ark and supply the file extension in case
+the file extension can not be determined by the URL:
 
-     ark "test_autogen" do
-       url 'https://github.com/zeromq/libzmq/tarball/master'
-       extension "tar.gz"
-       action [ :configure, :build_with_make ]
-     end
-
-     # you can also pass multiple actions to ark and supply the file extension
-     # in case the file extension can not be determined by the URL
      ark "test_autogen" do
        url 'https://github.com/zeromq/libzmq/tarball/master'
        extension "tar.gz"
