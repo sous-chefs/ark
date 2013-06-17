@@ -84,6 +84,7 @@ action :install do
     owner "root"
     group "root"
     mode "0755"
+    cookbook "ark"
     variables( :directory => "#{new_resource.path}/bin" )
     only_if { new_resource.append_env_path }
   end
