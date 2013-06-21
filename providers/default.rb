@@ -77,6 +77,7 @@ action :install do
 
   # Add to path for interactive bash sessions
   template "/etc/profile.d/#{new_resource.name}.sh" do
+    cookbook "ark"
     source "add_to_path.sh.erb"
     owner "root"
     group "root"
