@@ -52,8 +52,8 @@ def unzip_command
     require 'tmpdir'
     tmpdir = Dir.mktmpdir
     cmd = "unzip -q -u -o #{new_resource.release_file} -d #{tmpdir}"
-    cmd = cmd + "; rsync -a #{tmpdir}/*/ #{new_resource.path}"
-    cmd = cmd + "; rm -rf  #{tmpdir}"
+    cmd = cmd + " && rsync -a #{tmpdir}/*/ #{new_resource.path}"
+    cmd = cmd + " && rm -rf  #{tmpdir}"
   else
     cmd = "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
   end
@@ -88,9 +88,10 @@ def cherry_pick_command
     cmd = cmd + "-C #{new_resource.path} #{new_resource.creates}"
     cmd = cmd + tar_strip_args
   when "unzip"
-    cmd =  "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ;"
-    cmd = cmd + "if [ $? -eq 11 ] ; then "
-    cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} "
+    cmd = "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ; stat=$? ;"
+    cmd = cmd + "if [ $stat -eq 11 ] ; then "
+    cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} ;"
+    cmd = cmd + "elif [ $stat -ne 0 ] ; then false ;"
     cmd = cmd + "else "
     cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path} ;"
     cmd = cmd + "fi"
