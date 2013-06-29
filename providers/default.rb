@@ -21,6 +21,7 @@
 #
 
 use_inline_resources if defined?(use_inline_resources)
+include ::Opscode::Ark::ProviderHelpers
 
 # From resources/default.rb
 # :install, :put, :dump, :cherry_pick, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py
@@ -49,8 +50,9 @@ action :install do
   end
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -82,6 +84,7 @@ action :install do
     owner "root"
     group "root"
     mode "0755"
+    cookbook "ark"
     variables( :directory => "#{new_resource.path}/bin" )
     only_if { new_resource.append_env_path }
   end
