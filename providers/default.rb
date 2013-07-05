@@ -41,13 +41,8 @@ action :install do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link to existing file
+  get_or_link_file new_resource
 
   # unpack based on file extension
   _unpack_command = unpack_command
@@ -112,17 +107,13 @@ action :put do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  # download
-  remote_file new_resource.release_file do
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link to existing file
+  get_or_link_file new_resource
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -148,14 +139,8 @@ action :dump do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  # download
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link to existing file
+  get_or_link_file new_resource
 
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
@@ -186,11 +171,8 @@ action :cherry_pick do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
-  # download
-  remote_file new_resource.release_file do
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
+  # download or create link to existing file
+  get_or_link_file new_resource do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
@@ -222,13 +204,8 @@ action :install_with_make do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link
+  get_or_link_file new_resource
 
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
@@ -289,13 +266,8 @@ action :configure do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link
+  get_or_link_file new_resource
 
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
@@ -322,5 +294,47 @@ action :configure do
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
+  end
+end
+
+
+# This function will download a remote file or create a symbolic link to an
+# existing local file. By default it will then notify execute[unpack
+# new_resource.release_file] but this can be overridden by passing a code block
+# (so far this is only used by the cherry_pick action).
+#
+# For existing use cases (i.e. remote files) the behaviour should be exactly
+# the same. It should however transparently adapt to handling local files via
+# symbolic links.
+def get_or_link_file new_resource
+  Chef::Log.debug("Fetching archive from URL: #{new_resource.url}")
+  require 'uri'
+  uri = URI.parse(new_resource.url)
+  if uri.scheme == "file"
+    # link local file
+    link new_resource.release_file do
+      Chef::Log.debug("DEBUG: new_resource.release_file")
+      to uri.path
+      if new_resource.checksum then checksum new_resource.checksum end
+      action :create
+      if block_given?
+        yield
+      else
+        notifies :run, "execute[unpack #{new_resource.release_file}]"
+      end
+    end
+  else
+    # fetch remote file
+    remote_file new_resource.release_file do
+      Chef::Log.debug("DEBUG: new_resource.release_file")
+      source new_resource.url
+      if new_resource.checksum then checksum new_resource.checksum end
+      action :create
+      if block_given?
+        yield
+      else
+        notifies :run, "execute[unpack #{new_resource.release_file}]"
+      end
+    end
   end
 end
