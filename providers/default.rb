@@ -41,11 +41,8 @@ action :install do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
+  # download or create link to existing file
+  get_or_link_file new_resource do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -112,17 +109,13 @@ action :put do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  # download
-  remote_file new_resource.release_file do
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link to existing file
+  get_or_link_file new_resource
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -148,14 +141,8 @@ action :dump do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  # download
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link to existing file
+  get_or_link_file new_resource
 
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
@@ -186,11 +173,8 @@ action :cherry_pick do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
-  # download
-  remote_file new_resource.release_file do
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
+  # download or create link to existing file
+  get_or_link_file new_resource do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
@@ -222,13 +206,8 @@ action :install_with_make do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link
+  get_or_link_file new_resource
 
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
@@ -289,13 +268,8 @@ action :configure do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  # download or create link
+  get_or_link_file new_resource
 
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
@@ -324,3 +298,5 @@ action :configure do
     action :nothing
   end
 end
+
+
