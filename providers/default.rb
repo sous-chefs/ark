@@ -42,7 +42,9 @@ action :install do
   end
 
   # download or create link to existing file
-  get_or_link_file new_resource
+  get_or_link_file new_resource do
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
 
   # unpack based on file extension
   _unpack_command = unpack_command
@@ -298,43 +300,3 @@ action :configure do
 end
 
 
-# This function will download a remote file or create a symbolic link to an
-# existing local file. By default it will then notify execute[unpack
-# new_resource.release_file] but this can be overridden by passing a code block
-# (so far this is only used by the cherry_pick action).
-#
-# For existing use cases (i.e. remote files) the behaviour should be exactly
-# the same. It should however transparently adapt to handling local files via
-# symbolic links.
-def get_or_link_file new_resource
-  Chef::Log.debug("Fetching archive from URL: #{new_resource.url}")
-  require 'uri'
-  uri = URI.parse(new_resource.url)
-  if uri.scheme == "file"
-    # link local file
-    link new_resource.release_file do
-      Chef::Log.debug("DEBUG: new_resource.release_file")
-      to uri.path
-      if new_resource.checksum then checksum new_resource.checksum end
-      action :create
-      if block_given?
-        yield
-      else
-        notifies :run, "execute[unpack #{new_resource.release_file}]"
-      end
-    end
-  else
-    # fetch remote file
-    remote_file new_resource.release_file do
-      Chef::Log.debug("DEBUG: new_resource.release_file")
-      source new_resource.url
-      if new_resource.checksum then checksum new_resource.checksum end
-      action :create
-      if block_given?
-        yield
-      else
-        notifies :run, "execute[unpack #{new_resource.release_file}]"
-      end
-    end
-  end
-end
