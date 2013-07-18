@@ -35,6 +35,7 @@ include ::Opscode::Ark::ProviderHelpers
 action :install do
   set_paths
 
+  #make sure we don't (re-)download the file if it's already installed
   unless ::File.exists?(new_resource.path)
     directory new_resource.path do
       recursive true
