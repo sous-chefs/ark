@@ -55,7 +55,7 @@ module Opscode
           require 'tmpdir'
           tmpdir = Dir.mktmpdir
           cmd = "unzip -q -u -o #{new_resource.release_file} -d #{tmpdir}"
-          cmd = cmd + "&& rsync -a #{tmpdir}/ #{new_resource.path}"
+          cmd = cmd + "&& rsync -a #{tmpdir}/*/ #{new_resource.path}"
           cmd = cmd + "&& rm -rf  #{tmpdir}"
         else
           cmd = "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
