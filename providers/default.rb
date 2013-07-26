@@ -79,12 +79,11 @@ action :install do
 
   # Add to path for interactive bash sessions
   template "/etc/profile.d/#{new_resource.name}.sh" do
-    cookbook "ark"
+    cookbook new_resource.template_cookbook
     source "add_to_path.sh.erb"
     owner "root"
     group "root"
     mode "0755"
-    cookbook "ark"
     variables( :directory => "#{new_resource.path}/bin" )
     only_if { new_resource.append_env_path }
   end

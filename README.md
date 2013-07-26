@@ -168,6 +168,9 @@ Attribute Parameters
   linked into `/usr/bin/*`. This option provides more granularity than
   the boolean option.
   - Example: `mvn`, `java`, `javac`, etc.
+- `template_cookbook`: the template to look for templates in
+  (used when append_env_path is true)
+  - Example: `template_cookbook 'my_custom_cookbook'` Default: `ark`
 - `environment`: hash of environment variables to pass to invoked
   shell commands like `tar`, `unzip`, `configure`, and `make`.
 - `strip_leading_dir`: by default, ark strips the leading directory
