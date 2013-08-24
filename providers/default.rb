@@ -121,8 +121,9 @@ action :put do
   end
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -158,8 +159,9 @@ action :dump do
   end
 
   # unpack based on file extension
+  _dump_command = dump_command
   execute "unpack #{new_resource.release_file}" do
-    command dump_command
+    command _dump_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -194,9 +196,11 @@ action :cherry_pick do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
+  _unpack_type = unpack_type
+  _cherry_pick_command = cherry_pick_command
   execute "cherry_pick #{new_resource.creates} from #{new_resource.release_file}" do
-    Chef::Log.debug("DEBUG: unpack_type: #{unpack_type}")
-    command cherry_pick_command
+    Chef::Log.debug("DEBUG: unpack_type: #{_unpack_type}")
+    command _cherry_pick_command
     creates "#{new_resource.path}/#{new_resource.creates}"
     notifies :run, "execute[set owner on #{new_resource.path}]"
     action :nothing
@@ -231,8 +235,9 @@ action :install_with_make do
   end
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[autogen #{new_resource.path}]"
@@ -298,8 +303,9 @@ action :configure do
   end
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[autogen #{new_resource.path}]"
