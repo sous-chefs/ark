@@ -3,6 +3,17 @@ ark Cookbook CHANGELOG
 This file is used to list changes made in each version of the ark cookbook.
 
 
+v0.3.2
+------
+### Bug
+- **[COOK-3191](https://tickets.opscode.com/browse/COOK-3191)** - Propogate unzip failures
+- **[COOK-3118](https://tickets.opscode.com/browse/COOK-3118)** - Set cookbook attribute in provider
+- **[COOK-3055](https://tickets.opscode.com/browse/COOK-3055)** - Use proper scope in helper module
+- **[COOK-3054](https://tickets.opscode.com/browse/COOK-3054)** - Fix notification resource updating
+
+### Improvement
+- **[COOK-3179](https://tickets.opscode.com/browse/COOK-3179)** - README updates and refactor
+
 v0.3.0
 ------
 ### Improvement
