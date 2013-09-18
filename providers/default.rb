@@ -91,7 +91,7 @@ action :install do
 
   # Add to path for the current chef-client converge.
   bin_path = ::File.join(new_resource.path, 'bin')
-  ruby_block "adding path to chef-client ENV['PATH']" do
+  ruby_block "adding '#{bin_path}' to chef-client ENV['PATH']" do
     block do
       ENV['PATH'] = bin_path + ':' + ENV['PATH']
     end
@@ -162,6 +162,44 @@ action :dump do
   _dump_command = dump_command
   execute "unpack #{new_resource.release_file}" do
     command _dump_command
+    cwd new_resource.path
+    environment new_resource.environment
+    notifies :run, "execute[set owner on #{new_resource.path}]"
+    action :nothing
+  end
+
+  # set_owner
+  execute "set owner on #{new_resource.path}" do
+    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+    action :nothing
+  end
+end
+
+###########################
+# action :unzip
+###########################
+action :unzip do
+  set_dump_paths
+
+  directory new_resource.path do
+    recursive true
+    action :create
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # download
+  remote_file new_resource.release_file do
+    Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
+    source new_resource.url
+    if new_resource.checksum then checksum new_resource.checksum end
+    action :create
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # unpack based on file extension
+  _unzip_command = unzip_command
+  execute "unpack #{new_resource.release_file}" do
+    command _unzip_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"

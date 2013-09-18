@@ -64,10 +64,8 @@ module Opscode
 
       def dump_command
         case unpack_type
-        when "tar_xzf"
-          Chef::Application.fatal!("Cannot yet dump paths for tar archives")
-        when "tar_xjf"
-          Chef::Application.fatal!("Cannot yet dump paths for tar archives")
+        when "tar_xzf", "tar_xjf"
+          cmd = "tar -mxf \"#{new_resource.release_file}\" -C \"#{new_resource.path}\""
         when "unzip"
           cmd = "unzip  -j -q -u -o \"#{new_resource.release_file}\" -d \"#{new_resource.path}\""
         end
