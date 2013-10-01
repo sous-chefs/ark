@@ -3,6 +3,11 @@ ark Cookbook CHANGELOG
 This file is used to list changes made in each version of the ark cookbook.
 
 
+v0.4.0
+------
+### Improvement
+- **[COOK-3539](https://tickets.opscode.com/browse/COOK-3539)** - Allow dumping of bz2 and gzip files
+
 v0.3.2
 ------
 ### Bug
