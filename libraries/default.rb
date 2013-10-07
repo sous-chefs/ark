@@ -144,6 +144,39 @@ module Opscode
         new_resource.strip_leading_dir ? " --strip-components=1" : ""
       end
 
+      # This function will download a remote file or create a symbolic link to
+      # an existing local file. By default it will then notify execute[unpack
+      # new_resource.release_file] but this can be overridden by passing a code
+      # block (so far this is only used by the cherry_pick action).
+      #
+      # For existing use cases (i.e. remote files) the behaviour should be
+      # exactly the same. It should however transparently adapt to handling
+      # local files via symbolic links.
+      def get_or_link_file new_resource, notify_action=:run, resource_spec="execute[unpack #{new_resource.release_file}]"
+        Chef::Log.debug("Fetching archive from URL: #{new_resource.url}")
+        Chef::Log.debug("Notifying: action=#{notify_action}, resource=#{resource_spec}")
+        require 'uri'
+        uri = URI.parse(new_resource.url)
+        if uri.scheme == "file"
+          # link local file
+          link new_resource.release_file do
+            Chef::Log.debug("new_resource.release_file")
+            to uri.path
+            action :create
+            notifies notify_action, resource_spec
+          end
+        else
+          # fetch remote file
+          remote_file new_resource.release_file do
+            Chef::Log.debug("new_resource.release_file")
+            source new_resource.url
+            action :create
+            if new_resource.checksum then checksum new_resource.checksum end
+            notifies notify_action, resource_spec
+          end
+        end
+      end
+
       # def unpacked?(path)
       #   if new_resource.creates
       #     full_path = ::File.join(new_resource.path, new_resource.creates)
