@@ -135,6 +135,23 @@ action :put do
     command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
     action :nothing
   end
+
+  # symlink binaries
+  new_resource.has_binaries.each do |bin|
+    link ::File.join(new_resource.prefix_bin, ::File.basename(bin)) do
+      to ::File.join(new_resource.path, bin)
+    end
+  end
+
+  # Add to path for interactive bash sessions
+  template "/etc/profile.d/#{new_resource.name}.sh" do
+    source "add_to_path.sh.erb"
+    owner "root"
+    group "root"
+    mode "0755"
+    variables( :directory => "#{new_resource.path}/bin" )
+    only_if { new_resource.append_env_path }
+  end
 end
 
 ###########################
