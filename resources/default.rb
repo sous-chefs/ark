@@ -35,6 +35,7 @@ attribute :path, :kind_of => String, :default => nil
 attribute :full_path, :kind_of => String, :default => nil
 attribute :append_env_path, :kind_of => [TrueClass, FalseClass], :default => false
 attribute :checksum, :regex => /^[a-zA-Z0-9]{64}$/, :default => nil
+attribute :http_headers, :kind_of => Hash, :default => nil
 attribute :has_binaries, :kind_of => Array, :default => []
 attribute :creates, :kind_of => String, :default => nil
 attribute :release_file, :kind_of => String, :default => ''
