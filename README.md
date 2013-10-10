@@ -273,7 +273,7 @@ the file extension can not be determined by the URL:
      ark "test_autogen" do
        url 'https://github.com/zeromq/libzmq/tarball/master'
        extension "tar.gz"
-       action [ :configure, :build_with_make ]
+       action [ :configure, :install_with_make ]
      end
 
 License and Author
