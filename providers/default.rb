@@ -35,28 +35,37 @@ include ::Opscode::Ark::ProviderHelpers
 action :install do
   set_paths
 
-  directory new_resource.path do
-    recursive true
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+  #make sure we don't (re-)download the file if it's already installed
+  unless ::File.exists?(new_resource.path)
+    directory new_resource.path do
+      recursive true
+      action :create
+      notifies :run, "execute[unpack #{new_resource.release_file}]"
+    end
+  
+    directory new_resource.path do
+      recursive true
+      action :create
+      notifies :run, "execute[unpack #{new_resource.release_file}]"
+    end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
-    source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
+    remote_file new_resource.release_file do
+      Chef::Log.debug("DEBUG: new_resource.release_file")
+      source new_resource.url
+      if new_resource.checksum then checksum new_resource.checksum end
+      action :create_if_missing
+      notifies :run, "execute[unpack #{new_resource.release_file}]"
+    end
 
-  # unpack based on file extension
-  _unpack_command = unpack_command
-  execute "unpack #{new_resource.release_file}" do
-    command _unpack_command
-    cwd new_resource.path
-    environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    action :nothing
+    # unpack based on file extension
+    _unpack_command = unpack_command
+    execute "unpack #{new_resource.release_file}" do
+      command _unpack_command
+      cwd new_resource.path
+      environment new_resource.environment
+      notifies :run, "execute[set owner on #{new_resource.path}]"
+      action :nothing
+    end
   end
 
   # set_owner
@@ -116,7 +125,7 @@ action :put do
   remote_file new_resource.release_file do
     source new_resource.url
     if new_resource.checksum then checksum new_resource.checksum end
-    action :create
+    action :create_if_missing
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -154,7 +163,7 @@ action :dump do
     Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
     source new_resource.url
     if new_resource.checksum then checksum new_resource.checksum end
-    action :create
+    action :create_if_missing
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -230,7 +239,7 @@ action :cherry_pick do
   remote_file new_resource.release_file do
     source new_resource.url
     if new_resource.checksum then checksum new_resource.checksum end
-    action :create
+    action :create_if_missing
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
