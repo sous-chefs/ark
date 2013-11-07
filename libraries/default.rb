@@ -116,7 +116,12 @@ module Opscode
         new_resource.path       = ::File.join(prefix_root, "#{new_resource.name}-#{new_resource.version}")
         new_resource.home_dir ||= default_home_dir
         Chef::Log.debug("path is #{new_resource.path}")
-        new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
+        if new_resource.url && new_resource.url.start_with?("file://")
+          new_resource.release_file     =  new_resource.url.gsub(/^file:\/\//, "")
+        else
+          new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
+        end
+
       end
 
       def set_put_paths
@@ -124,12 +129,20 @@ module Opscode
         path = new_resource.path.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.path
         new_resource.path      = ::File.join(path, new_resource.name)
         Chef::Log.debug("DEBUG: path is #{new_resource.path}")
-        new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
+        if new_resource.url && new_resource.url.start_with?("file://")
+          new_resource.release_file     =  new_resource.url.gsub(/^file:\/\//, "")
+        else
+          new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
+        end        
       end
 
       def set_dump_paths
         release_ext = parse_file_extension
-        new_resource.release_file  = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
+        if new_resource.url && new_resource.url.start_with?("file://")
+          new_resource.release_file     =  new_resource.url.gsub(/^file:\/\//, "")
+        else
+          new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
+        end
       end
 
       def set_apache_url(url_ref)
