@@ -121,6 +121,17 @@ ark "foo_tgz" do
   version '3'
 end
 
+remote_file "local_test_file" do
+  url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.tar.gz'
+  path "/usr/local/source/foo.tar.gz"
+  action :create
+end
+
+ark "local_file_put" do
+  url "file:///usr/local/source/foo.tar.gz"
+  action :put
+end
+
 ark "test notification" do
   url  'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.zip'
   path "/tmp/foobarbaz"

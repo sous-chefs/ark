@@ -127,7 +127,7 @@ module Opscode
       def set_put_paths
         release_ext = parse_file_extension
         path = new_resource.path.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.path
-        new_resource.path      = ::File.join(path, new_resource.name)
+        new_resource.path      = new_resource.override_path ? path : ::File.join(path, new_resource.name)
         Chef::Log.debug("DEBUG: path is #{new_resource.path}")
         if new_resource.url && new_resource.url.start_with?("file://")
           new_resource.release_file     =  new_resource.url.gsub(/^file:\/\//, "")

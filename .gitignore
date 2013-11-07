@@ -10,3 +10,5 @@ Gemfile.lock
 /cookbooks
 .kitchen
 .kitchen.local.yml
+metadata.rb
+.gitignore

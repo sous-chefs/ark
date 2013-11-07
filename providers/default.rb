@@ -118,6 +118,7 @@ action :put do
     if new_resource.checksum then checksum new_resource.checksum end
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+    not_if { "file://" + new_resource.release_file == new_resource.url }
   end
 
   # unpack based on file extension
