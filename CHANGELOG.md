@@ -3,6 +3,14 @@ ark Cookbook CHANGELOG
 This file is used to list changes made in each version of the ark cookbook.
 
 
+v0.4.2
+------
+### Improvement
+- **[COOK-3854](https://tickets.opscode.com/browse/COOK-3854)** - Capability with mac_os_x: '/bin/chown' - No such file or directory
+- Cleaning up some style for rubucop
+- Updating test harness
+
+
 v0.4.0
 ------
 ### Improvement
