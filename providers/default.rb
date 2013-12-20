@@ -25,7 +25,7 @@ include ::Opscode::Ark::ProviderHelpers
 
 # From resources/default.rb
 # :install, :put, :dump, :cherry_pick, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py
-
+#
 # Used in test.rb
 # :install, :put, :dump, :cherry_pick, :install_with_make, :configure
 
@@ -42,9 +42,9 @@ action :install do
   end
 
   remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
+    Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
+    checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
@@ -79,13 +79,13 @@ action :install do
 
   # Add to path for interactive bash sessions
   template "/etc/profile.d/#{new_resource.name}.sh" do
-    cookbook "ark"
-    source "add_to_path.sh.erb"
-    owner "root"
-    group "root"
-    mode "0755"
-    cookbook "ark"
-    variables( :directory => "#{new_resource.path}/bin" )
+    cookbook 'ark'
+    source 'add_to_path.sh.erb'
+    owner 'root'
+    group 'root'
+    mode '0755'
+    cookbook 'ark'
+    variables(:directory => "#{new_resource.path}/bin")
     only_if { new_resource.append_env_path }
   end
 
@@ -95,10 +95,9 @@ action :install do
     block do
       ENV['PATH'] = bin_path + ':' + ENV['PATH']
     end
-    only_if{ new_resource.append_env_path and ENV['PATH'].scan(bin_path).empty? }
+    only_if { new_resource.append_env_path && ENV['PATH'].scan(bin_path).empty? }
   end
 end
-
 
 ##############
 # action :put
@@ -115,7 +114,7 @@ action :put do
   # download
   remote_file new_resource.release_file do
     source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
+    checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
@@ -153,7 +152,7 @@ action :dump do
   remote_file new_resource.release_file do
     Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
     source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
+    checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
@@ -191,7 +190,7 @@ action :unzip do
   remote_file new_resource.release_file do
     Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
     source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
+    checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
@@ -229,7 +228,7 @@ action :cherry_pick do
   # download
   remote_file new_resource.release_file do
     source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
+    checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
@@ -251,7 +250,6 @@ action :cherry_pick do
   end
 end
 
-
 ###########################
 # action :install_with_make
 ###########################
@@ -265,9 +263,9 @@ action :install_with_make do
   end
 
   remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
+    Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
+    checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
@@ -286,7 +284,7 @@ action :install_with_make do
   end
 
   execute "autogen #{new_resource.path}" do
-    command "./autogen.sh"
+    command './autogen.sh'
     only_if { ::File.exist? "#{new_resource.path}/autogen.sh" }
     cwd new_resource.path
     environment new_resource.environment
@@ -320,9 +318,6 @@ action :install_with_make do
   # end
 end
 
-
-
-
 action :configure do
   set_paths
 
@@ -333,9 +328,9 @@ action :configure do
   end
 
   remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file")
+    Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
-    if new_resource.checksum then checksum new_resource.checksum end
+    checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
@@ -352,7 +347,7 @@ action :configure do
   end
 
   execute "autogen #{new_resource.path}" do
-    command "./autogen.sh"
+    command './autogen.sh'
     only_if { ::File.exist? "#{new_resource.path}/autogen.sh" }
     cwd new_resource.path
     environment new_resource.environment

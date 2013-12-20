@@ -3,7 +3,6 @@ site :opscode
 metadata
 
 group :integration do
-  cookbook "apt"
-  cookbook "yum"
-  cookbook "minitest-handler"
+  cookbook 'apt'
+  cookbook 'minitest-handler'
 end

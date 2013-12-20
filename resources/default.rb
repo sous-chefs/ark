@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-def initialize(name, run_context=nil)
+def initialize(name, run_context = nil)
   super
   @resource_name = :ark
   @allowed_actions.push(:install, :dump, :cherry_pick, :put, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py, :unzip)
@@ -51,4 +51,3 @@ attribute :make_opts, :kind_of => Array, :default => []
 attribute :home_dir, :kind_of => String, :default => nil
 attribute :autoconf_opts, :kind_of => Array, :default => []
 attribute :extension, :kind_of => String
-

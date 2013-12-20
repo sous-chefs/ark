@@ -14,16 +14,35 @@ driver_config:
   sudo: false
 
 platforms:
-# - name: debian-60
-#   driver_plugin: digitalocean
-#   driver_config:
-#     image_id: 12573
-#     flavor_id: 63
-#     region_id: 1
-#     ssh_key_ids: <%= ENV['DIGITAL_OCEAN_SSH_KEY_IDS'] %>
-#
-#  run_list:
-#  - recipe[apt]
+- name: centos-5.8
+  driver_plugin: digitalocean
+  driver_config:
+    image_id: 1601
+    flavor_id: 63
+    region_id: 4
+    ssh_key_ids: <%= ENV['DIGITAL_OCEAN_SSH_KEY_IDS'] %>
+
+- name: centos-6.4
+  driver_plugin: digitalocean
+  driver_config:
+    image_id: 562354
+    flavor_id: 63
+    region_id: 4
+    ssh_key_ids: <%= ENV['DIGITAL_OCEAN_SSH_KEY_IDS'] %>
+
+- name: amazon-2013.09
+  driver_plugin: ec2
+  driver_config:
+    image_id: ami-3be4bc52
+    username: ec2-user
+
+- name: fedora-19
+  driver_plugin: digitalocean
+  driver_config:
+    image_id: 696598
+    flavor_id: 63
+    region_id: 4
+    ssh_key_ids: <%= ENV['DIGITAL_OCEAN_SSH_KEY_IDS'] %>
 
 - name: debian-70
   driver_plugin: digitalocean
