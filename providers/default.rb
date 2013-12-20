@@ -61,7 +61,7 @@ action :install do
 
   # set_owner
   execute "set owner on #{new_resource.path}" do
-    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+    command "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
     action :nothing
   end
 
@@ -132,7 +132,7 @@ action :put do
 
   # set_owner
   execute "set owner on #{new_resource.path}" do
-    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+    command "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
     action :nothing
   end
 end
@@ -170,7 +170,7 @@ action :dump do
 
   # set_owner
   execute "set owner on #{new_resource.path}" do
-    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+    command "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
     action :nothing
   end
 end
@@ -208,7 +208,7 @@ action :unzip do
 
   # set_owner
   execute "set owner on #{new_resource.path}" do
-    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+    command "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
     action :nothing
   end
 end
@@ -246,7 +246,7 @@ action :cherry_pick do
 
   # set_owner
   execute "set owner on #{new_resource.path}" do
-    command "/bin/chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+    command "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
     action :nothing
   end
 end
