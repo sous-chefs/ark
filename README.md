@@ -62,6 +62,8 @@ defaults.
   `prefix_bin` is not passed into the resource.
 * `node['ark']['prefix_home']` - default home location if the
   `prefix_home` is not passed into the resource.
+* `node['ark']['package_dependencies']` - prerequisite system
+  packages that need to be installed to support ark.
 
 Resources/Providers
 ===================
