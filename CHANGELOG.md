@@ -3,6 +3,15 @@ ark Cookbook CHANGELOG
 This file is used to list changes made in each version of the ark cookbook.
 
 
+v0.5.0 (2014-02-21)
+-------------------
+### Bug
+- **[COOK-4288](https://tickets.opscode.com/browse/COOK-4288)** - Cleanup the Kitchen
+
+### Improvement
+- **[COOK-4264](https://tickets.opscode.com/browse/COOK-4264)** - Add node['ark']['package_dependencies'] to allow tuning packages.
+
+
 v0.4.2
 ------
 ### Improvement
