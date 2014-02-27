@@ -3,6 +3,11 @@ ark Cookbook CHANGELOG
 This file is used to list changes made in each version of the ark cookbook.
 
 
+v0.6.0 (2014-02-27)
+-------------------
+[COOK-3786] - Unable to install multiple versions of archive without duplication
+
+
 v0.5.0 (2014-02-21)
 -------------------
 ### Bug
