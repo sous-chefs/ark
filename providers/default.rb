@@ -276,10 +276,17 @@ action :install_with_make do
     command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
+    notifies :run, "execute[set owner on #{new_resource.path}]"
     notifies :run, "execute[autogen #{new_resource.path}]"
     notifies :run, "execute[configure #{new_resource.path}]"
     notifies :run, "execute[make #{new_resource.path}]"
     notifies :run, "execute[make install #{new_resource.path}]"
+    action :nothing
+  end
+
+  # set_owner
+  execute "set owner on #{new_resource.path}" do
+    command "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
     action :nothing
   end
 
@@ -341,8 +348,15 @@ action :configure do
     command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
+    notifies :run, "execute[set owner on #{new_resource.path}]"
     notifies :run, "execute[autogen #{new_resource.path}]"
     notifies :run, "execute[configure #{new_resource.path}]"
+    action :nothing
+  end
+
+  # set_owner
+  execute "set owner on #{new_resource.path}" do
+    command "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
     action :nothing
   end
 
