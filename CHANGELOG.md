@@ -3,6 +3,11 @@ ark Cookbook CHANGELOG
 This file is used to list changes made in each version of the ark cookbook.
 
 
+v0.7.0 (2014-03-18)
+-------------------
+- [COOK-4437] - configure and install_with_make should chown after unpack
+
+
 v0.6.0 (2014-02-27)
 -------------------
 [COOK-3786] - Unable to install multiple versions of archive without duplication
