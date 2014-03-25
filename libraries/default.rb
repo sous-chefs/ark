@@ -10,7 +10,7 @@ module Opscode
         when /tar.gz|tgz/  then "tar_xzf"
         when /tar.bz2|tbz/ then "tar_xjf"
         when /zip|war|jar/ then "unzip"
-        else raise "Don't know how to expand #{new_resource.url}"
+        else fail "Don't know how to expand #{new_resource.url}"
         end
       end
 
@@ -18,15 +18,15 @@ module Opscode
         if new_resource.extension.nil?
           # purge any trailing redirect
           url = new_resource.url.clone
-          url =~ /^https?:\/\/.*(.gz|bz2|bin|zip|jar|tgz|tbz)(\/.*\/)/
-          url.gsub!($2, '') unless $2.nil?
+          url =~ %r{^https?:\/\/.*(.gz|bz2|bin|zip|jar|tgz|tbz)(\/.*\/)}
+          url.gsub!(Regexp.last_match(2), '') unless Regexp.last_match(2).nil?
           # remove tailing query string
           release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
           # (\?.*)? accounts for a trailing querystring
           Chef::Log.debug("DEBUG: release_basename is #{release_basename}")
-          release_basename =~ %r{^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz|tbz)(\?.*)?}
-          Chef::Log.debug("DEBUG: file_extension is #{$2}")
-          new_resource.extension = $2
+          release_basename =~ /^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz|tbz)(\?.*)?/
+          Chef::Log.debug("DEBUG: file_extension is #{Regexp.last_match(2)}")
+          new_resource.extension = Regexp.last_match(2)
         end
         new_resource.extension
       end
@@ -35,14 +35,14 @@ module Opscode
         case unpack_type
         when "tar_xzf"
           cmd = node['ark']['tar']
-          cmd = cmd + " xzf "
-          cmd = cmd + new_resource.release_file
-          cmd = cmd + tar_strip_args
+          cmd += " xzf "
+          cmd += new_resource.release_file
+          cmd += tar_strip_args
         when "tar_xjf"
           cmd = node['ark']['tar']
-          cmd = cmd + " xjf "
-          cmd = cmd + " #{new_resource.release_file}"
-          cmd = cmd + tar_strip_args
+          cmd += " xjf "
+          cmd += " #{new_resource.release_file}"
+          cmd += tar_strip_args
         when "unzip"
           cmd = unzip_command
         end
@@ -55,10 +55,10 @@ module Opscode
           require 'tmpdir'
           tmpdir = Dir.mktmpdir
           cmd = "unzip -q -u -o #{new_resource.release_file} -d #{tmpdir}"
-          cmd = cmd + "&& rsync -a #{tmpdir}/*/ #{new_resource.path}"
-          cmd = cmd + "&& rm -rf  #{tmpdir}"
+          cmd += "&& rsync -a #{tmpdir}/*/ #{new_resource.path}"
+          cmd + "&& rm -rf  #{tmpdir}"
         else
-          cmd = "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
+          "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
         end
       end
 
@@ -78,24 +78,24 @@ module Opscode
 
         case unpack_type
         when "tar_xzf"
-          cmd = cmd + " xzf "
-          cmd = cmd + " #{new_resource.release_file}"
-          cmd = cmd + " -C"
-          cmd = cmd + " #{new_resource.path}"
-          cmd = cmd + " #{new_resource.creates}"
-          cmd = cmd + tar_strip_args
+          cmd += " xzf "
+          cmd += " #{new_resource.release_file}"
+          cmd += " -C"
+          cmd += " #{new_resource.path}"
+          cmd += " #{new_resource.creates}"
+          cmd += tar_strip_args
         when "tar_xjf"
-          cmd = cmd + "xjf #{new_resource.release_file}"
-          cmd = cmd + "-C #{new_resource.path} #{new_resource.creates}"
-          cmd = cmd + tar_strip_args
+          cmd += "xjf #{new_resource.release_file}"
+          cmd += "-C #{new_resource.path} #{new_resource.creates}"
+          cmd += tar_strip_args
         when "unzip"
           cmd = "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ; stat=$? ;"
-          cmd = cmd + "if [ $stat -eq 11 ] ; then "
-          cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} ;"
-          cmd = cmd + "elif [ $stat -ne 0 ] ; then false ;"
-          cmd = cmd + "else "
-          cmd = cmd + "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path} ;"
-          cmd = cmd + "fi"
+          cmd += "if [ $stat -eq 11 ] ; then "
+          cmd += "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} ;"
+          cmd += "elif [ $stat -ne 0 ] ; then false ;"
+          cmd += "else "
+          cmd += "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path} ;"
+          cmd += "fi"
         end
         Chef::Log.debug("DEBUG: cmd: #{cmd}")
         cmd
@@ -130,14 +130,6 @@ module Opscode
       def set_dump_paths
         release_ext = parse_file_extension
         new_resource.release_file  = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
-      end
-
-      def set_apache_url(url_ref)
-        raise "Missing required resource attribute url" unless url_ref
-        url_ref.gsub!(/:name:/,          name.to_s)
-        url_ref.gsub!(/:version:/,       version.to_s)
-        url_ref.gsub!(/:apache_mirror:/, node['install_from']['apache_mirror'])
-        url_ref
       end
 
       def tar_strip_args
