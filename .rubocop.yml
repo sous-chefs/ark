@@ -18,3 +18,9 @@ CyclomaticComplexity:
 
 ParameterLists:
   Enabled: false
+
+Documentation:
+  Enabled: false
+
+StringLiterals:
+  Enabled: false

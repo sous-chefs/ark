@@ -16,6 +16,7 @@ suites:
 - name: default
   run_list:
   - recipe[minitest-handler]
+  - recipe[build-essential]
   - recipe[ark]
   - recipe[ark::test]
   attributes: {}
