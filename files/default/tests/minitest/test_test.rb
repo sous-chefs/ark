@@ -90,4 +90,13 @@ describe_recipe 'ark::test' do
     file('/usr/local/test_autogen-1/configure').must_exist
   end
 
+  it 'strips 2 components out of foo_sub.tar.gz archive path' do
+    directory('/usr/local/foo_sub-1/bin').must_exist
+    file('/usr/local/foo_sub-1/foo1.txt').must_exist
+  end
+
+  it 'strips 2 components out of foo_sub.zip archive path' do
+    directory('/usr/local/foo_sub-2/bin').must_exist
+    file('/usr/local/foo_sub-2/foo1.txt').must_exist
+  end
 end
