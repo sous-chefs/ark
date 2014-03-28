@@ -33,6 +33,7 @@ include ::Opscode::Ark::ProviderHelpers
 # action :install
 #################
 action :install do
+  show_deprecations
   set_paths
 
   directory new_resource.path do
@@ -103,6 +104,7 @@ end
 # action :put
 ##############
 action :put do
+  show_deprecations
   set_put_paths
 
   directory new_resource.path do
@@ -140,6 +142,7 @@ end
 # action :dump
 ###########################
 action :dump do
+  show_deprecations
   set_dump_paths
 
   directory new_resource.path do
@@ -178,6 +181,7 @@ end
 # action :unzip
 ###########################
 action :unzip do
+  show_deprecations
   set_dump_paths
 
   directory new_resource.path do
@@ -216,6 +220,7 @@ end
 # action :cherry_pick
 #####################
 action :cherry_pick do
+  show_deprecations
   set_dump_paths
   Chef::Log.debug("DEBUG: new_resource.creates #{new_resource.creates}")
 
@@ -254,6 +259,7 @@ end
 # action :install_with_make
 ###########################
 action :install_with_make do
+  show_deprecations
   set_paths
 
   directory new_resource.path do
@@ -326,6 +332,7 @@ action :install_with_make do
 end
 
 action :configure do
+  show_deprecations
   set_paths
 
   directory new_resource.path do

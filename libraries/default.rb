@@ -51,12 +51,13 @@ module Opscode
       end
 
       def unzip_command
-        if new_resource.strip_leading_dir
+        if new_resource.strip_components > 0
           require 'tmpdir'
           tmpdir = Dir.mktmpdir
+          strip_dir = '*/' * new_resource.strip_components
           cmd = "unzip -q -u -o #{new_resource.release_file} -d #{tmpdir}"
-          cmd += "&& rsync -a #{tmpdir}/*/ #{new_resource.path}"
-          cmd + "&& rm -rf  #{tmpdir}"
+          cmd = cmd + "&& rsync -a #{tmpdir}/#{strip_dir} #{new_resource.path}"
+          cmd = cmd + "&& rm -rf  #{tmpdir}"
         else
           "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
         end
@@ -133,7 +134,13 @@ module Opscode
       end
 
       def tar_strip_args
-        new_resource.strip_leading_dir ? " --strip-components=1" : ""
+        new_resource.strip_components > 0 ? " --strip-components=#{new_resource.strip_components}" : ""
+      end
+
+      def show_deprecations
+        if [true, false].include?(new_resource.strip_leading_dir)
+          Chef::Log.warn("DEPRECATED: strip_leading_dir attribute was deprecated. Use strip_components instead.")
+        end
       end
 
       # def unpacked?(path)

@@ -76,7 +76,7 @@ ark 'foo_dont_strip' do
   version '2'
   url 'https://github.com/bryanwb/chef-ark/raw/master/files/default/foo.tar.gz'
   checksum '5996e676f17457c823d86f1605eaa44ca8a81e70d6a0e5f8e45b51e62e0c52e8'
-  strip_leading_dir false
+  strip_components 0
   action :install
 end
 
@@ -132,4 +132,16 @@ ark 'test_autogen' do
   action :configure
   # autoconf in RHEL < 6 is too old
   not_if { platform_family?('rhel') && node['platform_version'].to_f < 6.0 }
+end
+
+ark 'foo_sub' do
+  url 'https://github.com/opscode-cookbooks/ark/raw/master/files/default/foo_sub.tar.gz'
+  version '1'
+  strip_components 2
+end
+
+ark 'foo_sub' do
+  url 'https://github.com/opscode-cookbooks/ark/raw/master/files/default/foo_sub.zip'
+  version '2'
+  strip_components 2
 end

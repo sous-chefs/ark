@@ -172,9 +172,9 @@ Attribute Parameters
   - Example: `mvn`, `java`, `javac`, etc.
 - `environment`: hash of environment variables to pass to invoked
   shell commands like `tar`, `unzip`, `configure`, and `make`.
-- `strip_leading_dir`: by default, ark strips the leading directory
-  from an archive, which is the default for both `unzip` and `tar`
-  commands
+- `strip_components`: number of components in path to strip when extracting archive.
+  With default value of `1`, ark strips the leading directory from an archive, 
+  which is the default for both `unzip` and `tar` commands.
 - `autoconf_opts`: an array of command line options for use with the
   GNU `autoconf` script.
   - Example: `[ '--include=/opt/local/include', '--force' ]`
