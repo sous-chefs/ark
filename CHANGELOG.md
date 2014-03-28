@@ -3,6 +3,12 @@ ark Cookbook CHANGELOG
 This file is used to list changes made in each version of the ark cookbook.
 
 
+v0.7.2 (2014-03-28)
+-------------------
+- [COOK-4477] - Fix failing test suite
+- [COOK-4484] - Replace strip_leading_dir attribute with more general strip_components
+
+
 v0.7.0 (2014-03-18)
 -------------------
 - [COOK-4437] - configure and install_with_make should chown after unpack
