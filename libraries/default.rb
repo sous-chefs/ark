@@ -61,8 +61,9 @@ module Opscode
           tmpdir = Dir.mktmpdir
           strip_dir = '*/' * new_resource.strip_components
           cmd = "unzip -q -u -o #{new_resource.release_file} -d #{tmpdir}"
-          cmd = cmd + "&& rsync -a #{tmpdir}/#{strip_dir} #{new_resource.path}"
-          cmd = cmd + "&& rm -rf  #{tmpdir}"
+          cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{new_resource.path}"
+          cmd += " && rm -rf #{tmpdir}"
+          cmd
         else
           "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
         end

@@ -24,3 +24,8 @@ Documentation:
 
 StringLiterals:
   Enabled: false
+
+SingleSpaceBeforeFirstArg:
+  Enabled: true
+  Exclude:
+    - metadata.rb
