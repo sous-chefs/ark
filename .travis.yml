@@ -12,6 +12,7 @@ before_install:
 - echo -n $JOYENT_KEY_CHUNK_{0..30} >> ~/.ssh/id_joyent.base64
 - cat ~/.ssh/id_joyent.base64 | tr -d ' ' | base64 --decode > ~/.ssh/id_joyent.pem
 script:
+- bundle exec rake style
 - bundle exec kitchen test $KITCHEN_INSTANCE
 after_script:
 - bundle exec kitchen destroy
