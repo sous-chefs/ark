@@ -9,6 +9,7 @@ module Opscode
         case parse_file_extension
         when /tar.gz|tgz/  then "tar_xzf"
         when /tar.bz2|tbz/ then "tar_xjf"
+        when /tar.xz|txz/  then "tar_xJf"
         when /zip|war|jar/ then "unzip"
         else fail "Don't know how to expand #{new_resource.url}"
         end
@@ -18,13 +19,13 @@ module Opscode
         if new_resource.extension.nil?
           # purge any trailing redirect
           url = new_resource.url.clone
-          url =~ %r{^https?:\/\/.*(.gz|bz2|bin|zip|jar|tgz|tbz)(\/.*\/)}
+          url =~ %r{^https?:\/\/.*(.bin|bz2|gz|jar|tbz|tgz|txz|war|xz|zip)(\/.*\/)}
           url.gsub!(Regexp.last_match(2), '') unless Regexp.last_match(2).nil?
           # remove tailing query string
           release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
           # (\?.*)? accounts for a trailing querystring
           Chef::Log.debug("DEBUG: release_basename is #{release_basename}")
-          release_basename =~ /^(.+?)\.(tar\.gz|tar\.bz2|zip|war|jar|tgz|tbz)(\?.*)?/
+          release_basename =~ /^(.+?)\.(jar|tar\.bz2|tar\.gz|tar\.xz|tbz|tgz|txz|war|zip)(\?.*)?/
           Chef::Log.debug("DEBUG: file_extension is #{Regexp.last_match(2)}")
           new_resource.extension = Regexp.last_match(2)
         end
@@ -34,19 +35,23 @@ module Opscode
       def unpack_command
         case unpack_type
         when "tar_xzf"
-          cmd = node['ark']['tar']
-          cmd += " xzf "
-          cmd += new_resource.release_file
-          cmd += tar_strip_args
+          cmd = tar_command("xzf")
         when "tar_xjf"
-          cmd = node['ark']['tar']
-          cmd += " xjf "
-          cmd += " #{new_resource.release_file}"
-          cmd += tar_strip_args
+          cmd = tar_command("xjf")
+        when "tar_xJf"
+          cmd = tar_command("xJf")
         when "unzip"
           cmd = unzip_command
         end
         Chef::Log.debug("DEBUG: cmd: #{cmd}")
+        cmd
+      end
+
+      def tar_command(tar_args)
+        cmd = node['ark']['tar']
+        cmd += " #{tar_args} "
+        cmd += new_resource.release_file
+        cmd += tar_strip_args
         cmd
       end
 
@@ -56,8 +61,9 @@ module Opscode
           tmpdir = Dir.mktmpdir
           strip_dir = '*/' * new_resource.strip_components
           cmd = "unzip -q -u -o #{new_resource.release_file} -d #{tmpdir}"
-          cmd = cmd + "&& rsync -a #{tmpdir}/#{strip_dir} #{new_resource.path}"
-          cmd = cmd + "&& rm -rf  #{tmpdir}"
+          cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{new_resource.path}"
+          cmd += " && rm -rf #{tmpdir}"
+          cmd
         else
           "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
         end
@@ -65,7 +71,7 @@ module Opscode
 
       def dump_command
         case unpack_type
-        when "tar_xzf", "tar_xjf"
+        when "tar_xzf", "tar_xjf", "tar_xJf"
           cmd = "tar -mxf \"#{new_resource.release_file}\" -C \"#{new_resource.path}\""
         when "unzip"
           cmd = "unzip  -j -q -u -o \"#{new_resource.release_file}\" -d \"#{new_resource.path}\""
@@ -75,20 +81,13 @@ module Opscode
       end
 
       def cherry_pick_command
-        cmd = node['ark']['tar']
-
         case unpack_type
         when "tar_xzf"
-          cmd += " xzf "
-          cmd += " #{new_resource.release_file}"
-          cmd += " -C"
-          cmd += " #{new_resource.path}"
-          cmd += " #{new_resource.creates}"
-          cmd += tar_strip_args
+          cmd = cherry_pick_tar_command("xzf")
         when "tar_xjf"
-          cmd += "xjf #{new_resource.release_file}"
-          cmd += "-C #{new_resource.path} #{new_resource.creates}"
-          cmd += tar_strip_args
+          cmd = cherry_pick_tar_command("xjf")
+        when "tar_xJf"
+          cmd = cherry_pick_tar_command("xJf")
         when "unzip"
           cmd = "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ; stat=$? ;"
           cmd += "if [ $stat -eq 11 ] ; then "
@@ -99,6 +98,17 @@ module Opscode
           cmd += "fi"
         end
         Chef::Log.debug("DEBUG: cmd: #{cmd}")
+        cmd
+      end
+
+      def cherry_pick_tar_command(tar_args)
+        cmd = node['ark']['tar']
+        cmd += " #{tar_args}"
+        cmd += " #{new_resource.release_file}"
+        cmd += " -C"
+        cmd += " #{new_resource.path}"
+        cmd += " #{new_resource.creates}"
+        cmd += tar_strip_args
         cmd
       end
 
