@@ -30,8 +30,9 @@ By default, the ark will not run again if the `:path` is not empty.
 Ark provides many actions to accommodate different use cases, such as
 `:dump`, `:cherry_pick`, `:put`, and `:install_with_make`.
 
-At this time ark only handles files available from URLs. It does not
-handle local files.
+At this time ark only handles files available from URLs using the
+[remote_file](http://docs.opscode.com/resource_remote_file.html) provider.
+It does handle local files using the `file://` protocol.
 
 Requirements
 ============
