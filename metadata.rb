@@ -12,5 +12,7 @@ end
 
 recipe 'ark::default', 'Installs and configures ark'
 
-depends 'windows'
-depends '7-zip'
+if platform_family?("windows")
+	depends 'windows'
+	depends '7-zip'
+end
