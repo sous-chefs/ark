@@ -51,9 +51,9 @@ action :install do
   end
 
   # unpack based on file extension
-  _unpack_command = unpack_command
+  unpacked_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command _unpack_command
+    command unpacked_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -61,14 +61,14 @@ action :install do
   end
 
   # set_owner
-  _owner_command = owner_command
+  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command _owner_command
+    command current_owner_command
     action :nothing
   end
 
   # usually on windows there is no central directory with executables where the applciations are linked
-  if not node['platform_family'] === 'windows'
+  unless node['platform_family'] == 'windows'
     # symlink binaries
     new_resource.has_binaries.each do |bin|
       link ::File.join(new_resource.prefix_bin, ::File.basename(bin)) do
@@ -126,9 +126,9 @@ action :put do
   end
 
   # unpack based on file extension
-  _unpack_command = unpack_command
+  unpacked_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command _unpack_command
+    command unpacked_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -136,9 +136,9 @@ action :put do
   end
 
   # set_owner
-  _owner_command = owner_command
+  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command _owner_command
+    command current_owner_command
     action :nothing
   end
 end
@@ -166,9 +166,9 @@ action :dump do
   end
 
   # unpack based on file extension
-  _dump_command = dump_command
+  dumped_command = dump_command
   execute "unpack #{new_resource.release_file}" do
-    command _dump_command
+    command dumped_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -176,9 +176,9 @@ action :dump do
   end
 
   # set_owner
-  _owner_command = owner_command
+  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command _owner_command
+    command current_owner_command
     action :nothing
   end
 end
@@ -206,9 +206,9 @@ action :unzip do
   end
 
   # unpack based on file extension
-  _unzip_command = unzip_command
+  unzipped_command = unzip_command
   execute "unpack #{new_resource.release_file}" do
-    command _unzip_command
+    command unzipped_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -216,9 +216,9 @@ action :unzip do
   end
 
   # set_owner
-  _owner_command = owner_command
+  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command _owner_command
+    command current_owner_command
     action :nothing
   end
 end
@@ -245,20 +245,20 @@ action :cherry_pick do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
-  _unpack_type = unpack_type
-  _cherry_pick_command = cherry_pick_command
+  unpacked_type = unpack_type
+  cherry_picked_command = cherry_pick_command
   execute "cherry_pick #{new_resource.creates} from #{new_resource.release_file}" do
-    Chef::Log.debug("DEBUG: unpack_type: #{_unpack_type}")
-    command _cherry_pick_command
+    Chef::Log.debug("DEBUG: unpack_type: #{unpacked_type}")
+    command cherry_picked_command
     creates "#{new_resource.path}/#{new_resource.creates}"
     notifies :run, "execute[set owner on #{new_resource.path}]"
     action :nothing
   end
 
   # set_owner
-  _owner_command = owner_command
+  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command _owner_command
+    command current_owner_command
     action :nothing
   end
 end
@@ -285,9 +285,9 @@ action :install_with_make do
   end
 
   # unpack based on file extension
-  _unpack_command = unpack_command
+  unpacked_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command _unpack_command
+    command unpacked_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -299,9 +299,9 @@ action :install_with_make do
   end
 
   # set_owner
-  _owner_command = owner_command
+  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command _owner_command
+    command current_owner_command
     action :nothing
   end
 
@@ -359,9 +359,9 @@ action :configure do
   end
 
   # unpack based on file extension
-  _unpack_command = unpack_command
+  unpacked_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command _unpack_command
+    command unpacked_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -371,9 +371,9 @@ action :configure do
   end
 
   # set_owner
-  _owner_command = owner_command
+  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command _owner_command
+    command current_owner_command
     action :nothing
   end
 

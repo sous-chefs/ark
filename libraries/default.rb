@@ -33,8 +33,8 @@ module Opscode
       end
 
       def unpack_command
-        if node['platform_family'] === 'windows'
-           cmd = sevenzip_command
+        if node['platform_family'] == 'windows'
+          cmd = sevenzip_command
         else
           case unpack_type
           when "tar_xzf"
@@ -77,24 +77,24 @@ module Opscode
         if new_resource.strip_components > 0
           require 'tmpdir'
           tmpdir = Dir.mktmpdir
-          cmd = sevenzip_command_builder(tmpdir,'e')
+          cmd = sevenzip_command_builder(tmpdir, 'e')
           cmd += " && "
           currdir = tmpdir
           var = 0
-          while var < new_resource.strip_components do
+          while var < new_resource.strip_components
             var += 1
             cmd += "for /f %#{var} in ('dir /ad /b \"#{currdir.gsub! '/', '\\'}\"') do "
             currdir += "\\%#{var}"
           end
           cmd += "xcopy \"#{currdir}\" \"#{new_resource.home_dir}\" /s /e"
         else
-          cmd = sevenzip_command_builder(new_resource.path,'x')
+          cmd = sevenzip_command_builder(new_resource.path, 'x')
         end
         cmd
       end
 
       def sevenzip_command_builder(dir, command)
-        cmd = "#{node['ark']['tar']} #{command} \"";
+        cmd = "#{node['ark']['tar']} #{command} \""
         cmd += new_resource.release_file
         cmd += "\" "
         case parse_file_extension
@@ -106,8 +106,8 @@ module Opscode
       end
 
       def dump_command
-        if node['platform_family'] === 'windows'
-          cmd = sevenzip_command_builder(new_resource.path,'e')
+        if node['platform_family'] == 'windows'
+          cmd = sevenzip_command_builder(new_resource.path, 'e')
         else
           case unpack_type
           when "tar_xzf", "tar_xjf", "tar_xJf"
@@ -121,8 +121,8 @@ module Opscode
       end
 
       def cherry_pick_command
-        if node['platform_family'] === 'windows'
-          cmd = sevenzip_command_builder(new_resource.path,'e')
+        if node['platform_family'] == 'windows'
+          cmd = sevenzip_command_builder(new_resource.path, 'e')
           cmd += " -r #{new_resource.creates}"
         else
           case unpack_type
@@ -170,7 +170,7 @@ module Opscode
         new_resource.prefix_bin = prefix_bin
         new_resource.version ||= "1"  # initialize to one if nil
         new_resource.home_dir ||= default_home_dir
-        if node['platform_family'] === 'windows'
+        if node['platform_family'] == 'windows'
           new_resource.path = new_resource.win_install_dir
         else
           new_resource.path = ::File.join(prefix_root, "#{new_resource.name}-#{new_resource.version}")
@@ -197,13 +197,12 @@ module Opscode
       end
 
       def show_deprecations
-        if [true, false].include?(new_resource.strip_leading_dir)
-          Chef::Log.warn("DEPRECATED: strip_leading_dir attribute was deprecated. Use strip_components instead.")
-        end
+        return unless [true, false].include?(new_resource.strip_leading_dir)
+        Chef::Log.warn("DEPRECATED: strip_leading_dir attribute was deprecated. Use strip_components instead.")
       end
 
       def owner_command
-        if node['platform_family'] === 'windows'
+        if node['platform_family'] == 'windows'
           cmd = "icacls #{new_resource.path}\\* /setowner #{new_resource.owner}"
         else
           cmd = "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
