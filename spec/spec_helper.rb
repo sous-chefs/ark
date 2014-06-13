@@ -19,7 +19,7 @@ RSpec.shared_context "recipe tests", :type => :recipe do
   end
 
   def cookbook_recipe_names
-    described_recipe.split("::",2)
+    described_recipe.split("::", 2)
   end
 
   def cookbook_name
