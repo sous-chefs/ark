@@ -16,6 +16,10 @@ describe_recipe "ark::default" do
     end
   end
 
+  it "does include the 7-zip recipe" do
+    expect(chef_run).to include_recipe("7-zip")
+  end
+
   context "sets default attributes" do
 
     it "tar binary" do
