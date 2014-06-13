@@ -6,6 +6,7 @@ at_exit { ChefSpec::Coverage.report! }
 RSpec.configure do |config|
   config.color = true
   config.alias_example_group_to :describe_recipe, :type => :recipe
+  config.alias_example_group_to :describe_helpers, :type => :helpers
 end
 
 RSpec.shared_context "recipe tests", :type => :recipe do
@@ -34,4 +35,18 @@ RSpec.shared_context "recipe tests", :type => :recipe do
     node[cookbook_name][attribute_name]
   end
 
+end
+
+RSpec.shared_context "helpers tests", :type => :helpers do
+  include described_class
+
+  let(:new_resource) { OpenStruct.new(resource_properties) }
+
+  def resource_properties
+    @resource_properties || {}
+  end
+
+  def with_resource_properties(properties)
+    @resource_properties = properties
+  end
 end
