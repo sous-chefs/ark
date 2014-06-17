@@ -189,7 +189,6 @@ describe_helpers Opscode::Ark::ProviderHelpers do
 
     context "when the resource path is not set" do
       it "sets the resource's release_file and path" do
-        # This is a workaround because I don't want to mock out the run_context
         allow(self).to receive(:prefix_root_from_node_in_run_context) { "/opt/default" }
 
         with_resource_properties(:extension => "jar", :name => "gustav-moomoo")
@@ -201,7 +200,10 @@ describe_helpers Opscode::Ark::ProviderHelpers do
 
     context "when the resource path has been set" do
       it "sets the resource's release_file and path" do
-        with_resource_properties(:extension => "jar", :name => "gustav-tootoo", :path => "/path/piece")
+        with_resource_properties(
+          :extension => "jar",
+          :name => "gustav-tootoo",
+          :path => "/path/piece")
         set_put_paths
 
         expect(new_resource.release_file).to eq("/var/chef/cache/gustav-tootoo.jar")
@@ -209,6 +211,371 @@ describe_helpers Opscode::Ark::ProviderHelpers do
       end
     end
 
+  end
+
+  describe "#set_paths" do
+
+    context 'when the resource prefix_bin has not been set' do
+      it "defaults to the one on the current node" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_root => "/resource/prefix/root",
+          :prefix_home => "/resource/prefix/home",
+          :name => "resource_name")
+
+        allow(self).to receive(:prefix_bin_from_node_in_run_context) { "/node/prefix/bin" }
+
+        set_paths
+
+        expect(new_resource.prefix_bin).to eq("/node/prefix/bin")
+      end
+    end
+
+    context 'when the resource prefix_bin has been set' do
+      it "uses the one on the current reource" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_root => "/resource/prefix/root",
+          :prefix_home => "/resource/prefix/home",
+          :prefix_bin => "/resource/prefix/bin",
+          :name => "resource_name")
+
+        set_paths
+
+        expect(new_resource.prefix_bin).to eq("/resource/prefix/bin")
+      end
+    end
+
+    context 'when the resource prefix_root has not been set' do
+      it "defaults to the one on the current node the correct path" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_bin => "/resource/prefix/bin",
+          :prefix_home => "/prefix/home",
+          :name => "resource_name")
+
+        allow(self).to receive(:prefix_root_from_node_in_run_context) { "/node/prefix/root" }
+
+        set_paths
+
+        expect(new_resource.path).to eq("/node/prefix/root/resource_name-1")
+      end
+    end
+
+    context 'when the resource prefix_root has been set' do
+      it "uses the one on current resource to generate the correct path" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_root => "/resource/prefix/root",
+          :prefix_bin => "/resource/prefix/bin",
+          :prefix_home => "/resource/prefix/home",
+          :name => "resource_name")
+
+        set_paths
+
+        expect(new_resource.path).to eq("/resource/prefix/root/resource_name-1")
+      end
+    end
+
+    context 'when the resource prefix_home has not been set' do
+      it "defaults to the one on the current node" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_root => "/resource/prefix/root",
+          :prefix_bin => "/resource/prefix/bin",
+          :name => "resource_name")
+
+        allow(self).to receive(:prefix_home_from_node_in_run_context) { "/node/prefix/home" }
+        set_paths
+
+        expect(new_resource.home_dir).to eq("/node/prefix/home/resource_name")
+      end
+    end
+
+    context 'when the resource prefix_home has been set' do
+      it "users the one on the current resource" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_root => "/resource/prefix/root",
+          :prefix_bin => "/resource/prefix/bin",
+          :prefix_home => "/resource/prefix/home",
+          :name => "resource_name")
+
+        set_paths
+
+        expect(new_resource.home_dir).to eq("/resource/prefix/home/resource_name")
+
+      end
+    end
+
+    context "when the node's platform_family is windows" do
+      it "sets the path to the resources Win_install_dir" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_root => "/resource/prefix/root",
+          :prefix_bin => "/resource/prefix/bin",
+          :prefix_home => "/resource/prefix/home",
+          :win_install_dir => "/resource/windows/install/dir",
+          :name => "resource_name")
+
+        with_node_attributes(:platform_family => "windows")
+        set_paths
+
+        expect(new_resource.path).to eq("/resource/windows/install/dir")
+      end
+    end
+
+    context 'when the version has not been set' do
+      it "defaults to 1" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_root => "/resource/prefix/root",
+          :prefix_bin => "/resource/prefix/bin",
+          :prefix_home => "/resource/prefix/home",
+          :name => "resource_name")
+
+        set_paths
+
+        expect(new_resource.version).to eq("1")
+      end
+    end
+
+    context 'when the version has been set' do
+      it "remains the value specified" do
+        with_resource_properties(
+          :extension => "jar",
+          :prefix_root => "/resource/prefix/root",
+          :prefix_bin => "/resource/prefix/bin",
+          :prefix_home => "/resource/prefix/home",
+          :version => "23",
+          :name => "resource_name")
+
+        set_paths
+
+        expect(new_resource.version).to eq("23")
+      end
+    end
+
+    it "sets the resource's release_file" do
+      with_resource_properties(
+        :extension => "jar",
+        :prefix_root => "/resource/prefix/root",
+        :prefix_bin => "/resource/prefix/bin",
+        :prefix_home => "/resource/prefix/home",
+        :version => "23",
+        :name => "resource_name")
+
+      set_paths
+
+      chef_config_file_cache_path = "/var/chef/cache"
+
+      expect(new_resource.release_file).to eq("#{chef_config_file_cache_path}/resource_name-23.jar")
+    end
+
+  end
+
+  describe "#cherry_pick_tar_command" do
+    it "generates the correct command" do
+      with_node_attributes(:ark => { :tar => "/bin/tar" })
+      with_resource_properties(
+        :release_file => "/resource/release_file",
+        :path => "/resource/path",
+        :creates => "/resource/creates",
+        :strip_components => 1)
+
+      expected_command = "/bin/tar TAROPTIONS /resource/release_file -C /resource/path /resource/creates --strip-components=1"
+      expect(cherry_pick_tar_command("TAROPTIONS")).to eq(expected_command)
+    end
+  end
+
+  describe "#cherry_pick_command" do
+    context "when the node's platform_family is windows" do
+      it "generates a 7-zip command" do
+        with_node_attributes(:platform_family => "windows")
+        with_resource_properties(
+          :path => "/resource/path",
+          :creates => "/resource/creates")
+        allow(self).to receive(:sevenzip_command_builder) { "sevenzip_command" }
+
+
+        expect(cherry_pick_command).to eq("sevenzip_command -r /resource/creates")
+      end
+    end
+
+    context "when the node's platform_family is not windows" do
+      context 'when the unpack_type is tar_xzf' do
+        it "generates a cherry pick tar command with the correct options" do
+          allow(self).to receive(:unpack_type) { "tar_xzf" }
+          allow(self).to receive(:cherry_pick_tar_command) { "cherry_pick_tar_command" }
+
+          expect(cherry_pick_command).to eq("cherry_pick_tar_command")
+        end
+      end
+
+      context 'when the unpack_type is tar_xjf' do
+        it "generates a cherry pick tar command with the correct options" do
+          allow(self).to receive(:unpack_type) { "tar_xjf" }
+          allow(self).to receive(:cherry_pick_tar_command) { "cherry_pick_tar_command" }
+
+          expect(cherry_pick_command).to eq("cherry_pick_tar_command")
+        end
+      end
+
+      context 'when the unpack_type is tar_xJf' do
+        it "generates a cherry pick tar command with the correct options" do
+          allow(self).to receive(:unpack_type) { "tar_xJf" }
+          allow(self).to receive(:cherry_pick_tar_command) { "cherry_pick_tar_command" }
+
+          expect(cherry_pick_command).to eq("cherry_pick_tar_command")
+        end
+      end
+
+      context 'when the unpack_type is unzip' do
+        it "generates an unzip command" do
+          allow(self).to receive(:unpack_type) { "unzip" }
+          allow(self).to receive(:cherry_pick_unzip_command) { "cherry_pick_unzip_command" }
+
+          expect(cherry_pick_command).to eq("cherry_pick_unzip_command")
+        end
+      end
+    end
+  end
+
+  describe "#dump_command" do
+    context "when the node's platform_family is windows" do
+      it "generates a 7-zip command" do
+
+      end
+    end
+
+    context "when the node's platform_family is not windows" do
+      context 'when the unpack_type is tar_xzf' do
+        it "generates a tar command" do
+          with_resource_properties(
+            :release_file => "/resource/release_file",
+            :path => "/resource/path")
+
+          allow(self).to receive(:unpack_type) { "tar_xzf" }
+
+          expect(dump_command).to eq("tar -mxf \"/resource/release_file\" -C \"/resource/path\"")
+        end
+      end
+
+      context 'when the unpack_type is tar_xjf' do
+        it "generates a tar command" do
+          with_resource_properties(
+            :release_file => "/resource/release_file",
+            :path => "/resource/path")
+
+          allow(self).to receive(:unpack_type) { "tar_xjf" }
+
+          expect(dump_command).to eq("tar -mxf \"/resource/release_file\" -C \"/resource/path\"")
+        end
+      end
+
+      context 'when the unpack_type is tar_xJf' do
+        it "generates a tar command" do
+          with_resource_properties(
+            :release_file => "/resource/release_file",
+            :path => "/resource/path")
+
+          allow(self).to receive(:unpack_type) { "tar_xJf" }
+
+          expect(dump_command).to eq("tar -mxf \"/resource/release_file\" -C \"/resource/path\"")
+        end
+      end
+
+      context 'when the unpack_type is unzip' do
+        it "generates an unzip command" do
+          with_resource_properties(
+            :release_file => "/resource/release_file",
+            :path => "/resource/path")
+
+          allow(self).to receive(:unpack_type) { "unzip" }
+
+          expect(dump_command).to eq("unzip  -j -q -u -o \"/resource/release_file\" -d \"/resource/path\"")
+        end
+      end
+    end
+  end
+
+  describe "#sevenzip_command_builder" do
+    context 'when the file extenion is a tar file' do
+      it "generates the correct command" do
+        with_node_attributes(:ark => { :tar => "/bin/tar" })
+        with_resource_properties(
+          :release_file => "/resource/release_file",
+          :extension => "tar.gz")
+
+        expected_command = "/bin/tar /param/command \"/resource/release_file\"  -so | /bin/tar x -aoa -si -ttar -o\"/param/dir\" -uy"
+        expect(sevenzip_command_builder("/param/dir", "/param/command")).to eq(expected_command)
+      end
+    end
+
+    context 'when the file extension is not a tar file' do
+      it "generates the correct command" do
+        with_node_attributes(:ark => { :tar => "/bin/tar" })
+        with_resource_properties(
+          :release_file => "/resource/release_file",
+          :extension => "jar")
+
+        expected_command = "/bin/tar /param/command \"/resource/release_file\"  -o\"/param/dir\" -uy"
+        expect(sevenzip_command_builder("/param/dir", "/param/command")).to eq(expected_command)
+      end
+    end
+  end
+
+  describe "#sevenzip_command" do
+    context "when the resources strip_components is greater than 0" do
+      it "generates a for loop for each component being stripped" do
+        with_resource_properties(
+          :strip_components => 1,
+          :home_dir => "/resource/home")
+
+        allow(Dir).to receive(:mktmpdir) { "/tmp/dir" }
+        allow(self).to receive(:sevenzip_command_builder) { "sevenzip_command_from_builder" }
+
+        expected_command = "sevenzip_command_from_builder && for /f %1 in ('dir /ad /b \"\\tmp\\dir\"') do xcopy \"\\tmp\\dir\\%1\" \"/resource/home\" /s /e"
+        expect(sevenzip_command).to eq(expected_command)
+      end
+    end
+
+    context "when the resource's strip_components is 0" do
+      it "generates a 7-zip command from the builder" do
+        with_resource_properties(:strip_components => 0)
+
+        allow(self).to receive(:sevenzip_command_builder) { "sevenzip_command_with_x" }
+        expect(sevenzip_command).to eq("sevenzip_command_with_x")
+      end
+    end
+  end
+
+  describe "#unzip_command" do
+    context "when the resource's strip_components is greater than 0" do
+      it "generates a zip command" do
+        with_resource_properties(
+          :strip_components => 2,
+          :release_file => "/resource/release_file",
+          :path => "/resource/path")
+
+        allow(Dir).to receive(:mktmpdir) { "/tmp/dir" }
+        expected_command = "unzip -q -u -o /resource/release_file -d /tmp/dir && rsync -a /tmp/dir/*/*/ /resource/path && rm -rf /tmp/dir"
+
+        expect(unzip_command).to eq(expected_command)
+      end
+    end
+
+    context "when the resource's strip_components is 0" do
+      it "generates a zip command" do
+        with_resource_properties(
+          :strip_components => 0,
+          :release_file => "/resource/release_file",
+          :path => "/resource/path")
+
+        expected_command = "unzip -q -u -o /resource/release_file -d /resource/path"
+        expect(unzip_command).to eq(expected_command)
+      end
+    end
   end
 
 end

@@ -133,18 +133,24 @@ module Opscode
           when "tar_xJf"
             cmd = cherry_pick_tar_command("xJf")
           when "unzip"
-            cmd = "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ; stat=$? ;"
-            cmd += "if [ $stat -eq 11 ] ; then "
-            cmd += "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} ;"
-            cmd += "elif [ $stat -ne 0 ] ; then false ;"
-            cmd += "else "
-            cmd += "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path} ;"
-            cmd += "fi"
+            cmd = cherry_pick_unzip_command
           end
         end
         Chef::Log.debug("DEBUG: cmd: #{cmd}")
         cmd
       end
+
+      def cherry_pick_unzip_command
+        cmd = "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ; stat=$? ;"
+        cmd += "if [ $stat -eq 11 ] ; then "
+        cmd += "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} ;"
+        cmd += "elif [ $stat -ne 0 ] ; then false ;"
+        cmd += "else "
+        cmd += "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path} ;"
+        cmd += "fi"
+        cmd
+      end
+
 
       def cherry_pick_tar_command(tar_args)
         cmd = node['ark']['tar']
@@ -159,24 +165,36 @@ module Opscode
 
       def set_paths
         release_ext = parse_file_extension
-        prefix_bin  = new_resource.prefix_bin.nil? ? new_resource.run_context.node['ark']['prefix_bin'] : new_resource.prefix_bin
-        prefix_root = new_resource.prefix_root.nil? ? new_resource.run_context.node['ark']['prefix_root'] : new_resource.prefix_root
+        prefix_bin  = new_resource.prefix_bin.nil? ? prefix_bin_from_node_in_run_context : new_resource.prefix_bin
+        prefix_root = new_resource.prefix_root.nil? ? prefix_root_from_node_in_run_context : new_resource.prefix_root
+
         if new_resource.prefix_home.nil?
-          default_home_dir = ::File.join(new_resource.run_context.node['ark']['prefix_home'], new_resource.name)
+          default_home_dir = ::File.join(prefix_home_from_node_in_run_context, new_resource.name)
         else
           default_home_dir =  ::File.join(new_resource.prefix_home, new_resource.name)
         end
+
         # set effective paths
         new_resource.prefix_bin = prefix_bin
         new_resource.version ||= "1"  # initialize to one if nil
         new_resource.home_dir ||= default_home_dir
+
         if node['platform_family'] == 'windows'
           new_resource.path = new_resource.win_install_dir
         else
           new_resource.path = ::File.join(prefix_root, "#{new_resource.name}-#{new_resource.version}")
         end
+
         Chef::Log.debug("path is #{new_resource.path}")
         new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}-#{new_resource.version}.#{release_ext}")
+      end
+
+      def prefix_home_from_node_in_run_context
+        new_resource.run_context.node['ark']['prefix_home']
+      end
+
+      def prefix_bin_from_node_in_run_context
+        new_resource.run_context.node['ark']['prefix_bin']
       end
 
       def prefix_root_from_node_in_run_context
