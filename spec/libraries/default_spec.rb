@@ -213,147 +213,112 @@ describe_helpers Opscode::Ark::ProviderHelpers do
 
   end
 
-  describe "#set_paths" do
-
-    context 'when the resource prefix_bin has not been set' do
-      it "defaults to the one on the current node" do
-        with_resource_properties(
-          :extension => "jar",
-          :prefix_root => "/resource/prefix/root",
-          :prefix_home => "/resource/prefix/home",
-          :name => "resource_name")
-
-        allow(self).to receive(:prefix_bin_from_node_in_run_context) { "/node/prefix/bin" }
-
-        set_paths
-
-        expect(new_resource.prefix_bin).to eq("/node/prefix/bin")
+  describe "#default_prefix_bin" do
+    context 'when the resource prefix_bin has been set' do
+      it "uses the resources prefix_bin" do
+        with_resource_properties(:prefix_bin => "/resource/prefix/bin")
+        expect(default_prefix_bin).to eq("/resource/prefix/bin")
       end
     end
 
-    context 'when the resource prefix_bin has been set' do
-      it "uses the one on the current reource" do
-        with_resource_properties(
-          :extension => "jar",
-          :prefix_root => "/resource/prefix/root",
-          :prefix_home => "/resource/prefix/home",
-          :prefix_bin => "/resource/prefix/bin",
-          :name => "resource_name")
+    context 'when the resource prefix_bin has not been set' do
+      it "defaults to the one on the current node" do
+        allow(self).to receive(:prefix_bin_from_node_in_run_context) { "/node/prefix/bin" }
+        expect(default_prefix_bin).to eq("/node/prefix/bin")
+      end
+    end
+  end
 
-        set_paths
-
-        expect(new_resource.prefix_bin).to eq("/resource/prefix/bin")
+  describe "#default_prefix_root" do
+    context 'when the resource prefix_root has been set' do
+      it "uses the resources prefix_root" do
+        with_resource_properties(:prefix_root => "/resource/prefix/root")
+        expect(default_prefix_root).to eq("/resource/prefix/root")
       end
     end
 
     context 'when the resource prefix_root has not been set' do
-      it "defaults to the one on the current node the correct path" do
-        with_resource_properties(
-          :extension => "jar",
-          :prefix_bin => "/resource/prefix/bin",
-          :prefix_home => "/prefix/home",
-          :name => "resource_name")
-
+      it "defaults to the one on the current node" do
         allow(self).to receive(:prefix_root_from_node_in_run_context) { "/node/prefix/root" }
-
-        set_paths
-
-        expect(new_resource.path).to eq("/node/prefix/root/resource_name-1")
+        expect(default_prefix_root).to eq("/node/prefix/root")
       end
     end
+  end
 
-    context 'when the resource prefix_root has been set' do
-      it "uses the one on current resource to generate the correct path" do
+  describe "#default_home_dir" do
+    context 'when the resource prefix_home has been set' do
+      it "uses the resources prefix_home" do
         with_resource_properties(
-          :extension => "jar",
-          :prefix_root => "/resource/prefix/root",
-          :prefix_bin => "/resource/prefix/bin",
           :prefix_home => "/resource/prefix/home",
           :name => "resource_name")
-
-        set_paths
-
-        expect(new_resource.path).to eq("/resource/prefix/root/resource_name-1")
+        expect(default_home_dir).to eq("/resource/prefix/home/resource_name")
       end
     end
 
     context 'when the resource prefix_home has not been set' do
       it "defaults to the one on the current node" do
-        with_resource_properties(
-          :extension => "jar",
-          :prefix_root => "/resource/prefix/root",
-          :prefix_bin => "/resource/prefix/bin",
-          :name => "resource_name")
-
+        with_resource_properties(:name => "resource_name")
         allow(self).to receive(:prefix_home_from_node_in_run_context) { "/node/prefix/home" }
-        set_paths
-
-        expect(new_resource.home_dir).to eq("/node/prefix/home/resource_name")
+        expect(default_home_dir).to eq("/node/prefix/home/resource_name")
       end
     end
+  end
 
-    context 'when the resource prefix_home has been set' do
-      it "users the one on the current resource" do
-        with_resource_properties(
-          :extension => "jar",
-          :prefix_root => "/resource/prefix/root",
-          :prefix_bin => "/resource/prefix/bin",
-          :prefix_home => "/resource/prefix/home",
-          :name => "resource_name")
-
-        set_paths
-
-        expect(new_resource.home_dir).to eq("/resource/prefix/home/resource_name")
-
-      end
-    end
-
+  describe "#default_path" do
     context "when the node's platform_family is windows" do
-      it "sets the path to the resources Win_install_dir" do
-        with_resource_properties(
-          :extension => "jar",
-          :prefix_root => "/resource/prefix/root",
-          :prefix_bin => "/resource/prefix/bin",
-          :prefix_home => "/resource/prefix/home",
-          :win_install_dir => "/resource/windows/install/dir",
-          :name => "resource_name")
+      it "returns win_install_dir" do
+        with_resource_properties(:win_install_dir => "/resource/windows/install/dir",)
 
         with_node_attributes(:platform_family => "windows")
-        set_paths
-
-        expect(new_resource.path).to eq("/resource/windows/install/dir")
+        expect(default_path).to eq("/resource/windows/install/dir")
       end
     end
 
-    context 'when the version has not been set' do
+    context "when the node's platform_family is not windows" do
+      it "generates a path from the prefix_root" do
+        with_resource_properties(
+          :prefix_root => "/resource/prefix/root",
+          :name => "resource_name",
+          :version => "55")
+
+        expect(default_path).to eq("/resource/prefix/root/resource_name-55")
+      end
+    end
+  end
+
+  describe "#default_version" do
+    context "when the resource's version has been set" do
+      it "uses the version specified on the resource" do
+        with_resource_properties(:version => "00001")
+
+        expect(default_version).to eq("00001")
+      end
+    end
+
+    context "when the resource's version has not been set" do
       it "defaults to 1" do
-        with_resource_properties(
-          :extension => "jar",
-          :prefix_root => "/resource/prefix/root",
-          :prefix_bin => "/resource/prefix/bin",
-          :prefix_home => "/resource/prefix/home",
-          :name => "resource_name")
-
-        set_paths
-
-        expect(new_resource.version).to eq("1")
+        expect(default_version).to eq("1")
       end
     end
 
-    context 'when the version has been set' do
-      it "remains the value specified" do
-        with_resource_properties(
-          :extension => "jar",
-          :prefix_root => "/resource/prefix/root",
-          :prefix_bin => "/resource/prefix/bin",
-          :prefix_home => "/resource/prefix/home",
-          :version => "23",
-          :name => "resource_name")
+  end
 
-        set_paths
+  describe "#set_paths" do
 
-        expect(new_resource.version).to eq("23")
-      end
+    it "uses all the defaults" do
+      with_resource_properties(
+        :extension => "jar",
+        :name => "resource_name")
+
+      expect(self).to receive(:default_prefix_bin) { "/default/prefix/bin" }
+      expect(self).to receive(:default_prefix_root) { "/default/prefix/root" }
+      expect(self).to receive(:default_home_dir) { "/default/prefix/home" }
+      expect(self).to receive(:default_version) { "99" }
+      expect(self).to receive(:default_path) { "/default/path" }
+
+      set_paths
+
+      expect(new_resource.release_file).to eq("/var/chef/cache/resource_name-99.jar")
     end
 
     it "sets the resource's release_file" do

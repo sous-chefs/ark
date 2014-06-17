@@ -151,7 +151,6 @@ module Opscode
         cmd
       end
 
-
       def cherry_pick_tar_command(tar_args)
         cmd = node['ark']['tar']
         cmd += " #{tar_args}"
@@ -163,42 +162,57 @@ module Opscode
         cmd
       end
 
+      def default_prefix_bin
+        new_resource.prefix_bin || prefix_bin_from_node_in_run_context
+      end
+
+      def default_prefix_root
+        new_resource.prefix_root || prefix_root_from_node_in_run_context
+      end
+
+      def default_home_dir
+        prefix_home = new_resource.prefix_home || prefix_home_from_node_in_run_context
+        ::File.join(prefix_home, new_resource.name)
+      end
+
+      def default_version
+        new_resource.version || "1"
+      end
+
+      def default_path
+        if node['platform_family'] == 'windows'
+          new_resource.win_install_dir
+        else
+          ::File.join(new_resource.prefix_root, "#{new_resource.name}-#{new_resource.version}")
+        end
+      end
+
       def set_paths
         release_ext = parse_file_extension
-        prefix_bin  = new_resource.prefix_bin.nil? ? prefix_bin_from_node_in_run_context : new_resource.prefix_bin
-        prefix_root = new_resource.prefix_root.nil? ? prefix_root_from_node_in_run_context : new_resource.prefix_root
-
-        if new_resource.prefix_home.nil?
-          default_home_dir = ::File.join(prefix_home_from_node_in_run_context, new_resource.name)
-        else
-          default_home_dir =  ::File.join(new_resource.prefix_home, new_resource.name)
-        end
-
-        # set effective paths
-        new_resource.prefix_bin = prefix_bin
-        new_resource.version ||= "1"  # initialize to one if nil
-        new_resource.home_dir ||= default_home_dir
-
-        if node['platform_family'] == 'windows'
-          new_resource.path = new_resource.win_install_dir
-        else
-          new_resource.path = ::File.join(prefix_root, "#{new_resource.name}-#{new_resource.version}")
-        end
+        new_resource.prefix_bin = default_prefix_bin
+        new_resource.prefix_root = default_prefix_root
+        new_resource.home_dir = default_home_dir
+        new_resource.version = default_version
+        new_resource.path = default_path
 
         Chef::Log.debug("path is #{new_resource.path}")
-        new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}-#{new_resource.version}.#{release_ext}")
+        new_resource.release_file = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}-#{new_resource.version}.#{release_ext}")
+      end
+
+      def node_in_run_context
+        new_resource.run_context.node
       end
 
       def prefix_home_from_node_in_run_context
-        new_resource.run_context.node['ark']['prefix_home']
+        node_in_run_context['ark']['prefix_home']
       end
 
       def prefix_bin_from_node_in_run_context
-        new_resource.run_context.node['ark']['prefix_bin']
+        node_in_run_context['ark']['prefix_bin']
       end
 
       def prefix_root_from_node_in_run_context
-        new_resource.run_context.node['ark']['prefix_root']
+        node_in_run_context['ark']['prefix_root']
       end
 
       def set_put_paths
@@ -225,11 +239,10 @@ module Opscode
 
       def owner_command
         if node['platform_family'] == 'windows'
-          cmd = "icacls #{new_resource.path}\\* /setowner #{new_resource.owner}"
+          "icacls #{new_resource.path}\\* /setowner #{new_resource.owner}"
         else
-          cmd = "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+          "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
         end
-        cmd
       end
 
     end
