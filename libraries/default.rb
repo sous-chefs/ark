@@ -232,24 +232,6 @@ module Opscode
         cmd
       end
 
-      # def unpacked?(path)
-      #   if new_resource.creates
-      #     full_path = ::File.join(new_resource.path, new_resource.creates)
-      #   else
-      #     full_path = path
-      #   end
-      #   if ::File.directory? full_path
-      #     if ::File.stat(full_path).nlink == 2
-      #       false
-      #     else
-      #       true
-      #     end
-      #   elsif ::File.exists? full_path
-      #     true
-      #   else
-      #     false
-      #   end
-      # end
     end
   end
 end
