@@ -7,3 +7,6 @@ group :integration do
   cookbook 'minitest-handler'
   cookbook 'build-essential'
 end
+
+
+cookbook "ark_test", path: "spec/fixtures/cookbooks/ark_test"

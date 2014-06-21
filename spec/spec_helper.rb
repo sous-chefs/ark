@@ -1,5 +1,6 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
+require 'pry'
 
 at_exit { ChefSpec::Coverage.report! }
 
@@ -7,6 +8,7 @@ RSpec.configure do |config|
   config.color = true
   config.alias_example_group_to :describe_recipe, :type => :recipe
   config.alias_example_group_to :describe_helpers, :type => :helpers
+  config.alias_example_group_to :describe_resource, :type => :resource
 end
 
 def stringify_keys(hash)
@@ -69,4 +71,45 @@ RSpec.shared_context "helpers tests", :type => :helpers do
   def with_node_attributes(attributes)
     @node_attributes = attributes
   end
+end
+
+RSpec.shared_context "resource tests", :type => :resource do
+
+  let(:chef_run) do
+    ChefSpec::Runner.new(node_properties.merge(step_into)).converge(example_recipe)
+  end
+
+  let(:example_recipe) do
+    raise %(
+Please specify the name of the test recipe that executes your recipe:
+
+    let(:example_recipe) do
+      "ark_test::put"
+    end
+
+)
+  end
+
+  let(:node) { chef_run.node }
+
+  def node_properties
+    { }
+  end
+
+  let(:step_into) do
+    { step_into: [cookbook_name] }
+  end
+
+  def cookbook_recipe_names
+    described_recipe.split("::", 2)
+  end
+
+  def cookbook_name
+    cookbook_recipe_names.first
+  end
+
+  def recipe_name
+    cookbook_recipe_names.last
+  end
+
 end
