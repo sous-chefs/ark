@@ -11,21 +11,21 @@
 #   watch(%r{^resources/(.+)\.rb})
 # end
 
-guard 'foodcritic', cookbook_paths: '.', all_on_start: false do
-  watch(%r{attributes/.+\.rb$})
-  watch(%r{providers/.+\.rb$})
-  watch(%r{recipes/.+\.rb$})
-  watch(%r{resources/.+\.rb$})
-  watch('metadata.rb')
-end
+# guard 'foodcritic', cookbook_paths: '.', all_on_start: false do
+#   watch(%r{attributes/.+\.rb$})
+#   watch(%r{providers/.+\.rb$})
+#   watch(%r{recipes/.+\.rb$})
+#   watch(%r{resources/.+\.rb$})
+#   watch('metadata.rb')
+# end
 
-guard 'rubocop', all_on_start: false do
-  watch(%r{attributes/.+\.rb$})
-  watch(%r{providers/.+\.rb$})
-  watch(%r{recipes/.+\.rb$})
-  watch(%r{resources/.+\.rb$})
-  watch('metadata.rb')
-end
+# guard 'rubocop', all_on_start: false do
+#   watch(%r{attributes/.+\.rb$})
+#   watch(%r{providers/.+\.rb$})
+#   watch(%r{recipes/.+\.rb$})
+#   watch(%r{resources/.+\.rb$})
+#   watch('metadata.rb')
+# end
 
 guard :rspec, cmd: 'bundle exec rspec', all_on_start: false, notification: false do
   watch(%r{^libraries/(.+)\.rb$})
