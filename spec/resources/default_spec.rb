@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe_resource "ark" do
 
   describe "install" do
@@ -55,7 +54,7 @@ describe_resource "ark" do
       expect(chef_run).to create_link("/usr/local/test_install")
 
       expect(chef_run).not_to create_template("/etc/profile.d/test_install.sh")
-      expect(chef_run).not_to create_ruby_block("adding '/usr/local/test_install-2/bin' to chef-client ENV['PATH']")
+      expect(chef_run).not_to run_ruby_block("adding '/usr/local/test_install-2/bin' to chef-client ENV['PATH']")
     end
   end
 
@@ -166,7 +165,7 @@ describe_resource "ark" do
       expect(chef_run).not_to create_link("/usr/local/test_install")
 
       expect(chef_run).not_to create_template("/etc/profile.d/test_install.sh")
-      expect(chef_run).not_to create_ruby_block("adding 'C:\\install/bin' to chef-client ENV['PATH']")
+      expect(chef_run).not_to run_ruby_block("adding 'C:\\install/bin' to chef-client ENV['PATH']")
 
     end
   end
@@ -308,7 +307,6 @@ describe_resource "ark" do
       expect(resource).to notify("execute[set owner on /usr/local/test_configure-1]")
       expect(resource).to notify("execute[autogen /usr/local/test_configure-1]")
       expect(resource).to notify("execute[configure /usr/local/test_configure-1]")
-
 
       expect(chef_run).not_to run_execute("set owner on /usr/local/test_configure-1")
       expect(chef_run).not_to run_execute("autogen /usr/local/test_configure-1")
