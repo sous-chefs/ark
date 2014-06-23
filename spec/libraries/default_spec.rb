@@ -1,5 +1,4 @@
 require "spec_helper"
-
 require './libraries/default'
 
 describe_helpers Opscode::Ark::ProviderHelpers do
@@ -267,7 +266,7 @@ describe_helpers Opscode::Ark::ProviderHelpers do
   describe "#default_path" do
     context "when the node's platform_family is windows" do
       it "returns win_install_dir" do
-        with_resource_properties(:win_install_dir => "/resource/windows/install/dir",)
+        with_resource_properties(:win_install_dir => "/resource/windows/install/dir")
 
         with_node_attributes(:platform_family => "windows")
         expect(default_path).to eq("/resource/windows/install/dir")
@@ -306,9 +305,7 @@ describe_helpers Opscode::Ark::ProviderHelpers do
   describe "#set_paths" do
 
     it "uses all the defaults" do
-      with_resource_properties(
-        :extension => "jar",
-        :name => "resource_name")
+      with_resource_properties(:extension => "jar", :name => "resource_name")
 
       expect(self).to receive(:default_prefix_bin) { "/default/prefix/bin" }
       expect(self).to receive(:default_prefix_root) { "/default/prefix/root" }
@@ -361,7 +358,6 @@ describe_helpers Opscode::Ark::ProviderHelpers do
           :path => "/resource/path",
           :creates => "/resource/creates")
         allow(self).to receive(:sevenzip_command_builder) { "sevenzip_command" }
-
 
         expect(cherry_pick_command).to eq("sevenzip_command -r /resource/creates")
       end

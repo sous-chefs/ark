@@ -28,4 +28,8 @@ StringLiterals:
 SingleSpaceBeforeFirstArg:
   Enabled: true
   Exclude:
-    - metadata.rb
+    - '**/metadata.rb'
+
+TrivialAccessors:
+  Exclude:
+    - '**/spec/spec_helper.rb'

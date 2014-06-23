@@ -244,7 +244,6 @@ module Opscode
           "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
         end
       end
-
     end
   end
 end

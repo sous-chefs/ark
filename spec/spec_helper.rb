@@ -12,7 +12,7 @@ RSpec.configure do |config|
 end
 
 def stringify_keys(hash)
-  hash.inject({}) do |base, (k, v)|
+  hash.each_with_object({}) do |(k, v), base|
     v = stringify_keys(v) if v.is_a? Hash
     base[k.to_s] = v
     base
@@ -80,7 +80,7 @@ RSpec.shared_context "resource tests", :type => :resource do
   end
 
   let(:example_recipe) do
-    raise %(
+    fail %(
 Please specify the name of the test recipe that executes your recipe:
 
     let(:example_recipe) do
@@ -93,11 +93,11 @@ Please specify the name of the test recipe that executes your recipe:
   let(:node) { chef_run.node }
 
   def node_properties
-    { }
+    {}
   end
 
   let(:step_into) do
-    { step_into: [cookbook_name] }
+    { :step_into => [cookbook_name] }
   end
 
   def cookbook_recipe_names
