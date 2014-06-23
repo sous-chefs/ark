@@ -1,4 +1,4 @@
-# <a name="title"></a> chef-ark [![Build Status](https://secure.travis-ci.org/opscode-cookbooks/ark.png?branch=master)](https://travis-ci.org/opscode-cookbooks/ark)
+# <a name="title"></a> chef-ark [![Build Status](https://secure.travis-ci.org/burtlo/ark.png?branch=master)](https://travis-ci.org/burtlo/ark)
 
 Overview
 ========
@@ -176,7 +176,7 @@ Attribute Parameters
 - `environment`: hash of environment variables to pass to invoked
   shell commands like `tar`, `unzip`, `configure`, and `make`.
 - `strip_components`: number of components in path to strip when extracting archive.
-  With default value of `1`, ark strips the leading directory from an archive, 
+  With default value of `1`, ark strips the leading directory from an archive,
   which is the default for both `unzip` and `tar` commands.
 - `autoconf_opts`: an array of command line options for use with the
   GNU `autoconf` script.
