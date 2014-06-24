@@ -9,4 +9,4 @@ group :integration do
 end
 
 
-cookbook "ark_test", path: "spec/fixtures/cookbooks/ark_test"
+cookbook "ark_spec", path: "spec/fixtures/cookbooks/ark_spec"

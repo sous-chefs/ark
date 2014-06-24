@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe_recipe "ark::default" do
 
-  def node_properties
+  def node_attributes
     { :platform => "windows", :version => "2008R2" }
   end
 

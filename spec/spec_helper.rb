@@ -21,11 +21,11 @@ end
 
 RSpec.shared_context "recipe tests", :type => :recipe do
 
-  let(:chef_run) { ChefSpec::Runner.new(node_properties).converge(described_recipe) }
+  let(:chef_run) { ChefSpec::Runner.new(node_attributes).converge(described_recipe) }
 
   let(:node) { chef_run.node }
 
-  def node_properties
+  def node_attributes
     {}
   end
 
@@ -76,7 +76,7 @@ end
 RSpec.shared_context "resource tests", :type => :resource do
 
   let(:chef_run) do
-    ChefSpec::Runner.new(node_properties.merge(step_into)).converge(example_recipe)
+    ChefSpec::Runner.new(node_attributes.merge(step_into)).converge(example_recipe)
   end
 
   let(:example_recipe) do
@@ -84,7 +84,7 @@ RSpec.shared_context "resource tests", :type => :resource do
 Please specify the name of the test recipe that executes your recipe:
 
     let(:example_recipe) do
-      "ark_test::put"
+      "ark_spec::put"
     end
 
 )
@@ -92,7 +92,7 @@ Please specify the name of the test recipe that executes your recipe:
 
   let(:node) { chef_run.node }
 
-  def node_properties
+  def node_attributes
     {}
   end
 

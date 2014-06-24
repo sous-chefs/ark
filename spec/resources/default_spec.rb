@@ -4,7 +4,7 @@ describe_resource "ark" do
 
   describe "install" do
 
-    let(:example_recipe) { "ark_test::install" }
+    let(:example_recipe) { "ark_spec::install" }
 
     it "installs" do
       expect(chef_run).to install_ark("test_install")
@@ -30,7 +30,7 @@ describe_resource "ark" do
 
   describe "install with binaries" do
 
-    let(:example_recipe) { "ark_test::install_with_binaries" }
+    let(:example_recipe) { "ark_spec::install_with_binaries" }
 
     it "installs" do
       expect(chef_run).to install_ark("test_install")
@@ -62,7 +62,7 @@ describe_resource "ark" do
 
     context "binary is not already in the environment path" do
 
-      let(:example_recipe) { "ark_test::install_with_append_env_path" }
+      let(:example_recipe) { "ark_spec::install_with_append_env_path" }
 
       it "installs" do
         expect(chef_run).to install_ark("test_install_with_append_env_path")
@@ -91,7 +91,7 @@ describe_resource "ark" do
 
     context "binary is already in the environment path" do
 
-      let(:example_recipe) { "ark_test::install_with_append_env_path" }
+      let(:example_recipe) { "ark_spec::install_with_append_env_path" }
 
       # TODO: Using the ENV is terrible -- attempts to replace it with a helper
       #   method did not work or a class with a method. Explore different ways
@@ -136,9 +136,9 @@ describe_resource "ark" do
 
   describe "install on windows" do
 
-    let(:example_recipe) { "ark_test::install_windows" }
+    let(:example_recipe) { "ark_spec::install_windows" }
 
-    def node_properties
+    def node_attributes
       { :platform => "windows", :version => "2008R2" }
     end
 
@@ -172,7 +172,7 @@ describe_resource "ark" do
 
   describe "put" do
 
-    let(:example_recipe) { "ark_test::put" }
+    let(:example_recipe) { "ark_spec::put" }
 
     it "puts" do
       expect(chef_run).to put_ark("test_put")
@@ -193,7 +193,7 @@ describe_resource "ark" do
 
   describe "dump" do
 
-    let(:example_recipe) { "ark_test::dump" }
+    let(:example_recipe) { "ark_spec::dump" }
 
     it "dumps" do
       expect(chef_run).to dump_ark("test_dump")
@@ -213,7 +213,7 @@ describe_resource "ark" do
 
   describe "unzip" do
 
-    let(:example_recipe) { "ark_test::unzip" }
+    let(:example_recipe) { "ark_spec::unzip" }
 
     it "unzips" do
       expect(chef_run).to unzip_ark("test_unzip")
@@ -233,7 +233,7 @@ describe_resource "ark" do
 
   describe "cherry_pick" do
 
-    let(:example_recipe) { "ark_test::cherry_pick" }
+    let(:example_recipe) { "ark_spec::cherry_pick" }
 
     it "cherry picks" do
 
@@ -251,13 +251,13 @@ describe_resource "ark" do
       expect(resource).to notify("execute[set owner on /usr/local/foo_cherry_pick]").to(:run)
 
       expect(chef_run).to_not run_execute("cherry_pick foo_sub/foo1.txt from /var/chef/cache/test_cherry_pick.tar.gz")
-      expect(chef_run).to_not run_execute("set owner /usr/local/foo_cherry_pick")
+      expect(chef_run).to_not run_execute("set owner on /usr/local/foo_cherry_pick")
     end
   end
 
   describe "install_with_make" do
 
-    let(:example_recipe) { "ark_test::install_with_make" }
+    let(:example_recipe) { "ark_spec::install_with_make" }
 
     it "installs with make" do
       expect(chef_run).to install_with_make_ark("test_install_with_make")
@@ -288,7 +288,7 @@ describe_resource "ark" do
 
   describe "configure" do
 
-    let(:example_recipe) { "ark_test::configure" }
+    let(:example_recipe) { "ark_spec::configure" }
 
     it "configures" do
 

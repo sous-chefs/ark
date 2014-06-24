@@ -2,12 +2,12 @@ require "spec_helper"
 
 describe_recipe "ark::default" do
 
-  def node_properties
+  def node_attributes
     { :platform => "centos", :version => "5.10" }
   end
 
   let(:expected_packages) do
-    %w( libtool autoconf unzip rsync make gcc xz-lzma-compat )
+    %w( libtool autoconf unzip rsync make gcc gcc-c++ xz-lzma-compat )
   end
 
   it "installs core packages" do
