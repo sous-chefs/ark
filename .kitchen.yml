@@ -18,5 +18,5 @@ suites:
   - recipe[minitest-handler]
   - recipe[build-essential]
   - recipe[ark]
-  - recipe[ark_test]
+  - recipe[ark_spec]
   attributes: {}
