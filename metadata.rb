@@ -12,5 +12,6 @@ end
 
 recipe 'ark::default', 'Installs and configures ark'
 
+depends 'build-essential'
 depends 'windows'
 depends '7-zip'
