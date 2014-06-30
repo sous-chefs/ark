@@ -7,7 +7,7 @@ describe_recipe "ark::default" do
   end
 
   let(:expected_packages) do
-    %w( libtool autoconf unzip rsync make gcc gcc-c++ xz-lzma-compat )
+    %w( libtool autoconf unzip rsync make gcc xz-lzma-compat )
   end
 
   it "installs core packages" do
