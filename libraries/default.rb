@@ -1,7 +1,11 @@
 require_relative 'platform_specific_builders'
 require_relative 'resource_deprecations'
 require_relative 'resource_defaults'
-require_relative 'commands'
+require_relative 'sevenzip_command_builder'
+require_relative 'unzip_command_builder'
+require_relative 'tar_command_builder'
+require_relative 'general_owner'
+require_relative 'windows_owner'
 
 module Ark
   module ProviderHelpers
