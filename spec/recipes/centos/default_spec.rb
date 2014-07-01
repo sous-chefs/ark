@@ -3,7 +3,7 @@ require "spec_helper"
 describe_recipe "ark::default" do
 
   def node_attributes
-    { :platform => "centos", :version => "5.10" }
+    { platform: "centos", version: "5.10" }
   end
 
   let(:expected_packages) do

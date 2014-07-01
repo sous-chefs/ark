@@ -19,7 +19,7 @@ module Ark
     end
 
     def deprecations
-      { :strip_leading_dir_feature => strip_leading_dir_feature_message }
+      { strip_leading_dir_feature: strip_leading_dir_feature_message }
     end
 
     def strip_leading_dir_feature

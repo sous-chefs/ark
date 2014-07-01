@@ -6,9 +6,9 @@ at_exit { ChefSpec::Coverage.report! }
 
 RSpec.configure do |config|
   config.color = true
-  config.alias_example_group_to :describe_recipe, :type => :recipe
-  config.alias_example_group_to :describe_helpers, :type => :helpers
-  config.alias_example_group_to :describe_resource, :type => :resource
+  config.alias_example_group_to :describe_recipe, type: :recipe
+  config.alias_example_group_to :describe_helpers, type: :helpers
+  config.alias_example_group_to :describe_resource, type: :resource
 end
 
 def stringify_keys(hash)
@@ -19,7 +19,7 @@ def stringify_keys(hash)
   end
 end
 
-RSpec.shared_context "recipe tests", :type => :recipe do
+RSpec.shared_context "recipe tests", type: :recipe do
 
   let(:chef_run) { ChefSpec::Runner.new(node_attributes).converge(described_recipe) }
 
@@ -47,7 +47,7 @@ RSpec.shared_context "recipe tests", :type => :recipe do
 
 end
 
-RSpec.shared_context "helpers tests", :type => :helpers do
+RSpec.shared_context "helpers tests", type: :helpers do
   include described_class
 
   let(:new_resource) { OpenStruct.new(resource_properties) }
@@ -73,7 +73,7 @@ RSpec.shared_context "helpers tests", :type => :helpers do
   end
 end
 
-RSpec.shared_context "resource tests", :type => :resource do
+RSpec.shared_context "resource tests", type: :resource do
 
   let(:chef_run) do
     ChefSpec::Runner.new(node_attributes.merge(step_into)).converge(example_recipe)
@@ -97,7 +97,7 @@ Please specify the name of the test recipe that executes your recipe:
   end
 
   let(:step_into) do
-    { :step_into => [cookbook_name] }
+    { step_into: [cookbook_name] }
   end
 
   def cookbook_recipe_names
