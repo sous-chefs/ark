@@ -1,6 +1,6 @@
 class TarCommandBuilder
   def unpack
-    "#{tar_binary} #{args} #{resource.release_file} #{strip_args}"
+    "#{tar_binary} #{args} #{resource.release_file}#{strip_args}"
   end
 
   def dump

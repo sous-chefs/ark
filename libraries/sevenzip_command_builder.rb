@@ -25,8 +25,7 @@ class SevenZipCommandBuilder
       return
     end
 
-    require 'tmpdir'
-    tmpdir = Dir.mktmpdir
+    tmpdir = make_temp_directory
     cmd = sevenzip_command_builder(tmpdir, 'e')
 
     cmd += " && "
@@ -54,5 +53,10 @@ class SevenZipCommandBuilder
     else
       ""
     end
+  end
+
+  def make_temp_directory
+    require 'tmpdir'
+    tmpdir = Dir.mktmpdir
   end
 end

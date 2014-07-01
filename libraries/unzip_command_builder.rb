@@ -28,9 +28,10 @@ class UnzipCommandBuilder
 
   private
 
+  attr_reader :resource
+
   def unzip_with_strip_components
-    require 'tmpdir'
-    tmpdir = Dir.mktmpdir
+    tmpdir = make_temp_directory
     strip_dir = '*/' * resource.strip_components
     cmd = "unzip -q -u -o #{resource.release_file} -d #{tmpdir}"
     cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{resource.path}"
@@ -38,5 +39,8 @@ class UnzipCommandBuilder
     cmd
   end
 
-  attr_reader :resource
+  def make_temp_directory
+    require 'tmpdir'
+    Dir.mktmpdir
+  end
 end
