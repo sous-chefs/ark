@@ -44,64 +44,64 @@ describe_helpers Opscode::Ark::ProviderHelpers do
 
   # end
 
-  describe "#unpack_type" do
-    context 'when given a tar.gz' do
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "tar.gz")
-        expect(unpack_type).to eq("tar_xzf")
-      end
+  # describe "#unpack_type" do
+  #   context 'when given a tar.gz' do
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "tar.gz")
+  #       expect(unpack_type).to eq("tar_xzf")
+  #     end
 
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "tgz")
-        expect(unpack_type).to eq("tar_xzf")
-      end
-    end
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "tgz")
+  #       expect(unpack_type).to eq("tar_xzf")
+  #     end
+  #   end
 
-    context 'when given a tar.bz2' do
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "tar.bz2")
-        expect(unpack_type).to eq("tar_xjf")
-      end
+  #   context 'when given a tar.bz2' do
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "tar.bz2")
+  #       expect(unpack_type).to eq("tar_xjf")
+  #     end
 
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "tbz")
-        expect(unpack_type).to eq("tar_xjf")
-      end
-    end
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "tbz")
+  #       expect(unpack_type).to eq("tar_xjf")
+  #     end
+  #   end
 
-    context 'when given a tar.xz' do
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "tar.xz")
-        expect(unpack_type).to eq("tar_xJf")
-      end
+  #   context 'when given a tar.xz' do
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "tar.xz")
+  #       expect(unpack_type).to eq("tar_xJf")
+  #     end
 
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "txz")
-        expect(unpack_type).to eq("tar_xJf")
-      end
-    end
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "txz")
+  #       expect(unpack_type).to eq("tar_xJf")
+  #     end
+  #   end
 
-    context 'when given a zip' do
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "zip")
-        expect(unpack_type).to eq("unzip")
-      end
-    end
+  #   context 'when given a zip' do
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "zip")
+  #       expect(unpack_type).to eq("unzip")
+  #     end
+  #   end
 
-    context 'when given a war' do
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "war")
-        expect(unpack_type).to eq("unzip")
-      end
-    end
+  #   context 'when given a war' do
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "war")
+  #       expect(unpack_type).to eq("unzip")
+  #     end
+  #   end
 
-    context 'when given a jar' do
-      it "returns the correct command with parameters" do
-        with_resource_properties(:extension => "jar")
-        expect(unpack_type).to eq("unzip")
-      end
-    end
-  end
+  #   context 'when given a jar' do
+  #     it "returns the correct command with parameters" do
+  #       with_resource_properties(:extension => "jar")
+  #       expect(unpack_type).to eq("unzip")
+  #     end
+  #   end
+  # end
 
   # describe "#tar_command" do
 

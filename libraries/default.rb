@@ -98,10 +98,6 @@ module Opscode
         end
       end
 
-      def unpack_type
-        new_resource.unpack_type ||= defaults.unpack_type
-      end
-
       def archive_application
         @archive_application ||= builder_klass.new(new_resource)
       end
