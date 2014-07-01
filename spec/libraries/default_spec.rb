@@ -370,7 +370,7 @@ describe_helpers Opscode::Ark::ProviderHelpers do
           :run_context => OpenStruct.new(:node => { 'ark' => { 'tar' => "sevenzip_command" } })
         )
 
-        expect(cherry_pick_command).to eq("sevenzip_command e \"/resource/release_file\"  -o\"/resource/path\" -uy -r /resource/creates")
+        expect(cherry_pick_command).to eq("sevenzip_command e \"/resource/release_file\" -o\"/resource/path\" -uy -r /resource/creates")
       end
     end
 

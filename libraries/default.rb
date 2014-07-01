@@ -49,7 +49,7 @@ module Opscode
 
       def unpack_command
         if node['platform_family'] == 'windows'
-          WindowsUnpacker.new(new_resource).command
+          SevenZipCommandBuilder.new(new_resource).unpack
         else
           case unpack_type
           when "tar_xzf"
@@ -66,7 +66,7 @@ module Opscode
 
       def dump_command
         if node['platform_family'] == 'windows'
-          WindowsDumper.new(new_resource).command
+          SevenZipCommandBuilder.new(new_resource).dump
         else
           case unpack_type
           when "tar_xzf", "tar_xjf", "tar_xJf"
@@ -79,7 +79,7 @@ module Opscode
 
       def cherry_pick_command
         if node['platform_family'] == 'windows'
-          WindowsCherryPicker.new(new_resource).command
+          SevenZipCommandBuilder.new(new_resource).cherry_pick
         else
           case unpack_type
           when "tar_xzf"
