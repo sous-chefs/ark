@@ -1,5 +1,8 @@
 # libs
 require_relative 'resource_deprecations'
+require_relative 'resource_defaults'
+require_relative 'commands'
+
 
 module Opscode
   module Ark
@@ -13,69 +16,85 @@ module Opscode
         deprecations.each { |message| Chef::Log.warn("DEPRECATED: #{message}") }
       end
 
-      # private
-      def unpack_type
-        case parse_file_extension
-        when /tar.gz|tgz/  then "tar_xzf"
-        when /tar.bz2|tbz/ then "tar_xjf"
-        when /tar.xz|txz/  then "tar_xJf"
-        when /zip|war|jar/ then "unzip"
-        else fail "Don't know how to expand #{new_resource.url}"
-        end
+      def defaults
+        @resource_defaults ||= ::Ark::ResourceDefaults.new(new_resource)
       end
 
-      # private
-      def parse_file_extension
-        parse_file_extension_on_resource(new_resource)
+      def set_paths
+        new_resource.extension = defaults.extension
+        new_resource.prefix_bin = defaults.prefix_bin
+        new_resource.prefix_root = defaults.prefix_root
+        new_resource.home_dir = defaults.home_dir
+        new_resource.version = defaults.version
+
+        # TODO: what happens when the path is already set -- with the current logic we overwrite it\
+        # if you are in windows we overwrite it
+        # otherwise we overwrite it with the root/name-version
+        new_resource.path = defaults.path
+        new_resource.release_file = defaults.release_file
       end
 
-      def parse_file_extension_on_resource(resource)
-        if resource.extension.nil?
-          # purge any trailing redirect
-          url = resource.url.clone
-          url =~ %r{^https?:\/\/.*(.bin|bz2|gz|jar|tbz|tgz|txz|war|xz|zip)(\/.*\/)}
-          url.gsub!(Regexp.last_match(2), '') unless Regexp.last_match(2).nil?
-          # remove tailing query string
-          release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
-          # (\?.*)? accounts for a trailing querystring
-          Chef::Log.debug("DEBUG: release_basename is #{release_basename}")
-          release_basename =~ /^(.+?)\.(jar|tar\.bz2|tar\.gz|tar\.xz|tbz|tgz|txz|war|zip)(\?.*)?/
-          Chef::Log.debug("DEBUG: file_extension is #{Regexp.last_match(2)}")
-          resource.extension = Regexp.last_match(2)
-        end
-        resource.extension
+      def set_put_paths
+        new_resource.extension = defaults.extension
+
+        # TODO: Should this be added - as the prefix_root could be used in the path_with_version
+        # new_resource.prefix_root = default.prefix_root
+        new_resource.path = defaults.path_without_version
+        new_resource.release_file = defaults.release_file_without_version
       end
 
-      # public
+      def set_dump_paths
+        new_resource.extension = defaults.extension
+        new_resource.release_file = defaults.release_file_without_version
+      end
+
       def unpack_command
         if node['platform_family'] == 'windows'
-          cmd = sevenzip_command
+          WindowsUnpacker.new(new_resource).command
         else
           case unpack_type
           when "tar_xzf"
-            cmd = tar_command("xzf")
+            TarUnpacker.new(new_resource,flags: "xzf").command
           when "tar_xjf"
-            cmd = tar_command("xjf")
+            TarUnpacker.new(new_resource,flags: "xjf").command
           when "tar_xJf"
-            cmd = tar_command("xJf")
+            TarUnpacker.new(new_resource,flags: "xJf").command
           when "unzip"
-            cmd = unzip_command
+            UnzipUnpacker.new(new_resource).command
           end
         end
-        Chef::Log.debug("DEBUG: cmd: #{cmd}")
-        cmd
       end
 
-      # public
-      def tar_command(tar_args)
-        cmd = node['ark']['tar']
-        cmd += " #{tar_args} "
-        cmd += new_resource.release_file
-        cmd += tar_strip_args
-        cmd
+      def dump_command
+        if node['platform_family'] == 'windows'
+          WindowsDumper.new(new_resource).command
+        else
+          case unpack_type
+          when "tar_xzf", "tar_xjf", "tar_xJf"
+            TarDumper.new(new_resource).command
+          when "unzip"
+            UnzipDumper.new(new_resource).command
+          end
+        end
       end
 
-      # public
+      def cherry_pick_command
+        if node['platform_family'] == 'windows'
+          WindowsCherryPicker.new(new_resource).command
+        else
+          case unpack_type
+          when "tar_xzf"
+            TarCherryPicker.new(new_resource, flags: "xzf").command
+          when "tar_xjf"
+            TarCherryPicker.new(new_resource, flags: "xjf").command
+          when "tar_xJf"
+            TarCherryPicker.new(new_resource, flags: "xJf").command
+          when "unzip"
+            UnzipCherryPicker.new(new_resource).command
+          end
+        end
+      end
+
       def unzip_command
         if new_resource.strip_components > 0
           require 'tmpdir'
@@ -90,192 +109,26 @@ module Opscode
         end
       end
 
-      # public
-      def sevenzip_command
-        if new_resource.strip_components > 0
-          require 'tmpdir'
-          tmpdir = Dir.mktmpdir
-          cmd = sevenzip_command_builder(tmpdir, 'e')
-          cmd += " && "
-          currdir = tmpdir
-          var = 0
-          while var < new_resource.strip_components
-            var += 1
-            cmd += "for /f %#{var} in ('dir /ad /b \"#{currdir.gsub! '/', '\\'}\"') do "
-            currdir += "\\%#{var}"
-          end
-          cmd += "xcopy \"#{currdir}\" \"#{new_resource.home_dir}\" /s /e"
-        else
-          cmd = sevenzip_command_builder(new_resource.path, 'x')
-        end
-        cmd
-      end
-
-      # private
-      def sevenzip_command_builder(dir, command)
-        cmd = "#{node['ark']['tar']} #{command} \""
-        cmd += new_resource.release_file
-        cmd += "\" "
-        case parse_file_extension
-        when /tar.gz|tgz|tar.bz2|tbz|tar.xz|txz/
-          cmd += " -so | #{node['ark']['tar']} x -aoa -si -ttar"
-        end
-        cmd += " -o\"#{dir}\" -uy"
-        cmd
-      end
-
-      # public
-      def dump_command
-        if node['platform_family'] == 'windows'
-          cmd = sevenzip_command_builder(new_resource.path, 'e')
-        else
-          case unpack_type
-          when "tar_xzf", "tar_xjf", "tar_xJf"
-            cmd = "tar -mxf \"#{new_resource.release_file}\" -C \"#{new_resource.path}\""
-          when "unzip"
-            cmd = "unzip  -j -q -u -o \"#{new_resource.release_file}\" -d \"#{new_resource.path}\""
-          end
-        end
-        Chef::Log.debug("DEBUG: cmd: #{cmd}")
-        cmd
-      end
-
-      # public
-      def cherry_pick_command
-        if node['platform_family'] == 'windows'
-          cmd = sevenzip_command_builder(new_resource.path, 'e')
-          cmd += " -r #{new_resource.creates}"
-        else
-          case unpack_type
-          when "tar_xzf"
-            cmd = cherry_pick_tar_command("xzf")
-          when "tar_xjf"
-            cmd = cherry_pick_tar_command("xjf")
-          when "tar_xJf"
-            cmd = cherry_pick_tar_command("xJf")
-          when "unzip"
-            cmd = cherry_pick_unzip_command
-          end
-        end
-        Chef::Log.debug("DEBUG: cmd: #{cmd}")
-        cmd
-      end
-
-      # private
-      def cherry_pick_unzip_command
-        cmd = "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ; stat=$? ;"
-        cmd += "if [ $stat -eq 11 ] ; then "
-        cmd += "unzip  -j -o #{new_resource.release_file} \"#{new_resource.creates}\" -d #{new_resource.path} ;"
-        cmd += "elif [ $stat -ne 0 ] ; then false ;"
-        cmd += "else "
-        cmd += "unzip  -j -o #{new_resource.release_file} \"*/#{new_resource.creates}\" -d #{new_resource.path} ;"
-        cmd += "fi"
-        cmd
-      end
-
-      # private
-      def cherry_pick_tar_command(tar_args)
-        cmd = node['ark']['tar']
-        cmd += " #{tar_args}"
-        cmd += " #{new_resource.release_file}"
-        cmd += " -C"
-        cmd += " #{new_resource.path}"
-        cmd += " #{new_resource.creates}"
-        cmd += tar_strip_args
-        cmd
-      end
-
-      # private
-      def default_prefix_bin
-        new_resource.prefix_bin || prefix_bin_from_node_in_run_context
-      end
-
-      # private
-      def default_prefix_root
-        new_resource.prefix_root || prefix_root_from_node_in_run_context
-      end
-
-      # private
-      def default_home_dir
-        prefix_home = new_resource.prefix_home || prefix_home_from_node_in_run_context
-        ::File.join(prefix_home, new_resource.name)
-      end
-
-      # private
-      def default_version
-        new_resource.version || "1"
-      end
-
-      # private
-      def default_path
-        if node['platform_family'] == 'windows'
-          new_resource.win_install_dir
-        else
-          ::File.join(new_resource.prefix_root, "#{new_resource.name}-#{new_resource.version}")
-        end
-      end
-
-      # public
-      def set_paths
-        release_ext = parse_file_extension
-        new_resource.prefix_bin = default_prefix_bin
-        new_resource.prefix_root = default_prefix_root
-        new_resource.home_dir = default_home_dir
-        new_resource.version = default_version
-        new_resource.path = default_path
-
-        Chef::Log.debug("path is #{new_resource.path}")
-        new_resource.release_file = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}-#{new_resource.version}.#{release_ext}")
-      end
-
-      # private
-      def node_in_run_context
-        new_resource.run_context.node
-      end
-
-      # private
-      def prefix_home_from_node_in_run_context
-        node_in_run_context['ark']['prefix_home']
-      end
-
-      # private
-      def prefix_bin_from_node_in_run_context
-        node_in_run_context['ark']['prefix_bin']
-      end
-
-      # private
-      def prefix_root_from_node_in_run_context
-        node_in_run_context['ark']['prefix_root']
-      end
-
-      # public
-      def set_put_paths
-        release_ext = parse_file_extension
-        path = new_resource.path.nil? ? prefix_root_from_node_in_run_context : new_resource.path
-        new_resource.path      = ::File.join(path, new_resource.name)
-        Chef::Log.debug("DEBUG: path is #{new_resource.path}")
-        new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
-      end
-
-      # public
-      def set_dump_paths
-        release_ext = parse_file_extension
-        new_resource.release_file  = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
-      end
-
-      # private
-      def tar_strip_args
-        new_resource.strip_components > 0 ? " --strip-components=#{new_resource.strip_components}" : ""
-      end
-
-      # public
       def owner_command
         if node['platform_family'] == 'windows'
-          "icacls #{new_resource.path}\\* /setowner #{new_resource.owner}"
+          WindowsOwner.new(new_resource).command
         else
-          "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+          GeneralOwner.new(new_resource).command
         end
       end
+
+
+      # private
+      def unpack_type
+        case new_resource.extension
+        when /tar.gz|tgz/  then "tar_xzf"
+        when /tar.bz2|tbz/ then "tar_xjf"
+        when /tar.xz|txz/  then "tar_xJf"
+        when /zip|war|jar/ then "unzip"
+        else fail "Don't know how to expand #{new_resource.url}"
+        end
+      end
+
     end
   end
 end
