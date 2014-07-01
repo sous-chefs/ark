@@ -7,12 +7,22 @@ module PlatformSpecificBuilders
 
   def generates_archive_commands_for(application,options)
     condition = options[:when_the]
-    builder = options[:with_builder_klass]
+    builder = options[:with_klass]
     archive_command_generators.push [ condition, builder ]
   end
 
   def archive_command_generators
     @archive_command_generators ||= []
+  end
+
+  def generates_owner_commands_for(application,options)
+    condition = options[:when_the]
+    builder = options[:with_klass]
+    owner_command_generators.push [ condition, builder ]
+  end
+
+  def owner_command_generators
+    @owner_command_generators ||= []
   end
 
 end
@@ -24,15 +34,24 @@ module Opscode
 
       generates_archive_commands_for :seven_zip,
         when_the: -> { node['platform_family'] == 'windows' },
-        with_builder_klass: SevenZipCommandBuilder
+        with_klass: SevenZipCommandBuilder
 
       generates_archive_commands_for :unzip,
         when_the: -> { new_resource.extension =~ /zip|war|jar/ },
-        with_builder_klass: UnzipCommandBuilder
+        with_klass: UnzipCommandBuilder
 
       generates_archive_commands_for :tar,
         when_the: -> { true },
-        with_builder_klass: TarCommandBuilder
+        with_klass: TarCommandBuilder
+
+
+      generates_owner_commands_for :windows,
+        when_the: -> { node['platform_family'] == 'windows' },
+        with_klass: WindowsOwner
+
+      generates_owner_commands_for :all_other_platforms,
+        when_the: -> { true },
+        with_klass: GeneralOwner
 
       def deprecations
         ::Ark::ResourceDeprecations.on(new_resource)
@@ -91,22 +110,22 @@ module Opscode
       end
 
       def owner_command
-        if node['platform_family'] == 'windows'
-          WindowsOwner.new(new_resource).command
-        else
-          GeneralOwner.new(new_resource).command
-        end
+        owner_builder_klass.new(new_resource).command
       end
 
       private
 
       def archive_application
-        @archive_application ||= builder_klass.new(new_resource)
+        @archive_application ||= archive_builder_klass.new(new_resource)
       end
 
-      def builder_klass
+      def archive_builder_klass
         new_resource.extension ||= defaults.extension
         Opscode::Ark::ProviderHelpers.archive_command_generators.find { |condition, klass| instance_exec(&condition) }.last
+      end
+
+      def owner_builder_klass
+        Opscode::Ark::ProviderHelpers.owner_command_generators.find { |condition, klass| instance_exec(&condition) }.last
       end
 
     end
