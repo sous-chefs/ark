@@ -1,4 +1,46 @@
 
+class TarCommandBuilder
+
+  def unpack
+    "#{tar_binary} #{args} #{resource.release_file} #{strip_args}"
+  end
+
+  def dump
+    "tar -mxf \"#{resource.release_file}\" -C \"#{resource.path}\""
+  end
+
+  def cherry_pick
+    "#{tar_binary} #{args} #{resource.release_file} -C #{resource.path} #{resource.creates}#{strip_args}"
+  end
+
+  def initialize(resource, options = {})
+    @resource = resource
+    @options = options
+  end
+
+  private
+
+  attr_reader :resource, :options
+
+  def node
+    resource.run_context.node
+  end
+
+  def tar_binary
+    resource.run_context.node['ark']['tar']
+  end
+
+  def args
+    options[:flags]
+  end
+
+  def strip_args
+    resource.strip_components > 0 ? " --strip-components=#{resource.strip_components}" : ""
+  end
+
+end
+
+
 class TarUnpacker
   def initialize(resource,options = {})
     @resource = resource
@@ -8,24 +50,9 @@ class TarUnpacker
   attr_reader :resource, :options
 
   def command
-    tar_command(options[:flags])
+    TarCommandBuilder.new(resource,options).unpack
   end
 
-  def node
-    resource.run_context.node
-  end
-
-  def tar_command(tar_args)
-    cmd = node['ark']['tar']
-    cmd += " #{tar_args} "
-    cmd += resource.release_file
-    cmd += tar_strip_args
-    cmd
-  end
-
-  def tar_strip_args
-    resource.strip_components > 0 ? " --strip-components=#{resource.strip_components}" : ""
-  end
 end
 
 class TarDumper
@@ -36,7 +63,7 @@ class TarDumper
   attr_reader :resource
 
   def command
-    "tar -mxf \"#{resource.release_file}\" -C \"#{resource.path}\""
+    TarCommandBuilder.new(resource).dump
   end
 end
 
@@ -49,27 +76,7 @@ class TarCherryPicker
   attr_reader :resource, :options
 
   def command
-    cherry_pick_tar_command(options[:flags])
-  end
-
-  def node
-    resource.run_context.node
-  end
-
-  def cherry_pick_tar_command(tar_args)
-    cmd = node['ark']['tar']
-    cmd += " #{tar_args}"
-    cmd += " #{resource.release_file}"
-    cmd += " -C"
-    cmd += " #{resource.path}"
-    cmd += " #{resource.creates}"
-    cmd += tar_strip_args
-    cmd
-  end
-
-  # private
-  def tar_strip_args
-    resource.strip_components > 0 ? " --strip-components=#{resource.strip_components}" : ""
+    TarCommandBuilder.new(resource,options).cherry_pick
   end
 
 end
