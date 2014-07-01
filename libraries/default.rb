@@ -5,14 +5,14 @@ require_relative 'commands'
 
 module PlatformSpecificBuilders
 
-  def uses(application,options)
+  def generates_archive_commands_for(application,options)
     condition = options[:when_the]
     builder = options[:with_builder_klass]
-    all_uses.push [ condition, builder ]
+    archive_command_generators.push [ condition, builder ]
   end
 
-  def all_uses
-    @all_uses ||= []
+  def archive_command_generators
+    @archive_command_generators ||= []
   end
 
 end
@@ -22,15 +22,15 @@ module Opscode
     module ProviderHelpers
       extend PlatformSpecificBuilders
 
-      uses :seven_zip,
+      generates_archive_commands_for :seven_zip,
         when_the: -> { node['platform_family'] == 'windows' },
         with_builder_klass: SevenZipCommandBuilder
 
-      uses :unzip,
+      generates_archive_commands_for :unzip,
         when_the: -> { new_resource.extension =~ /zip|war|jar/ },
         with_builder_klass: UnzipCommandBuilder
 
-      uses :tar,
+      generates_archive_commands_for :tar,
         when_the: -> { true },
         with_builder_klass: TarCommandBuilder
 
@@ -98,13 +98,15 @@ module Opscode
         end
       end
 
+      private
+
       def archive_application
         @archive_application ||= builder_klass.new(new_resource)
       end
 
       def builder_klass
         new_resource.extension ||= defaults.extension
-        Opscode::Ark::ProviderHelpers.all_uses.find { |condition, klass| instance_exec(&condition) }.last
+        Opscode::Ark::ProviderHelpers.archive_command_generators.find { |condition, klass| instance_exec(&condition) }.last
       end
 
     end
