@@ -59,7 +59,7 @@ module Opscode
           when "tar_xJf"
             TarCommandBuilder.new(new_resource,flags: "xJf").unpack
           when "unzip"
-            UnzipUnpacker.new(new_resource).command
+            UnzipCommandBuilder.new(new_resource).unpack
           end
         end
       end
@@ -72,7 +72,7 @@ module Opscode
           when "tar_xzf", "tar_xjf", "tar_xJf"
             TarCommandBuilder.new(new_resource).dump
           when "unzip"
-            UnzipDumper.new(new_resource).command
+            UnzipCommandBuilder.new(new_resource).dump
           end
         end
       end
@@ -89,13 +89,13 @@ module Opscode
           when "tar_xJf"
             TarCommandBuilder.new(new_resource, flags: "xJf").cherry_pick
           when "unzip"
-            UnzipCherryPicker.new(new_resource).command
+            UnzipCommandBuilder.new(new_resource).cherry_pick
           end
         end
       end
 
       def unzip_command
-        UnzipUnzipper.new(new_resource).command
+        UnzipCommandBuilder.new(new_resource).unpack
       end
 
       def owner_command

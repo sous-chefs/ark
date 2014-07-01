@@ -1,50 +1,18 @@
-class UnzipUnpacker
-  def initialize(resource)
-    @resource = resource
-  end
+class UnzipCommandBuilder
 
-  attr_reader :resource
-
-  def command
-    unzip_command
-  end
-
-  def unzip_command
+  def unpack
     if resource.strip_components > 0
-      require 'tmpdir'
-      tmpdir = Dir.mktmpdir
-      strip_dir = '*/' * resource.strip_components
-      cmd = "unzip -q -u -o #{resource.release_file} -d #{tmpdir}"
-      cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{resource.path}"
-      cmd += " && rm -rf #{tmpdir}"
-      cmd
+      unzip_with_strip_components
     else
       "unzip -q -u -o #{resource.release_file} -d #{resource.path}"
     end
   end
 
-end
-
-class UnzipDumper
-  def initialize(resource)
-    @resource = resource
-  end
-
-  attr_reader :resource
-
-  def command
+  def dump
     "unzip  -j -q -u -o \"#{resource.release_file}\" -d \"#{resource.path}\""
   end
-end
 
-class UnzipCherryPicker
-  def initialize(resource)
-    @resource = resource
-  end
-
-  attr_reader :resource
-
-  def cherry_pick_unzip_command
+  def cherry_pick
     cmd = "unzip -t #{resource.release_file} \"*/#{resource.creates}\" ; stat=$? ;"
     cmd += "if [ $stat -eq 11 ] ; then "
     cmd += "unzip  -j -o #{resource.release_file} \"#{resource.creates}\" -d #{resource.path} ;"
@@ -55,28 +23,13 @@ class UnzipCherryPicker
     cmd
   end
 
-  def command
-    cherry_pick_unzip_command
-  end
-
-end
-
-class UnzipUnzipper
   def initialize(resource)
     @resource = resource
   end
 
-  attr_reader :resource
+  private
 
-  def command
-    if resource.strip_components > 0
-      command_with_components_stripped
-    else
-      "unzip -q -u -o #{resource.release_file} -d #{resource.path}"
-    end
-  end
-
-  def command_with_components_stripped
+  def unzip_with_strip_components
     require 'tmpdir'
     tmpdir = Dir.mktmpdir
     strip_dir = '*/' * resource.strip_components
@@ -86,4 +39,7 @@ class UnzipUnzipper
     cmd
   end
 
+  attr_reader :resource
+
 end
+
