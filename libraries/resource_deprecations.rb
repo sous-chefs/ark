@@ -1,6 +1,5 @@
 module Ark
   class ResourceDeprecations
-
     def self.on(resource)
       new(resource).warnings
     end
@@ -12,11 +11,11 @@ module Ark
     attr_reader :resource
 
     def warnings
-      applicable_deprecrations.map { |condition,message| message }
+      applicable_deprecrations.map { | _, message| message }
     end
 
     def applicable_deprecrations
-      deprecations.find_all { |condition,message| send(condition) }
+      deprecations.select { |condition, _| send(condition) }
     end
 
     def deprecations

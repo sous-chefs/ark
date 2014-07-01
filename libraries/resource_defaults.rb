@@ -96,6 +96,5 @@ module Ark
       else fail "Don't know how to expand #{resource.url}"
       end
     end
-
   end
 end

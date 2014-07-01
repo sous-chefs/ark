@@ -1,5 +1,4 @@
 class UnzipCommandBuilder
-
   def unpack
     if resource.strip_components > 0
       unzip_with_strip_components
@@ -40,6 +39,4 @@ class UnzipCommandBuilder
   end
 
   attr_reader :resource
-
 end
-

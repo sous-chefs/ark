@@ -1,5 +1,4 @@
 class SevenZipCommandBuilder
-
   def unpack
     sevenzip_command
   end
@@ -56,5 +55,4 @@ class SevenZipCommandBuilder
       ""
     end
   end
-
 end

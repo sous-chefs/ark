@@ -6,6 +6,8 @@ Encoding:
 
 LineLength:
   Max: 200
+  Exclude:
+    - '**/spec/**/*_spec.rb'
 
 HashSyntax:
   EnforcedStyle: hash_rockets

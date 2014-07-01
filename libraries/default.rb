@@ -1,4 +1,3 @@
-# libs
 require_relative 'platform_specific_builders'
 require_relative 'resource_deprecations'
 require_relative 'resource_defaults'
@@ -19,7 +18,6 @@ module Ark
     generates_archive_commands_for :tar,
       when_the: -> { true },
       with_klass: TarCommandBuilder
-
 
     generates_owner_commands_for :windows,
       when_the: -> { node['platform_family'] == 'windows' },
@@ -48,9 +46,10 @@ module Ark
       new_resource.home_dir = defaults.home_dir
       new_resource.version = defaults.version
 
-      # TODO: what happens when the path is already set -- with the current logic we overwrite it\
-      # if you are in windows we overwrite it
-      # otherwise we overwrite it with the root/name-version
+      # TODO: what happens when the path is already set --
+      #   with the current logic we overwrite it
+      #   if you are in windows we overwrite it
+      #   otherwise we overwrite it with the root/name-version
       new_resource.path = defaults.path
       new_resource.release_file = defaults.release_file
     end
@@ -58,7 +57,8 @@ module Ark
     def set_put_paths
       new_resource.extension = defaults.extension
 
-      # TODO: Should this be added - as the prefix_root could be used in the path_with_version
+      # TODO: Should we be setting the prefix_root -
+      #   as the prefix_root could be used in the path_with_version
       # new_resource.prefix_root = default.prefix_root
       new_resource.path = defaults.path_without_version
       new_resource.release_file = defaults.release_file_without_version
@@ -97,12 +97,11 @@ module Ark
 
     def archive_builder_klass
       new_resource.extension ||= defaults.extension
-      Ark::ProviderHelpers.archive_command_generators.find { |condition, klass| instance_exec(&condition) }.last
+      Ark::ProviderHelpers.archive_command_generators.find { |condition, _klass| instance_exec(&condition) }.last
     end
 
     def owner_builder_klass
-      Ark::ProviderHelpers.owner_command_generators.find { |condition, klass| instance_exec(&condition) }.last
+      Ark::ProviderHelpers.owner_command_generators.find { |condition, _klass| instance_exec(&condition) }.last
     end
-
   end
 end

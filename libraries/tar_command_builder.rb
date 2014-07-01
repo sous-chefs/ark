@@ -1,6 +1,4 @@
-
 class TarCommandBuilder
-
   def unpack
     "#{tar_binary} #{args} #{resource.release_file} #{strip_args}"
   end
@@ -41,5 +39,4 @@ class TarCommandBuilder
   def strip_args
     resource.strip_components > 0 ? " --strip-components=#{resource.strip_components}" : ""
   end
-
 end
