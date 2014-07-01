@@ -53,11 +53,11 @@ module Opscode
         else
           case unpack_type
           when "tar_xzf"
-            TarUnpacker.new(new_resource,flags: "xzf").command
+            TarCommandBuilder.new(new_resource,flags: "xzf").unpack
           when "tar_xjf"
-            TarUnpacker.new(new_resource,flags: "xjf").command
+            TarCommandBuilder.new(new_resource,flags: "xjf").unpack
           when "tar_xJf"
-            TarUnpacker.new(new_resource,flags: "xJf").command
+            TarCommandBuilder.new(new_resource,flags: "xJf").unpack
           when "unzip"
             UnzipUnpacker.new(new_resource).command
           end
@@ -70,7 +70,7 @@ module Opscode
         else
           case unpack_type
           when "tar_xzf", "tar_xjf", "tar_xJf"
-            TarDumper.new(new_resource).command
+            TarCommandBuilder.new(new_resource).dump
           when "unzip"
             UnzipDumper.new(new_resource).command
           end
@@ -83,11 +83,11 @@ module Opscode
         else
           case unpack_type
           when "tar_xzf"
-            TarCherryPicker.new(new_resource, flags: "xzf").command
+            TarCommandBuilder.new(new_resource, flags: "xzf").cherry_pick
           when "tar_xjf"
-            TarCherryPicker.new(new_resource, flags: "xjf").command
+            TarCommandBuilder.new(new_resource, flags: "xjf").cherry_pick
           when "tar_xJf"
-            TarCherryPicker.new(new_resource, flags: "xJf").command
+            TarCommandBuilder.new(new_resource, flags: "xJf").cherry_pick
           when "unzip"
             UnzipCherryPicker.new(new_resource).command
           end
