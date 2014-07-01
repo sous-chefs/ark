@@ -1,36 +1,13 @@
 # libs
+require_relative 'platform_specific_builders'
 require_relative 'resource_deprecations'
 require_relative 'resource_defaults'
 require_relative 'commands'
 
-module PlatformSpecificBuilders
-
-  def generates_archive_commands_for(application,options)
-    condition = options[:when_the]
-    builder = options[:with_klass]
-    archive_command_generators.push [ condition, builder ]
-  end
-
-  def archive_command_generators
-    @archive_command_generators ||= []
-  end
-
-  def generates_owner_commands_for(application,options)
-    condition = options[:when_the]
-    builder = options[:with_klass]
-    owner_command_generators.push [ condition, builder ]
-  end
-
-  def owner_command_generators
-    @owner_command_generators ||= []
-  end
-
-end
-
 module Opscode
   module Ark
     module ProviderHelpers
-      extend PlatformSpecificBuilders
+      extend ::Ark::PlatformSpecificBuilders
 
       generates_archive_commands_for :seven_zip,
         when_the: -> { node['platform_family'] == 'windows' },
@@ -106,7 +83,7 @@ module Opscode
       end
 
       def unzip_command
-        UnzipCommandBuilder.new(new_resource).unpack
+        archive_application.unpack
       end
 
       def owner_command
