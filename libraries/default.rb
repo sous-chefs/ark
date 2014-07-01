@@ -241,7 +241,11 @@ module Opscode
         if node['platform_family'] == 'windows'
           "icacls #{new_resource.path}\\* /setowner #{new_resource.owner}"
         else
-          "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+          if new_resource.chown_hidden == false
+            "find #{new_resource.path} -path '*/.*' -prune -o -exec chown #{new_resource.owner}:#{new_resource.group} {} \\;"
+          else
+            "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
+          end
         end
       end
     end

@@ -2,6 +2,7 @@ default['ark']['apache_mirror'] = 'http://apache.mirrors.tds.net'
 default['ark']['prefix_root'] = '/usr/local'
 default['ark']['prefix_bin'] = '/usr/local/bin'
 default['ark']['prefix_home'] = '/usr/local'
+default['ark']['chown_hidden'] = true
 if node['platform_family'] == 'windows'
   default['ark']['tar'] = "\"#{default['7-zip']['home']}\\7z.exe\""
 else
