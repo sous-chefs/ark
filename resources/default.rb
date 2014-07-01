@@ -33,8 +33,7 @@ actions(
 
 default_action :install
 
-attr_accessor :archive_application,
-  :extension,
+attr_accessor :extension,
   :home_dir,
   :path,
   :prefix_bin,
@@ -67,5 +66,3 @@ attribute :make_opts, :kind_of => Array, :default => []
 attribute :home_dir, :kind_of => String, :default => nil
 attribute :autoconf_opts, :kind_of => Array, :default => []
 attribute :extension, :kind_of => String
-
-attribute :archive_application, :kind_of => String, :default => nil
