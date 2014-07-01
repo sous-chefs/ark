@@ -3,8 +3,8 @@
 module Opscode
   module Ark
     module ProviderHelpers
-      private
 
+      # private
       def unpack_type
         case parse_file_extension
         when /tar.gz|tgz/  then "tar_xzf"
@@ -15,6 +15,7 @@ module Opscode
         end
       end
 
+      # private
       def parse_file_extension
         if new_resource.extension.nil?
           # purge any trailing redirect
@@ -32,6 +33,7 @@ module Opscode
         new_resource.extension
       end
 
+      # public
       def unpack_command
         if node['platform_family'] == 'windows'
           cmd = sevenzip_command
@@ -51,6 +53,7 @@ module Opscode
         cmd
       end
 
+      # public
       def tar_command(tar_args)
         cmd = node['ark']['tar']
         cmd += " #{tar_args} "
@@ -59,6 +62,7 @@ module Opscode
         cmd
       end
 
+      # public
       def unzip_command
         if new_resource.strip_components > 0
           require 'tmpdir'
@@ -73,6 +77,7 @@ module Opscode
         end
       end
 
+      # public
       def sevenzip_command
         if new_resource.strip_components > 0
           require 'tmpdir'
@@ -93,6 +98,7 @@ module Opscode
         cmd
       end
 
+      # private
       def sevenzip_command_builder(dir, command)
         cmd = "#{node['ark']['tar']} #{command} \""
         cmd += new_resource.release_file
@@ -105,6 +111,7 @@ module Opscode
         cmd
       end
 
+      # public
       def dump_command
         if node['platform_family'] == 'windows'
           cmd = sevenzip_command_builder(new_resource.path, 'e')
@@ -120,6 +127,7 @@ module Opscode
         cmd
       end
 
+      # public
       def cherry_pick_command
         if node['platform_family'] == 'windows'
           cmd = sevenzip_command_builder(new_resource.path, 'e')
@@ -140,6 +148,7 @@ module Opscode
         cmd
       end
 
+      # private
       def cherry_pick_unzip_command
         cmd = "unzip -t #{new_resource.release_file} \"*/#{new_resource.creates}\" ; stat=$? ;"
         cmd += "if [ $stat -eq 11 ] ; then "
@@ -151,6 +160,7 @@ module Opscode
         cmd
       end
 
+      # private
       def cherry_pick_tar_command(tar_args)
         cmd = node['ark']['tar']
         cmd += " #{tar_args}"
@@ -162,23 +172,28 @@ module Opscode
         cmd
       end
 
+      # private
       def default_prefix_bin
         new_resource.prefix_bin || prefix_bin_from_node_in_run_context
       end
 
+      # private
       def default_prefix_root
         new_resource.prefix_root || prefix_root_from_node_in_run_context
       end
 
+      # private
       def default_home_dir
         prefix_home = new_resource.prefix_home || prefix_home_from_node_in_run_context
         ::File.join(prefix_home, new_resource.name)
       end
 
+      # private
       def default_version
         new_resource.version || "1"
       end
 
+      # private
       def default_path
         if node['platform_family'] == 'windows'
           new_resource.win_install_dir
@@ -187,6 +202,7 @@ module Opscode
         end
       end
 
+      # public
       def set_paths
         release_ext = parse_file_extension
         new_resource.prefix_bin = default_prefix_bin
@@ -199,22 +215,27 @@ module Opscode
         new_resource.release_file = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}-#{new_resource.version}.#{release_ext}")
       end
 
+      # private
       def node_in_run_context
         new_resource.run_context.node
       end
 
+      # private
       def prefix_home_from_node_in_run_context
         node_in_run_context['ark']['prefix_home']
       end
 
+      # private
       def prefix_bin_from_node_in_run_context
         node_in_run_context['ark']['prefix_bin']
       end
 
+      # private
       def prefix_root_from_node_in_run_context
         node_in_run_context['ark']['prefix_root']
       end
 
+      # public
       def set_put_paths
         release_ext = parse_file_extension
         path = new_resource.path.nil? ? prefix_root_from_node_in_run_context : new_resource.path
@@ -223,20 +244,24 @@ module Opscode
         new_resource.release_file     = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
       end
 
+      # public
       def set_dump_paths
         release_ext = parse_file_extension
         new_resource.release_file  = ::File.join(Chef::Config[:file_cache_path],  "#{new_resource.name}.#{release_ext}")
       end
 
+      # private
       def tar_strip_args
         new_resource.strip_components > 0 ? " --strip-components=#{new_resource.strip_components}" : ""
       end
 
+      # public
       def show_deprecations
         return unless [true, false].include?(new_resource.strip_leading_dir)
         Chef::Log.warn("DEPRECATED: strip_leading_dir attribute was deprecated. Use strip_components instead.")
       end
 
+      # public
       def owner_command
         if node['platform_family'] == 'windows'
           "icacls #{new_resource.path}\\* /setowner #{new_resource.owner}"
