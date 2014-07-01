@@ -18,15 +18,29 @@
 # limitations under the License.
 #
 
-def initialize(name, run_context = nil)
-  super
-  @resource_name = :ark
-  @allowed_actions.push(:install, :dump, :cherry_pick, :put, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py, :unzip)
-  @action = :install
-  @provider = Chef::Provider::Ark
-end
+actions(
+  :cherry_pick,
+  :configure,
+  :dump,
+  :install,
+  :install_with_make,
+  :put,
+  :setup_py,
+  :setup_py_build,
+  :setup_py_install,
+  :unzip
+)
 
-attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir, :extension, :version, :unpack_type
+default_action :install
+
+attr_accessor :extension,
+  :home_dir,
+  :path,
+  :prefix_bin,
+  :prefix_root,
+  :release_file,
+  :unpack_type,
+  :version
 
 attribute :owner, :kind_of => String, :default => 'root'
 attribute :group, :kind_of => [String, Fixnum], :default => 0
@@ -54,4 +68,4 @@ attribute :home_dir, :kind_of => String, :default => nil
 attribute :autoconf_opts, :kind_of => Array, :default => []
 attribute :extension, :kind_of => String
 
-attribute :unpack_type, :kind_of => String
+attribute :unpack_type, :kind_of => String, :default => nil
