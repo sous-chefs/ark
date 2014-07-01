@@ -1,8 +1,17 @@
 # libs
+require_relative 'resource_deprecations'
 
 module Opscode
   module Ark
     module ProviderHelpers
+
+      def deprecations
+        ::Ark::ResourceDeprecations.on(new_resource)
+      end
+
+      def show_deprecations
+        deprecations.each { |message| Chef::Log.warn("DEPRECATED: #{message}") }
+      end
 
       # private
       def unpack_type
@@ -17,9 +26,13 @@ module Opscode
 
       # private
       def parse_file_extension
-        if new_resource.extension.nil?
+        parse_file_extension_on_resource(new_resource)
+      end
+
+      def parse_file_extension_on_resource(resource)
+        if resource.extension.nil?
           # purge any trailing redirect
-          url = new_resource.url.clone
+          url = resource.url.clone
           url =~ %r{^https?:\/\/.*(.bin|bz2|gz|jar|tbz|tgz|txz|war|xz|zip)(\/.*\/)}
           url.gsub!(Regexp.last_match(2), '') unless Regexp.last_match(2).nil?
           # remove tailing query string
@@ -28,9 +41,9 @@ module Opscode
           Chef::Log.debug("DEBUG: release_basename is #{release_basename}")
           release_basename =~ /^(.+?)\.(jar|tar\.bz2|tar\.gz|tar\.xz|tbz|tgz|txz|war|zip)(\?.*)?/
           Chef::Log.debug("DEBUG: file_extension is #{Regexp.last_match(2)}")
-          new_resource.extension = Regexp.last_match(2)
+          resource.extension = Regexp.last_match(2)
         end
-        new_resource.extension
+        resource.extension
       end
 
       # public
@@ -253,12 +266,6 @@ module Opscode
       # private
       def tar_strip_args
         new_resource.strip_components > 0 ? " --strip-components=#{new_resource.strip_components}" : ""
-      end
-
-      # public
-      def show_deprecations
-        return unless [true, false].include?(new_resource.strip_leading_dir)
-        Chef::Log.warn("DEPRECATED: strip_leading_dir attribute was deprecated. Use strip_components instead.")
       end
 
       # public
