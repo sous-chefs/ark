@@ -21,7 +21,7 @@
 #
 
 use_inline_resources if defined?(use_inline_resources)
-include ::Opscode::Ark::ProviderHelpers
+include ::Ark::ProviderHelpers
 
 # From resources/default.rb
 # :install, :put, :dump, :cherry_pick, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py

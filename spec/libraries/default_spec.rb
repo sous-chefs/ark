@@ -1,7 +1,7 @@
 require "spec_helper"
 require './libraries/default'
 
-describe_helpers Opscode::Ark::ProviderHelpers do
+describe_helpers Ark::ProviderHelpers do
 
   # describe "#parse_file_extension" do
 
