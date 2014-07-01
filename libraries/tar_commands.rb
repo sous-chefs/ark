@@ -13,14 +13,13 @@ class TarCommandBuilder
     "#{tar_binary} #{args} #{resource.release_file} -C #{resource.path} #{resource.creates}#{strip_args}"
   end
 
-  def initialize(resource, options = {})
+  def initialize(resource)
     @resource = resource
-    @options = options
   end
 
   private
 
-  attr_reader :resource, :options
+  attr_reader :resource
 
   def node
     resource.run_context.node
@@ -31,7 +30,12 @@ class TarCommandBuilder
   end
 
   def args
-    options[:flags]
+    case resource.extension
+    when /tar.gz|tgz/  then "xzf"
+    when /tar.bz2|tbz/ then "xjf"
+    when /tar.xz|txz/  then "xJf"
+    else fail "Don't know how to expand #{resource.url}"
+    end
   end
 
   def strip_args

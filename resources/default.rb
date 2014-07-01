@@ -33,13 +33,13 @@ actions(
 
 default_action :install
 
-attr_accessor :extension,
+attr_accessor :archive_application,
+  :extension,
   :home_dir,
   :path,
   :prefix_bin,
   :prefix_root,
   :release_file,
-  :unpack_type,
   :version
 
 attribute :owner, :kind_of => String, :default => 'root'
@@ -68,4 +68,4 @@ attribute :home_dir, :kind_of => String, :default => nil
 attribute :autoconf_opts, :kind_of => Array, :default => []
 attribute :extension, :kind_of => String
 
-attribute :unpack_type, :kind_of => String, :default => nil
+attribute :archive_application, :kind_of => String, :default => nil

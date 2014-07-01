@@ -364,6 +364,7 @@ describe_helpers Opscode::Ark::ProviderHelpers do
       it "generates a 7-zip command" do
         with_node_attributes(:platform_family => "windows")
         with_resource_properties(
+          :url => "http://website.com/windows_package.zip",
           :path => "/resource/path",
           :creates => "/resource/creates",
           :release_file => "/resource/release_file",
@@ -377,8 +378,9 @@ describe_helpers Opscode::Ark::ProviderHelpers do
     context "when the node's platform_family is not windows" do
       context 'when the unpack_type is tar_xzf' do
         it "generates a cherry pick tar command with the correct options" do
-          allow(self).to receive(:unpack_type) { "tar_xzf" }
+
           with_resource_properties(
+            :url => "http://website.com/package.tar.gz",
             :path => "/resource/path",
             :creates => "/resource/creates",
             :release_file => "/resource/release_file",
@@ -392,8 +394,9 @@ describe_helpers Opscode::Ark::ProviderHelpers do
 
       context 'when the unpack_type is tar_xjf' do
         it "generates a cherry pick tar command with the correct options" do
-          allow(self).to receive(:unpack_type) { "tar_xjf" }
+
           with_resource_properties(
+            :url => "http://website.com/package.tar.bz2",
             :path => "/resource/path",
             :creates => "/resource/creates",
             :release_file => "/resource/release_file",
@@ -407,8 +410,9 @@ describe_helpers Opscode::Ark::ProviderHelpers do
 
       context 'when the unpack_type is tar_xJf' do
         it "generates a cherry pick tar command with the correct options" do
-          allow(self).to receive(:unpack_type) { "tar_xJf" }
+
           with_resource_properties(
+            :url => "http://website.com/package.txz",
             :path => "/resource/path",
             :creates => "/resource/creates",
             :release_file => "/resource/release_file",
@@ -422,8 +426,8 @@ describe_helpers Opscode::Ark::ProviderHelpers do
 
       context 'when the unpack_type is unzip' do
         it "generates an unzip command" do
-          allow(self).to receive(:unpack_type) { "unzip" }
           with_resource_properties(
+            :url => "http://website.com/package.zip",
             :path => "/resource/path",
             :creates => "/resource/creates",
             :release_file => "/resource/release_file",
@@ -447,10 +451,9 @@ describe_helpers Opscode::Ark::ProviderHelpers do
       context 'when the unpack_type is tar_xzf' do
         it "generates a tar command" do
           with_resource_properties(
+            :url => "http://website.com/package.tgz",
             :release_file => "/resource/release_file",
             :path => "/resource/path")
-
-          allow(self).to receive(:unpack_type) { "tar_xzf" }
 
           expect(dump_command).to eq("tar -mxf \"/resource/release_file\" -C \"/resource/path\"")
         end
@@ -459,10 +462,9 @@ describe_helpers Opscode::Ark::ProviderHelpers do
       context 'when the unpack_type is tar_xjf' do
         it "generates a tar command" do
           with_resource_properties(
+            :url => "http://website.com/package.tbz",
             :release_file => "/resource/release_file",
             :path => "/resource/path")
-
-          allow(self).to receive(:unpack_type) { "tar_xjf" }
 
           expect(dump_command).to eq("tar -mxf \"/resource/release_file\" -C \"/resource/path\"")
         end
@@ -471,10 +473,9 @@ describe_helpers Opscode::Ark::ProviderHelpers do
       context 'when the unpack_type is tar_xJf' do
         it "generates a tar command" do
           with_resource_properties(
+            :url => "http://website.com/package.tar.xz",
             :release_file => "/resource/release_file",
             :path => "/resource/path")
-
-          allow(self).to receive(:unpack_type) { "tar_xJf" }
 
           expect(dump_command).to eq("tar -mxf \"/resource/release_file\" -C \"/resource/path\"")
         end
@@ -483,10 +484,9 @@ describe_helpers Opscode::Ark::ProviderHelpers do
       context 'when the unpack_type is unzip' do
         it "generates an unzip command" do
           with_resource_properties(
+            :url => "http://website.com/package.jar",
             :release_file => "/resource/release_file",
             :path => "/resource/path")
-
-          allow(self).to receive(:unpack_type) { "unzip" }
 
           expect(dump_command).to eq("unzip  -j -q -u -o \"/resource/release_file\" -d \"/resource/path\"")
         end
