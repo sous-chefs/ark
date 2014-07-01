@@ -3,7 +3,6 @@ require_relative 'resource_deprecations'
 require_relative 'resource_defaults'
 require_relative 'commands'
 
-
 module Opscode
   module Ark
     module ProviderHelpers
@@ -96,17 +95,7 @@ module Opscode
       end
 
       def unzip_command
-        if new_resource.strip_components > 0
-          require 'tmpdir'
-          tmpdir = Dir.mktmpdir
-          strip_dir = '*/' * new_resource.strip_components
-          cmd = "unzip -q -u -o #{new_resource.release_file} -d #{tmpdir}"
-          cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{new_resource.path}"
-          cmd += " && rm -rf #{tmpdir}"
-          cmd
-        else
-          "unzip -q -u -o #{new_resource.release_file} -d #{new_resource.path}"
-        end
+        UnzipUnzipper.new(new_resource).command
       end
 
       def owner_command
@@ -117,16 +106,8 @@ module Opscode
         end
       end
 
-
-      # private
       def unpack_type
-        case new_resource.extension
-        when /tar.gz|tgz/  then "tar_xzf"
-        when /tar.bz2|tbz/ then "tar_xjf"
-        when /tar.xz|txz/  then "tar_xJf"
-        when /zip|war|jar/ then "unzip"
-        else fail "Don't know how to expand #{new_resource.url}"
-        end
+        new_resource.unpack_type ||= defaults.unpack_type
       end
 
     end

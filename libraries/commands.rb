@@ -277,3 +277,30 @@ class GeneralOwner
     "chown -R #{resource.owner}:#{resource.group} #{resource.path}"
   end
 end
+
+class UnzipUnzipper
+  def initialize(resource)
+    @resource = resource
+  end
+
+  attr_reader :resource
+
+  def command
+    if resource.strip_components > 0
+      command_with_components_stripped
+    else
+      "unzip -q -u -o #{resource.release_file} -d #{resource.path}"
+    end
+  end
+
+  def command_with_components_stripped
+    require 'tmpdir'
+    tmpdir = Dir.mktmpdir
+    strip_dir = '*/' * resource.strip_components
+    cmd = "unzip -q -u -o #{resource.release_file} -d #{tmpdir}"
+    cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{resource.path}"
+    cmd += " && rm -rf #{tmpdir}"
+    cmd
+  end
+
+end

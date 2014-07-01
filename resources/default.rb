@@ -26,7 +26,7 @@ def initialize(name, run_context = nil)
   @provider = Chef::Provider::Ark
 end
 
-attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir, :extension, :version
+attr_accessor :path, :release_file, :prefix_bin, :prefix_root, :home_dir, :extension, :version, :unpack_type
 
 attribute :owner, :kind_of => String, :default => 'root'
 attribute :group, :kind_of => [String, Fixnum], :default => 0
@@ -53,3 +53,5 @@ attribute :make_opts, :kind_of => Array, :default => []
 attribute :home_dir, :kind_of => String, :default => nil
 attribute :autoconf_opts, :kind_of => Array, :default => []
 attribute :extension, :kind_of => String
+
+attribute :unpack_type, :kind_of => String

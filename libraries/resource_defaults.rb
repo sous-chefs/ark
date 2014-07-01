@@ -87,5 +87,15 @@ module Ark
       resource.run_context.node
     end
 
+    def unpack_type
+      case resource.extension
+      when /tar.gz|tgz/  then "tar_xzf"
+      when /tar.bz2|tbz/ then "tar_xjf"
+      when /tar.xz|txz/  then "tar_xJf"
+      when /zip|war|jar/ then "unzip"
+      else fail "Don't know how to expand #{resource.url}"
+      end
+    end
+
   end
 end
