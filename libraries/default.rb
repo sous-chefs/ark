@@ -13,23 +13,23 @@ module Ark
 
     generates_archive_commands_for :seven_zip,
       when_the: -> { node['platform_family'] == 'windows' },
-      with_klass: SevenZipCommandBuilder
+      with_klass: ::Ark::SevenZipCommandBuilder
 
     generates_archive_commands_for :unzip,
       when_the: -> { new_resource.extension =~ /zip|war|jar/ },
-      with_klass: UnzipCommandBuilder
+      with_klass: ::Ark::UnzipCommandBuilder
 
     generates_archive_commands_for :tar,
       when_the: -> { true },
-      with_klass: TarCommandBuilder
+      with_klass: ::Ark::TarCommandBuilder
 
     generates_owner_commands_for :windows,
       when_the: -> { node['platform_family'] == 'windows' },
-      with_klass: WindowsOwner
+      with_klass: ::Ark::WindowsOwner
 
     generates_owner_commands_for :all_other_platforms,
       when_the: -> { true },
-      with_klass: GeneralOwner
+      with_klass: ::Ark::GeneralOwner
 
     def deprecations
       ::Ark::ResourceDeprecations.on(new_resource)

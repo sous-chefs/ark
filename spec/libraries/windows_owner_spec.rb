@@ -1,7 +1,7 @@
 require 'spec_helper'
 require './libraries/default'
 
-describe WindowsOwner do
+describe Ark::WindowsOwner do
 
   let(:subject) { described_class.new(resource) }
 

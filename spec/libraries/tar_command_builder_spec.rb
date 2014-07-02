@@ -1,7 +1,7 @@
 require 'spec_helper'
 require './libraries/default'
 
-describe TarCommandBuilder do
+describe Ark::TarCommandBuilder do
 
   let(:subject) { described_class.new(resource) }
 
