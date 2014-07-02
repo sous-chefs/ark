@@ -59,10 +59,8 @@ describe_helpers Ark::ProviderHelpers do
 
     context "when the resource path is not set" do
       it "sets the resource's release_file and path" do
-        # allow(self).to receive(:prefix_root_from_node_in_run_context) { "/opt/default" }
-        allow_any_instance_of(Ark::ResourceDefaults).to receive(:prefix_root_from_node_in_run_context) { "/opt/default" }
-
         with_resource_properties(extension: "jar", name: "gustav-moomoo")
+        allow(defaults).to receive(:prefix_root_from_node_in_run_context) { "/opt/default" }
         set_put_paths
 
         expect(new_resource.release_file).to eq("/var/chef/cache/gustav-moomoo.jar")
@@ -89,11 +87,11 @@ describe_helpers Ark::ProviderHelpers do
     it "uses all the defaults" do
       with_resource_properties(extension: "jar", name: "resource_name")
 
-      allow_any_instance_of(Ark::ResourceDefaults).to receive(:prefix_bin) { "/default/prefix/bin" }
-      allow_any_instance_of(Ark::ResourceDefaults).to receive(:prefix_root) { "/default/prefix/root" }
-      allow_any_instance_of(Ark::ResourceDefaults).to receive(:home_dir) { "/default/prefix/home" }
-      allow_any_instance_of(Ark::ResourceDefaults).to receive(:version) { "99" }
-      allow_any_instance_of(Ark::ResourceDefaults).to receive(:path) { "/default/path" }
+      allow(defaults).to receive(:prefix_bin) { "/default/prefix/bin" }
+      allow(defaults).to receive(:prefix_root) { "/default/prefix/root" }
+      allow(defaults).to receive(:home_dir) { "/default/prefix/home" }
+      allow(defaults).to receive(:version) { "99" }
+      allow(defaults).to receive(:path) { "/default/path" }
 
       set_paths
 
@@ -109,7 +107,7 @@ describe_helpers Ark::ProviderHelpers do
         version: "23",
         name: "resource_name")
 
-      allow_any_instance_of(Ark::ResourceDefaults).to receive(:path) { "/default/path" }
+      allow(defaults).to receive(:path) { "/default/path" }
 
       set_paths
 
