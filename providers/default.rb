@@ -23,12 +23,6 @@
 use_inline_resources if defined?(use_inline_resources)
 include ::Ark::ProviderHelpers
 
-# From resources/default.rb
-# :install, :put, :dump, :cherry_pick, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py
-#
-# Used in test.rb
-# :install, :put, :dump, :cherry_pick, :install_with_make, :configure
-
 #################
 # action :install
 #################
