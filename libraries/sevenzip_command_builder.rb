@@ -58,7 +58,7 @@ module Ark
 
     def make_temp_directory
       require 'tmpdir'
-      tmpdir = Dir.mktmpdir
+      Dir.mktmpdir
     end
   end
 end

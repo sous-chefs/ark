@@ -7,8 +7,8 @@ describe Ark::GeneralOwner do
 
   let(:resource) do
     double(owner: "owner",
-      group: "group",
-      path: "/resource/path")
+           group: "group",
+           path: "/resource/path")
   end
 
   it "generates the correct command for windows file ownership" do

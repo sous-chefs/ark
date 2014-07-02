@@ -7,9 +7,9 @@ describe Ark::UnzipCommandBuilder do
 
   let(:resource) do
     double(release_file: "release_file",
-      creates: "creates",
-      path: "path",
-      strip_components: 0)
+           creates: "creates",
+           path: "path",
+           strip_components: 0)
   end
 
   describe "#unpack" do
@@ -26,9 +26,9 @@ describe Ark::UnzipCommandBuilder do
 
       let(:resource) do
         double(release_file: "release_file",
-          creates: "creates",
-          path: "path",
-          strip_components: 1)
+               creates: "creates",
+               path: "path",
+               strip_components: 1)
       end
 
       it "generates the correct command" do

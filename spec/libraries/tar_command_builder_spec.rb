@@ -7,10 +7,10 @@ describe Ark::TarCommandBuilder do
 
   let(:resource) do
     double(release_file: "release_file",
-      creates: "creates",
-      path: "path",
-      strip_components: 1,
-      extension: "tar.gz")
+           creates: "creates",
+           path: "path",
+           strip_components: 1,
+           extension: "tar.gz")
   end
 
   before(:each) do

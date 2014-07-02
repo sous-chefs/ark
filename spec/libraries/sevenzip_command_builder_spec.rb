@@ -7,11 +7,11 @@ describe Ark::SevenZipCommandBuilder do
 
   let(:resource) do
     double(release_file: "release_file",
-      creates: "creates",
-      path: "path",
-      home_dir: "home_dir",
-      strip_components: 1,
-      extension: "tar.gz")
+           creates: "creates",
+           path: "path",
+           home_dir: "home_dir",
+           strip_components: 1,
+           extension: "tar.gz")
   end
 
   before(:each) do
