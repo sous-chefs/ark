@@ -22,6 +22,23 @@ describe Ark::TarCommandBuilder do
       expected_command = "/bin/tar xzf release_file --strip-components=1"
       expect(subject.unpack).to eq(expected_command)
     end
+
+    context "when the extension is tar" do
+
+      let(:resource) do
+        double(release_file: "release_file",
+               creates: "creates",
+               path: "path",
+               strip_components: 1,
+               extension: "tar")
+      end
+
+      it "generates the correct command" do
+        expected_command = "/bin/tar xzf release_file --strip-components=1"
+        expect(subject.unpack).to eq(expected_command)
+      end
+    end
+
   end
 
   describe "#dump" do

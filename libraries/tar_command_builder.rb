@@ -30,9 +30,9 @@ module Ark
 
     def args
       case resource.extension
-      when /tar.gz|tgz/  then "xzf"
-      when /tar.bz2|tbz/ then "xjf"
-      when /tar.xz|txz/  then "xJf"
+      when /^(tar|tar.gz|tgz)$/  then "xzf"
+      when /^(tar.bz2|tbz)$/ then "xjf"
+      when /^(tar.xz|txz)$/  then "xJf"
       else fail "Don't know how to expand #{resource.url}"
       end
     end
