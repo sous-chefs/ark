@@ -64,7 +64,7 @@ module Ark
       release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
       # (\?.*)? accounts for a trailing querystring
       Chef::Log.debug("DEBUG: release_basename is #{release_basename}")
-      release_basename =~ /^(.+?)\.(jar|tar\.bz2|tar\.gz|tar\.xz|tbz|tgz|txz|war|zip)(\?.*)?/
+      release_basename =~ /^(.+?)\.(jar|tar\.bz2|tar\.gz|tar\.xz|tbz|tgz|txz|war|zip|tar)(\?.*)?/
       Chef::Log.debug("DEBUG: file_extension is #{Regexp.last_match(2)}")
       Regexp.last_match(2)
     end

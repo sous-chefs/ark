@@ -24,6 +24,12 @@ describe Ark::ResourceDefaults do
         expect(defaults.extension).to eq "tar.bz2"
       end
 
+      it "creates an extension for tar files" do
+        resource = double(extension: nil, url: "https://jar.binfiles.tbz/file.tar")
+        defaults = described_class.new(resource)
+        expect(defaults.extension).to eq "tar"
+      end
+
       context "when the archive format is not supported" do
 
         it "it returns a nil extension" do
