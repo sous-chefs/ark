@@ -18,9 +18,11 @@ describe Ark::TarCommandBuilder do
   end
 
   describe "#unpack" do
-    it "generates the correct command" do
-      expected_command = "/bin/tar xzf release_file --strip-components=1"
-      expect(subject.unpack).to eq(expected_command)
+    context "when the extension is supported" do
+      it "generates the correct command" do
+        expected_command = "/bin/tar xzf release_file --strip-components=1"
+        expect(subject.unpack).to eq(expected_command)
+      end
     end
 
     context "when the extension is tar (only tar)" do
@@ -36,6 +38,22 @@ describe Ark::TarCommandBuilder do
       it "generates the correct command" do
         expected_command = "/bin/tar xf release_file --strip-components=1"
         expect(subject.unpack).to eq(expected_command)
+      end
+    end
+
+    context "when the extension is not supported" do
+
+      let(:resource) do
+        double(release_file: "release_file",
+               url: "http://website.com/files/content.stuffit",
+               creates: "creates",
+               path: "path",
+               strip_components: 1,
+               extension: "stuffit")
+      end
+
+      it "generates a failure" do
+        expect { subject.unpack }.to raise_error("Don't know how to expand http://website.com/files/content.stuffit (extension: stuffit)")
       end
     end
 

@@ -34,12 +34,16 @@ module Ark
       when /^(tar.gz|tgz)$/  then "xzf"
       when /^(tar.bz2|tbz)$/ then "xjf"
       when /^(tar.xz|txz)$/  then "xJf"
-      else fail "Don't know how to expand #{resource.url}"
+      else fail unsupported_extension
       end
     end
 
     def strip_args
       resource.strip_components > 0 ? " --strip-components=#{resource.strip_components}" : ""
+    end
+
+    def unsupported_extension
+      "Don't know how to expand #{resource.url} (extension: #{resource.extension})"
     end
   end
 end
