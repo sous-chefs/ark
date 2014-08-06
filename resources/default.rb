@@ -53,4 +53,4 @@ attribute :make_opts, :kind_of => Array, :default => []
 attribute :home_dir, :kind_of => String, :default => nil
 attribute :autoconf_opts, :kind_of => Array, :default => []
 attribute :extension, :kind_of => String
-attribute :chown_hidden, :kind_of => [TrueClass, FalseClass], :default => true
+attribute :exclude_wildcard, :kind_of => String, :default => nil
