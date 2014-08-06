@@ -241,8 +241,8 @@ module Opscode
         if node['platform_family'] == 'windows'
           "icacls #{new_resource.path}\\* /setowner #{new_resource.owner}"
         else
-          if new_resource.exclude_wildcard
-            "find #{new_resource.path} -path '#{new_resource.exclude_wildcard}' -prune -o -exec chown #{new_resource.owner}:#{new_resource.group} {} \\;"
+          if new_resource.do_not_chown_wildcard
+            "find #{new_resource.path} -path '#{new_resource.do_not_chown_wildcard}' -prune -o -exec chown #{new_resource.owner}:#{new_resource.group} {} \\;"
           else
             "chown -R #{new_resource.owner}:#{new_resource.group} #{new_resource.path}"
           end

@@ -67,7 +67,7 @@ defaults.
   be put on windows
 * `node['ark']['package_dependencies']` - prerequisite system
   packages that need to be installed to support ark.
-* `node['ark']['exclude_wildcard']` - rsync style wildcard
+* `node['ark']['do_not_chown_wildcard']` - rsync style wildcard
   of files and/or directories to exclude for chown operation
 
 Resources/Providers
