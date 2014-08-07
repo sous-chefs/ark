@@ -30,10 +30,13 @@ action :install do
   show_deprecations
   set_paths
 
+  installed_flag = "#{new_resource.path}/.ark-installed" 
+
   directory new_resource.path do
     recursive true
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+    not_if { ::File.exists?(installed_flag) }
   end
 
   remote_file new_resource.release_file do
@@ -42,6 +45,7 @@ action :install do
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+    not_if { ::File.exists?(installed_flag) }
   end
 
   # unpack based on file extension
@@ -56,6 +60,11 @@ action :install do
   # set_owner
   execute "set owner on #{new_resource.path}" do
     command owner_command
+    action :nothing
+    notifies :create, "file[#{installed_flag}]"
+  end
+  
+  file installed_flag do
     action :nothing
   end
 

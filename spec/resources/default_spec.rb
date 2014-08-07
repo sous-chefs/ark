@@ -1,8 +1,12 @@
 require 'spec_helper'
 
+cache_path = Chef::Config[:file_cache_path]
+
 describe_resource "ark" do
 
   describe "install" do
+    
+    installed_flag = '/usr/local/test_install-2/.ark-installed'
 
     let(:example_recipe) { "ark_spec::install" }
 
@@ -11,20 +15,53 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("/usr/local/test_install-2")
       resource = chef_run.directory("/usr/local/test_install-2")
-      expect(resource).to notify('execute[unpack /var/chef/cache/test_install-2.tar.gz]').to(:run)
+      expect(resource).to notify("execute[unpack #{cache_path}/test_install-2.tar.gz]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_install-2.tar.gz")
-      resource = chef_run.remote_file("/var/chef/cache/test_install-2.tar.gz")
-      expect(resource).to notify('execute[unpack /var/chef/cache/test_install-2.tar.gz]').to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_install-2.tar.gz")
+      resource = chef_run.remote_file("#{cache_path}/test_install-2.tar.gz")
+      expect(resource).to notify("execute[unpack #{cache_path}/test_install-2.tar.gz]").to(:run)
 
-      expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_install-2.tar.gz")
-      resource = chef_run.execute("unpack /var/chef/cache/test_install-2.tar.gz")
-      expect(resource).to notify('execute[set owner on /usr/local/test_install-2]').to(:run)
+      expect(chef_run).not_to run_execute("unpack #{cache_path}/test_install-2.tar.gz")
+      resource = chef_run.execute("unpack #{cache_path}/test_install-2.tar.gz")
+      expect(resource).to notify("execute[set owner on /usr/local/test_install-2]").to(:run)
 
-      expect(chef_run).not_to run_execute("set owner on /usr/local/test_install-2")
+      expect(chef_run).not_to run_execute('set owner on /usr/local/test_install-2')
+      resource = chef_run.execute('set owner on /usr/local/test_install-2')
+      expect(resource).to notify("file[#{installed_flag}]").to(:create)
+
+      expect(chef_run).not_to create_file(installed_flag)
 
       expect(chef_run).not_to create_template("/etc/profile.d/test_install.sh")
       expect(chef_run).not_to run_ruby_block("adding '/usr/local/test_install-2/bin' to chef-client ENV['PATH']")
+
+    end
+  end
+
+  describe "install target exists" do
+
+    installed_flag = '/usr/local/test_install_target_exists-2/.ark-installed'
+
+    let(:example_recipe) { 
+      ::File.stub(:exists?).with(anything).and_call_original
+      ::File.stub(:exists?).with(installed_flag).and_return true
+      "ark_spec::install_target_exists" }
+
+    it "installs" do
+      expect(chef_run).to install_ark("test_install_target_exists")
+
+      expect(chef_run).not_to create_directory("/usr/local/test_install_target_exists-2")
+
+      expect(chef_run).not_to create_remote_file("#{cache_path}/test_install_target_exists-2.tar.gz")
+
+      expect(chef_run).not_to run_execute("unpack #{cache_path}/test_install_target_exists-2.tar.gz")
+
+      expect(chef_run).not_to run_execute('set owner on /usr/local/test_install_target_exists-2')
+
+      expect(chef_run).not_to create_template("/etc/profile.d/test_install_target_exists.sh")
+
+      expect(chef_run).not_to run_ruby_block("adding '/usr/local/test_install_target_exists-2/bin' to chef-client ENV['PATH']")
+
+      expect(chef_run).not_to create_file(installed_flag)
     end
   end
 
@@ -37,14 +74,14 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("/usr/local/test_install-2")
       resource = chef_run.directory("/usr/local/test_install-2")
-      expect(resource).to notify('execute[unpack /var/chef/cache/test_install-2.tar.gz]').to(:run)
+      expect(resource).to notify("execute[unpack #{cache_path}/test_install-2.tar.gz]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_install-2.tar.gz")
-      resource = chef_run.remote_file("/var/chef/cache/test_install-2.tar.gz")
-      expect(resource).to notify('execute[unpack /var/chef/cache/test_install-2.tar.gz]').to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_install-2.tar.gz")
+      resource = chef_run.remote_file("#{cache_path}/test_install-2.tar.gz")
+      expect(resource).to notify("execute[unpack #{cache_path}/test_install-2.tar.gz]").to(:run)
 
-      expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_install-2.tar.gz")
-      resource = chef_run.execute("unpack /var/chef/cache/test_install-2.tar.gz")
+      expect(chef_run).not_to run_execute("unpack #{cache_path}/test_install-2.tar.gz")
+      resource = chef_run.execute("unpack #{cache_path}/test_install-2.tar.gz")
       expect(resource).to notify('execute[set owner on /usr/local/test_install-2]').to(:run)
 
       expect(chef_run).not_to run_execute("set owner on /usr/local/test_install-2")
@@ -69,14 +106,14 @@ describe_resource "ark" do
 
         expect(chef_run).to create_directory("/usr/local/test_install_with_append_env_path-7.0.26")
         resource = chef_run.directory("/usr/local/test_install_with_append_env_path-7.0.26")
-        expect(resource).to notify("execute[unpack /var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz]").to(:run)
+        expect(resource).to notify("execute[unpack #{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz]").to(:run)
 
-        expect(chef_run).to create_remote_file("/var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz")
-        resource = chef_run.remote_file("/var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz")
-        expect(resource).to notify("execute[unpack /var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz]").to(:run)
+        expect(chef_run).to create_remote_file("#{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz")
+        resource = chef_run.remote_file("#{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz")
+        expect(resource).to notify("execute[unpack #{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz]").to(:run)
 
-        expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz")
-        resource = chef_run.execute("unpack /var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz")
+        expect(chef_run).not_to run_execute("unpack #{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz")
+        resource = chef_run.execute("unpack #{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz")
         expect(resource).to notify("execute[set owner on /usr/local/test_install_with_append_env_path-7.0.26]").to(:run)
 
         expect(chef_run).not_to run_execute("set owner on /usr/local/test_install_with_append_env_path-7.0.26")
@@ -112,14 +149,14 @@ describe_resource "ark" do
 
         expect(chef_run).to create_directory("/usr/local/test_install_with_append_env_path-7.0.26")
         resource = chef_run.directory("/usr/local/test_install_with_append_env_path-7.0.26")
-        expect(resource).to notify("execute[unpack /var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz]").to(:run)
+        expect(resource).to notify("execute[unpack #{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz]").to(:run)
 
-        expect(chef_run).to create_remote_file("/var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz")
-        resource = chef_run.remote_file("/var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz")
-        expect(resource).to notify("execute[unpack /var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz]").to(:run)
+        expect(chef_run).to create_remote_file("#{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz")
+        resource = chef_run.remote_file("#{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz")
+        expect(resource).to notify("execute[unpack #{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz]").to(:run)
 
-        expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz")
-        resource = chef_run.execute("unpack /var/chef/cache/test_install_with_append_env_path-7.0.26.tar.gz")
+        expect(chef_run).not_to run_execute("unpack #{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz")
+        resource = chef_run.execute("unpack #{cache_path}/test_install_with_append_env_path-7.0.26.tar.gz")
         expect(resource).to notify("execute[set owner on /usr/local/test_install_with_append_env_path-7.0.26]").to(:run)
 
         expect(chef_run).not_to run_execute("set owner on /usr/local/test_install_with_append_env_path-7.0.26")
@@ -148,14 +185,14 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("C:\\install")
       resource = chef_run.directory("C:\\install")
-      expect(resource).to notify('execute[unpack /var/chef/cache/test_install-2.tar.gz]').to(:run)
+      expect(resource).to notify("execute[unpack #{cache_path}/test_install-2.tar.gz]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_install-2.tar.gz")
-      resource = chef_run.remote_file("/var/chef/cache/test_install-2.tar.gz")
-      expect(resource).to notify('execute[unpack /var/chef/cache/test_install-2.tar.gz]').to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_install-2.tar.gz")
+      resource = chef_run.remote_file("#{cache_path}/test_install-2.tar.gz")
+      expect(resource).to notify("execute[unpack #{cache_path}/test_install-2.tar.gz]").to(:run)
 
-      expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_install-2.tar.gz")
-      resource = chef_run.execute("unpack /var/chef/cache/test_install-2.tar.gz")
+      expect(chef_run).not_to run_execute("unpack #{cache_path}/test_install-2.tar.gz")
+      resource = chef_run.execute("unpack #{cache_path}/test_install-2.tar.gz")
       expect(resource).to notify("execute[set owner on C:\\install]").to(:run)
 
       expect(chef_run).not_to run_execute("set owner on C:\\install")
@@ -179,13 +216,13 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("/usr/local/test_put")
       resource = chef_run.directory("/usr/local/test_put")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_put.tar.gz]").to(:run)
+      expect(resource).to notify("execute[unpack #{cache_path}/test_put.tar.gz]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_put.tar.gz")
-      resource = chef_run.remote_file("/var/chef/cache/test_put.tar.gz")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_put.tar.gz]").to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_put.tar.gz")
+      resource = chef_run.remote_file("#{cache_path}/test_put.tar.gz")
+      expect(resource).to notify("execute[unpack #{cache_path}/test_put.tar.gz]").to(:run)
 
-      expect(chef_run).to_not run_execute("unpack /var/chef/cache/test_put.tar.gz")
+      expect(chef_run).to_not run_execute("unpack #{cache_path}/test_put.tar.gz")
       expect(chef_run).to_not run_execute("set owner on /usr/local/test_put")
     end
 
@@ -200,13 +237,13 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("/usr/local/foo_dump")
       resource = chef_run.directory("/usr/local/foo_dump")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_dump.zip]").to(:run)
+      expect(resource).to notify("execute[unpack #{cache_path}/test_dump.zip]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_dump.zip")
-      resource = chef_run.remote_file("/var/chef/cache/test_dump.zip")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_dump.zip]").to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_dump.zip")
+      resource = chef_run.remote_file("#{cache_path}/test_dump.zip")
+      expect(resource).to notify("execute[unpack #{cache_path}/test_dump.zip]").to(:run)
 
-      expect(chef_run).to_not run_execute("unpack /var/chef/cache/test_dump.zip")
+      expect(chef_run).to_not run_execute("unpack #{cache_path}/test_dump.zip")
       expect(chef_run).to_not run_execute("set owner on /usr/local/foo_dump")
     end
   end
@@ -220,13 +257,13 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("/usr/local/foo_dump")
       resource = chef_run.directory("/usr/local/foo_dump")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_unzip.zip]").to(:run)
+      expect(resource).to notify("execute[unpack #{cache_path}/test_unzip.zip]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_unzip.zip")
-      resource = chef_run.remote_file("/var/chef/cache/test_unzip.zip")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_unzip.zip]").to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_unzip.zip")
+      resource = chef_run.remote_file("#{cache_path}/test_unzip.zip")
+      expect(resource).to notify("execute[unpack #{cache_path}/test_unzip.zip]").to(:run)
 
-      expect(chef_run).to_not run_execute("unpack /var/chef/cache/test_unzip.zip")
+      expect(chef_run).to_not run_execute("unpack #{cache_path}/test_unzip.zip")
       expect(chef_run).to_not run_execute("set owner on /usr/local/foo_dump")
     end
   end
@@ -241,16 +278,16 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("/usr/local/foo_cherry_pick")
       resource = chef_run.directory("/usr/local/foo_cherry_pick")
-      expect(resource).to notify("execute[cherry_pick foo_sub/foo1.txt from /var/chef/cache/test_cherry_pick.tar.gz]").to(:run)
+      expect(resource).to notify("execute[cherry_pick foo_sub/foo1.txt from #{cache_path}/test_cherry_pick.tar.gz]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_cherry_pick.tar.gz")
-      resource = chef_run.remote_file("/var/chef/cache/test_cherry_pick.tar.gz")
-      expect(resource).to notify("execute[cherry_pick foo_sub/foo1.txt from /var/chef/cache/test_cherry_pick.tar.gz]").to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_cherry_pick.tar.gz")
+      resource = chef_run.remote_file("#{cache_path}/test_cherry_pick.tar.gz")
+      expect(resource).to notify("execute[cherry_pick foo_sub/foo1.txt from #{cache_path}/test_cherry_pick.tar.gz]").to(:run)
 
-      resource = chef_run.execute("cherry_pick foo_sub/foo1.txt from /var/chef/cache/test_cherry_pick.tar.gz")
+      resource = chef_run.execute("cherry_pick foo_sub/foo1.txt from #{cache_path}/test_cherry_pick.tar.gz")
       expect(resource).to notify("execute[set owner on /usr/local/foo_cherry_pick]").to(:run)
 
-      expect(chef_run).to_not run_execute("cherry_pick foo_sub/foo1.txt from /var/chef/cache/test_cherry_pick.tar.gz")
+      expect(chef_run).to_not run_execute("cherry_pick foo_sub/foo1.txt from #{cache_path}/test_cherry_pick.tar.gz")
       expect(chef_run).to_not run_execute("set owner on /usr/local/foo_cherry_pick")
     end
   end
@@ -264,14 +301,14 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("/usr/local/test_install_with_make-1.5")
       resource = chef_run.directory("/usr/local/test_install_with_make-1.5")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_install_with_make-1.5.tar.gz]").to(:run)
+      expect(resource).to notify("execute[unpack #{cache_path}/test_install_with_make-1.5.tar.gz]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_install_with_make-1.5.tar.gz")
-      resource = chef_run.remote_file("/var/chef/cache/test_install_with_make-1.5.tar.gz")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_install_with_make-1.5.tar.gz]").to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_install_with_make-1.5.tar.gz")
+      resource = chef_run.remote_file("#{cache_path}/test_install_with_make-1.5.tar.gz")
+      expect(resource).to notify("execute[unpack #{cache_path}/test_install_with_make-1.5.tar.gz]").to(:run)
 
-      expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_install_with_make-1.5.tar.gz")
-      resource = chef_run.execute("unpack /var/chef/cache/test_install_with_make-1.5.tar.gz")
+      expect(chef_run).not_to run_execute("unpack #{cache_path}/test_install_with_make-1.5.tar.gz")
+      resource = chef_run.execute("unpack #{cache_path}/test_install_with_make-1.5.tar.gz")
       expect(resource).to notify("execute[set owner on /usr/local/test_install_with_make-1.5]")
       expect(resource).to notify("execute[autogen /usr/local/test_install_with_make-1.5]")
       expect(resource).to notify("execute[configure /usr/local/test_install_with_make-1.5]")
@@ -296,14 +333,14 @@ describe_resource "ark" do
 
       expect(chef_run).to create_directory("/usr/local/test_configure-1")
       resource = chef_run.directory("/usr/local/test_configure-1")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_configure-1.tar.gz]").to(:run)
+      expect(resource).to notify("execute[unpack #{cache_path}/test_configure-1.tar.gz]").to(:run)
 
-      expect(chef_run).to create_remote_file("/var/chef/cache/test_configure-1.tar.gz")
-      resource = chef_run.remote_file("/var/chef/cache/test_configure-1.tar.gz")
-      expect(resource).to notify("execute[unpack /var/chef/cache/test_configure-1.tar.gz]").to(:run)
+      expect(chef_run).to create_remote_file("#{cache_path}/test_configure-1.tar.gz")
+      resource = chef_run.remote_file("#{cache_path}/test_configure-1.tar.gz")
+      expect(resource).to notify("execute[unpack #{cache_path}/test_configure-1.tar.gz]").to(:run)
 
-      expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_configure-1.tar.gz")
-      resource = chef_run.execute("unpack /var/chef/cache/test_configure-1.tar.gz")
+      expect(chef_run).not_to run_execute("unpack #{cache_path}/test_configure-1.tar.gz")
+      resource = chef_run.execute("unpack #{cache_path}/test_configure-1.tar.gz")
       expect(resource).to notify("execute[set owner on /usr/local/test_configure-1]")
       expect(resource).to notify("execute[autogen /usr/local/test_configure-1]")
       expect(resource).to notify("execute[configure /usr/local/test_configure-1]")
