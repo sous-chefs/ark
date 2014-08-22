@@ -21,13 +21,7 @@
 #
 
 use_inline_resources if defined?(use_inline_resources)
-include ::Opscode::Ark::ProviderHelpers
-
-# From resources/default.rb
-# :install, :put, :dump, :cherry_pick, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py
-#
-# Used in test.rb
-# :install, :put, :dump, :cherry_pick, :install_with_make, :configure
+include ::Ark::ProviderHelpers
 
 #################
 # action :install
@@ -51,9 +45,8 @@ action :install do
   end
 
   # unpack based on file extension
-  unpacked_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpacked_command
+    command unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -61,9 +54,8 @@ action :install do
   end
 
   # set_owner
-  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command current_owner_command
+    command owner_command
     action :nothing
   end
 
@@ -89,7 +81,7 @@ action :install do
       group 'root'
       mode '0755'
       cookbook 'ark'
-      variables(:directory => "#{new_resource.path}/bin")
+      variables(directory: "#{new_resource.path}/bin")
       only_if { new_resource.append_env_path }
     end
   end
@@ -128,9 +120,8 @@ action :put do
   end
 
   # unpack based on file extension
-  unpacked_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpacked_command
+    command unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -138,9 +129,8 @@ action :put do
   end
 
   # set_owner
-  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command current_owner_command
+    command owner_command
     action :nothing
   end
 end
@@ -168,9 +158,8 @@ action :dump do
   end
 
   # unpack based on file extension
-  dumped_command = dump_command
   execute "unpack #{new_resource.release_file}" do
-    command dumped_command
+    command dump_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -178,9 +167,8 @@ action :dump do
   end
 
   # set_owner
-  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command current_owner_command
+    command owner_command
     action :nothing
   end
 end
@@ -208,9 +196,8 @@ action :unzip do
   end
 
   # unpack based on file extension
-  unzipped_command = unzip_command
   execute "unpack #{new_resource.release_file}" do
-    command unzipped_command
+    command unzip_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -218,9 +205,8 @@ action :unzip do
   end
 
   # set_owner
-  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command current_owner_command
+    command owner_command
     action :nothing
   end
 end
@@ -247,20 +233,16 @@ action :cherry_pick do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
-  unpacked_type = unpack_type
-  cherry_picked_command = cherry_pick_command
   execute "cherry_pick #{new_resource.creates} from #{new_resource.release_file}" do
-    Chef::Log.debug("DEBUG: unpack_type: #{unpacked_type}")
-    command cherry_picked_command
+    command cherry_pick_command
     creates "#{new_resource.path}/#{new_resource.creates}"
     notifies :run, "execute[set owner on #{new_resource.path}]"
     action :nothing
   end
 
   # set_owner
-  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command current_owner_command
+    command owner_command
     action :nothing
   end
 end
@@ -287,9 +269,8 @@ action :install_with_make do
   end
 
   # unpack based on file extension
-  unpacked_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpacked_command
+    command unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -301,9 +282,8 @@ action :install_with_make do
   end
 
   # set_owner
-  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command current_owner_command
+    command owner_command
     action :nothing
   end
 
@@ -338,8 +318,6 @@ action :install_with_make do
     action :nothing
   end
 
-  # unless new_resource.creates and ::File.exists? new_resource.creates
-  # end
 end
 
 action :configure do
@@ -361,9 +339,8 @@ action :configure do
   end
 
   # unpack based on file extension
-  unpacked_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpacked_command
+    command unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -373,9 +350,8 @@ action :configure do
   end
 
   # set_owner
-  current_owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command current_owner_command
+    command owner_command
     action :nothing
   end
 

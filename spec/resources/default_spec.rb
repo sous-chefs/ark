@@ -139,7 +139,7 @@ describe_resource "ark" do
     let(:example_recipe) { "ark_spec::install_windows" }
 
     def node_attributes
-      { :platform => "windows", :version => "2008R2" }
+      { platform: "windows", version: "2008R2" }
     end
 
     it "installs" do
