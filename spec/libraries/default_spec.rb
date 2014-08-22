@@ -19,7 +19,7 @@ describe_helpers Ark::ProviderHelpers do
 
         expect(owner_command).to eq("chown -R MouseTrap:RatCatchers /opt/rathole")
       end
-      
+
       it "excludes paths when do_not_chown_wildcard is set" do
         with_resource_properties(owner: "MouseTrap", group: "RatCatchers", path: "/opt/rathole", do_not_chown_wildcard: "*squirrel_den*")
         expect(owner_command).to eq("find /opt/rathole -path '*squirrel_den*' -prune -o -exec chown MouseTrap:RatCatchers {} \\;")
