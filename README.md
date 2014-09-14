@@ -231,7 +231,7 @@ Install Apache Ivy dependency resolution tool in /home/foobar/ivy, strip any
 leading directory if one exists:
 
      ark "ivy" do
-       path "/home/foobar
+       path "/home/foobar"
        url 'http://someurl.example.com/ivy.tar.gz'
        checksum '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
        action :put
