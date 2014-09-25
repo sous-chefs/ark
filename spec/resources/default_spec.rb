@@ -255,6 +255,69 @@ describe_resource "ark" do
     end
   end
 
+  describe "setup_py_build" do
+    let (:example_recipe) { "ark_spec::setup_py_build" }
+
+    it "builds with python setup.py" do
+      expect(chef_run).to setup_py_build_ark('test_setup_py_build')
+
+      expect(chef_run).to create_directory("/usr/local/test_setup_py_build-1")
+      expect(chef_run).to create_remote_file("/var/chef/cache/test_setup_py_build-1.tar.gz")
+      resource = chef_run.remote_file("/var/chef/cache/test_setup_py_build.tar-1.gz")
+      expect(resource).to notify("execute[unpack /var/chef/cache/test_setup_py_build-1.tar.gz]").to(:run)
+
+      expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_setup_py_build-1.tar.gz")
+      resource = chef_run.execute("unpack /var/chef/cache/test_setup_py_build.tar-1.gz")
+      expect(resource).to notify("execute[set owner on /usr/local/test_setup_py_build]")
+      expect(resource).to notify("execute[python setup.py build /usr/local/test_setup_py_build]")
+
+      expect(chef_run).not_to run_execute("set owner on /usr/local/test_setup_py_build")
+      expect(chef_run).not_to run_execute("python setup.py build /usr/local/test_setup_py_build")
+    end
+  end
+
+  describe "setup_py_install" do
+    let (:example_recipe) { "ark_spec::setup_py_install" }
+
+    it "installs with python setup.py" do
+      expect(chef_run).to setup_py_install_ark('test_setup_py_install')
+
+      expect(chef_run).to create_directory("/usr/local/test_setup_py_install-1")
+      expect(chef_run).to create_remote_file("/var/chef/cache/test_setup_py_install-1.tar.gz")
+      resource = chef_run.remote_file("/var/chef/cache/test_setup_py_install.tar-1.gz")
+      expect(resource).to notify("execute[unpack /var/chef/cache/test_setup_py_install-1.tar.gz]").to(:run)
+
+      expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_setup_py_install-1.tar.gz")
+      resource = chef_run.execute("unpack /var/chef/cache/test_setup_py_install-1.tar.gz")
+      expect(resource).to notify("execute[set owner on /usr/local/test_setup_py_install-1]")
+      expect(resource).to notify("execute[python setup.py install /usr/local/test_setup_py_install]")
+
+      expect(chef_run).not_to run_execute("set owner on /usr/local/test_setup_py_install-1")
+      expect(chef_run).not_to run_execute("python setup.py install /usr/local/test_setup_py_install-1")
+    end
+  end
+
+  describe "setup_py" do
+    let (:example_recipe) { "ark_spec::setup_py" }
+
+    it "runs with python setup.py" do
+      expect(chef_run).to setup_py_ark('test_setup_py')
+
+      expect(chef_run).to create_directory("/usr/local/test_setup_py-1")
+      expect(chef_run).to create_remote_file("/var/chef/cache/test_setup_py-1.tar.gz")
+      resource = chef_run.remote_file("/var/chef/cache/test_setup_py-1.tar.gz")
+      expect(resource).to notify("execute[unpack /var/chef/cache/test_setup_py-1.tar.gz]").to(:run)
+
+      expect(chef_run).not_to run_execute("unpack /var/chef/cache/test_setup_py-1.tar.gz")
+      resource = chef_run.execute("unpack /var/chef/cache/test_setup_py-1.tar.gz")
+      expect(resource).to notify("execute[set owner on /usr/local/test_setup_py]")
+      expect(resource).to notify("execute[python setup.py /usr/local/test_setup_py]")
+
+      expect(chef_run).not_to run_execute("set owner on /usr/local/test_setup_py")
+      expect(chef_run).not_to run_execute("python setup.py /usr/local/test_setup_py")
+    end
+  end
+
   describe "install_with_make" do
 
     let(:example_recipe) { "ark_spec::install_with_make" }
