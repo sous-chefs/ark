@@ -3,6 +3,10 @@ require './libraries/default'
 
 describe_helpers Ark::ProviderHelpers do
 
+  before(:each) do
+    allow_any_instance_of(Ark::ResourceDefaults).to receive(:file_cache_path).and_return("/var/chef/cache")
+  end
+
   describe "#owner_command" do
     context "when on windows" do
       it "generates a icacls command" do
