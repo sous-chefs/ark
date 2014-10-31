@@ -15,5 +15,6 @@ supported_operating_systems.each { |os| supports os }
 recipe 'ark::default', 'Installs and configures ark'
 
 depends 'build-essential'
-depends 'windows'
-depends '7-zip'
+
+suggests 'windows' # for windows os
+suggests '7-zip' # for windows os
