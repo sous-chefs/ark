@@ -97,6 +97,14 @@ describe Ark::ResourceDefaults do
   end
 
   describe "#home_dir" do
+    context 'when the home dir has been specified' do
+      it "uses the value specified" do
+        resource = double(prefix_home: "prefix_home", name: "application", home_dir: "home_dir")
+        defaults = described_class.new(resource)
+        expect(defaults.home_dir).to eq "home_dir"
+      end
+    end
+
     context 'when the prefix home has been specified' do
       it "uses the value specified" do
         resource = double(prefix_home: "prefix_home", name: "application")
