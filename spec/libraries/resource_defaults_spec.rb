@@ -107,7 +107,7 @@ describe Ark::ResourceDefaults do
 
     context 'when the prefix home has been specified' do
       it "uses the value specified" do
-        resource = double(prefix_home: "prefix_home", name: "application")
+        resource = double(prefix_home: "prefix_home", name: "application", :home_dir => nil)
         defaults = described_class.new(resource)
         expect(defaults.home_dir).to eq "prefix_home/application"
       end
@@ -115,7 +115,7 @@ describe Ark::ResourceDefaults do
 
     context 'when the prefix home has not been specified' do
       it "uses the value on the node" do
-        resource = double(prefix_home: nil, name: "application")
+        resource = double(prefix_home: nil, name: "application", :home_dir => nil)
         defaults = described_class.new(resource)
         allow(defaults).to receive(:prefix_home_from_node_in_run_context) { "node_home" }
         expect(defaults.home_dir).to eq "node_home/application"
