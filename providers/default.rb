@@ -4,8 +4,10 @@
 #
 # Author:: Bryan W. Berry <bryan.berry@gmail.com>
 # Author:: Sean OMeara <someara@opscode.com
+# Author:: John Bellone <jbellone@bloomberg.net>
 # Copyright 2012, Bryan W. Berry
 # Copyright 2013, Opscode, Inc.
+# Copyright 2014, Bloomberg L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -318,6 +320,132 @@ action :install_with_make do
     action :nothing
   end
 
+end
+
+action :setup_py_build do
+  show_deprecations
+  set_paths
+
+  directory new_resource.path do
+    recursive true
+    action :create
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  remote_file new_resource.release_file do
+    Chef::Log.debug('DEBUG: new_resource.release_file')
+    source new_resource.url
+    checksum new_resource.checksum if new_resource.checksum
+    action :create
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # unpack based on file extension
+  execute "unpack #{new_resource.release_file}" do
+    command unpack_command
+    cwd new_resource.path
+    environment new_resource.environment
+    notifies :run, "execute[set owner on #{new_resource.path}]"
+    notifies :run, "execute[python setup.py build #{new_resource.path}]"
+    action :nothing
+  end
+
+  # set_owner
+  execute "set owner on #{new_resource.path}" do
+    command owner_command
+    action :nothing
+  end
+
+  execute "python setup.py build #{new_resource.path}" do
+    command "python setup.py build #{new_resource.make_opts.join(' ')}"
+    cwd new_resource.path
+    environment new_resource.environment
+    action :nothing
+  end
+end
+
+action :setup_py_install do
+  show_deprecations
+  set_paths
+
+  directory new_resource.path do
+    recursive true
+    action :create
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  remote_file new_resource.release_file do
+    Chef::Log.debug('DEBUG: new_resource.release_file')
+    source new_resource.url
+    checksum new_resource.checksum if new_resource.checksum
+    action :create
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # unpack based on file extension
+  execute "unpack #{new_resource.release_file}" do
+    command unpack_command
+    cwd new_resource.path
+    environment new_resource.environment
+    notifies :run, "execute[set owner on #{new_resource.path}]"
+    notifies :run, "execute[python setup.py install #{new_resource.path}]"
+    action :nothing
+  end
+
+  # set_owner
+  execute "set owner on #{new_resource.path}" do
+    command owner_command
+    action :nothing
+  end
+
+  execute "python setup.py install #{new_resource.path}" do
+    command "python setup.py install #{new_resource.make_opts.join(' ')}"
+    cwd new_resource.path
+    environment new_resource.environment
+    action :nothing
+  end
+end
+
+action :setup_py do
+  show_deprecations
+  set_paths
+
+  directory new_resource.path do
+    recursive true
+    action :create
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  remote_file new_resource.release_file do
+    Chef::Log.debug('DEBUG: new_resource.release_file')
+    source new_resource.url
+    checksum new_resource.checksum if new_resource.checksum
+    action :create
+    notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # unpack based on file extension
+  execute "unpack #{new_resource.release_file}" do
+    command unpack_command
+    cwd new_resource.path
+    environment new_resource.environment
+    notifies :run, "execute[set owner on #{new_resource.path}]"
+    notifies :run, "execute[python setup.py #{new_resource.path}]"
+    action :nothing
+  end
+
+  # set_owner
+  execute "set owner on #{new_resource.path}" do
+    command owner_command
+    action :nothing
+  end
+
+  execute "python setup.py #{new_resource.path}" do
+    command "python setup.py #{new_resource.make_opts.join(' ')}"
+    cwd new_resource.path
+    environment new_resource.environment
+    action :nothing
+  end
 end
 
 action :configure do

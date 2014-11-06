@@ -89,6 +89,7 @@ Actions
 - `:put`: extract the archive to a specified path, does not create any
   symbolic links
 - `:remove`: removes the extracted directory and related symlink #TODO
+- `:setup_py`: runs the command "python setup.py" in the extracted directory
 - `:setup_py_build`: runs the command "python setup.py build" in the
   extracted directory
 - `:setup_py_install`: runs the comand "python setup.py install" in
@@ -287,10 +288,12 @@ License and Author
 - Author: Bryan W. Berry (<bryan.berry@gmail.com>)
 - Author: Denis Barishev (<denis.barishev@gmail.com>)
 - Author: Sean OMeara (<someara@opscode.com>)
+- Author: John Bellone (<jbellone@bloomberg.net>)
 - Copyright: 2011, Philip (flip) Kromer - Infochimps, Inc
 - Copyright: 2012, Bryan W. Berry
 - Copyright: 2012, Denis Barishev
 - Copyright: 2013, Opscode, Inc
+- Copyright: 2014, Bloomberg L.P.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
