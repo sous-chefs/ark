@@ -2,6 +2,9 @@ source "http://api.berkshelf.com"
 
 metadata
 
+cookbook '7-zip'
+cookbook 'windows'
+
 group :integration do
   cookbook 'apt'
   cookbook 'minitest-handler'
