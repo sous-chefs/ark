@@ -251,7 +251,7 @@ describe_helpers Ark::ProviderHelpers do
             release_file: "/resource/release_file",
             path: "/resource/path")
 
-          expect(dump_command).to eq("unzip  -j -q -u -o \"/resource/release_file\" -d \"/resource/path\"")
+          expect(dump_command).to eq("unzip  -j -q -o \"/resource/release_file\" -d \"/resource/path\"")
         end
       end
     end
