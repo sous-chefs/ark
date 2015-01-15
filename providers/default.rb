@@ -4,10 +4,8 @@
 #
 # Author:: Bryan W. Berry <bryan.berry@gmail.com>
 # Author:: Sean OMeara <someara@opscode.com
-# Author:: John Bellone <jbellone@bloomberg.net>
 # Copyright 2012, Bryan W. Berry
 # Copyright 2013, Opscode, Inc.
-# Copyright 2014, Bloomberg L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,7 +21,13 @@
 #
 
 use_inline_resources if defined?(use_inline_resources)
-include ::Ark::ProviderHelpers
+include ::Opscode::Ark::ProviderHelpers
+
+# From resources/default.rb
+# :install, :put, :dump, :cherry_pick, :install_with_make, :configure, :setup_py_build, :setup_py_install, :setup_py
+#
+# Used in test.rb
+# :install, :put, :dump, :cherry_pick, :install_with_make, :configure
 
 #################
 # action :install
@@ -47,8 +51,9 @@ action :install do
   end
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -56,13 +61,14 @@ action :install do
   end
 
   # set_owner
+  _owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command owner_command
+    command _owner_command
     action :nothing
   end
 
   # usually on windows there is no central directory with executables where the applciations are linked
-  unless node['platform_family'] == 'windows'
+  if not node['platform_family'] === 'windows'
     # symlink binaries
     new_resource.has_binaries.each do |bin|
       link ::File.join(new_resource.prefix_bin, ::File.basename(bin)) do
@@ -83,7 +89,7 @@ action :install do
       group 'root'
       mode '0755'
       cookbook 'ark'
-      variables(directory: "#{new_resource.path}/bin")
+      variables(:directory => "#{new_resource.path}/bin")
       only_if { new_resource.append_env_path }
     end
   end
@@ -94,9 +100,7 @@ action :install do
     block do
       ENV['PATH'] = bin_path + ':' + ENV['PATH']
     end
-    only_if do
-      new_resource.append_env_path && ENV['PATH'].scan(bin_path).empty?
-    end
+    only_if { new_resource.append_env_path && ENV['PATH'].scan(bin_path).empty? }
   end
 end
 
@@ -122,8 +126,9 @@ action :put do
   end
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -131,8 +136,9 @@ action :put do
   end
 
   # set_owner
+  _owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command owner_command
+    command _owner_command
     action :nothing
   end
 end
@@ -160,8 +166,9 @@ action :dump do
   end
 
   # unpack based on file extension
+  _dump_command = dump_command
   execute "unpack #{new_resource.release_file}" do
-    command dump_command
+    command _dump_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -169,8 +176,9 @@ action :dump do
   end
 
   # set_owner
+  _owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command owner_command
+    command _owner_command
     action :nothing
   end
 end
@@ -198,8 +206,9 @@ action :unzip do
   end
 
   # unpack based on file extension
+  _unzip_command = unzip_command
   execute "unpack #{new_resource.release_file}" do
-    command unzip_command
+    command _unzip_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -207,8 +216,9 @@ action :unzip do
   end
 
   # set_owner
+  _owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command owner_command
+    command _owner_command
     action :nothing
   end
 end
@@ -235,16 +245,20 @@ action :cherry_pick do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
+  _unpack_type = unpack_type
+  _cherry_pick_command = cherry_pick_command
   execute "cherry_pick #{new_resource.creates} from #{new_resource.release_file}" do
-    command cherry_pick_command
+    Chef::Log.debug("DEBUG: unpack_type: #{_unpack_type}")
+    command _cherry_pick_command
     creates "#{new_resource.path}/#{new_resource.creates}"
     notifies :run, "execute[set owner on #{new_resource.path}]"
     action :nothing
   end
 
   # set_owner
+  _owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command owner_command
+    command _owner_command
     action :nothing
   end
 end
@@ -271,8 +285,9 @@ action :install_with_make do
   end
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -284,8 +299,9 @@ action :install_with_make do
   end
 
   # set_owner
+  _owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command owner_command
+    command _owner_command
     action :nothing
   end
 
@@ -320,132 +336,8 @@ action :install_with_make do
     action :nothing
   end
 
-end
-
-action :setup_py_build do
-  show_deprecations
-  set_paths
-
-  directory new_resource.path do
-    recursive true
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
-
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
-    checksum new_resource.checksum if new_resource.checksum
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
-
-  # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
-    command unpack_command
-    cwd new_resource.path
-    environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    notifies :run, "execute[python setup.py build #{new_resource.path}]"
-    action :nothing
-  end
-
-  # set_owner
-  execute "set owner on #{new_resource.path}" do
-    command owner_command
-    action :nothing
-  end
-
-  execute "python setup.py build #{new_resource.path}" do
-    command "python setup.py build #{new_resource.make_opts.join(' ')}"
-    cwd new_resource.path
-    environment new_resource.environment
-    action :nothing
-  end
-end
-
-action :setup_py_install do
-  show_deprecations
-  set_paths
-
-  directory new_resource.path do
-    recursive true
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
-
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
-    checksum new_resource.checksum if new_resource.checksum
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
-
-  # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
-    command unpack_command
-    cwd new_resource.path
-    environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    notifies :run, "execute[python setup.py install #{new_resource.path}]"
-    action :nothing
-  end
-
-  # set_owner
-  execute "set owner on #{new_resource.path}" do
-    command owner_command
-    action :nothing
-  end
-
-  execute "python setup.py install #{new_resource.path}" do
-    command "python setup.py install #{new_resource.make_opts.join(' ')}"
-    cwd new_resource.path
-    environment new_resource.environment
-    action :nothing
-  end
-end
-
-action :setup_py do
-  show_deprecations
-  set_paths
-
-  directory new_resource.path do
-    recursive true
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
-
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
-    checksum new_resource.checksum if new_resource.checksum
-    action :create
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
-  end
-
-  # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
-    command unpack_command
-    cwd new_resource.path
-    environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    notifies :run, "execute[python setup.py #{new_resource.path}]"
-    action :nothing
-  end
-
-  # set_owner
-  execute "set owner on #{new_resource.path}" do
-    command owner_command
-    action :nothing
-  end
-
-  execute "python setup.py #{new_resource.path}" do
-    command "python setup.py #{new_resource.make_opts.join(' ')}"
-    cwd new_resource.path
-    environment new_resource.environment
-    action :nothing
-  end
+  # unless new_resource.creates and ::File.exists? new_resource.creates
+  # end
 end
 
 action :configure do
@@ -467,8 +359,9 @@ action :configure do
   end
 
   # unpack based on file extension
+  _unpack_command = unpack_command
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command _unpack_command
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -478,8 +371,9 @@ action :configure do
   end
 
   # set_owner
+  _owner_command = owner_command
   execute "set owner on #{new_resource.path}" do
-    command owner_command
+    command _owner_command
     action :nothing
   end
 

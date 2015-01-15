@@ -8,8 +8,8 @@ group :lint do
 end
 
 group :unit do
-  gem 'berkshelf',  '~> 3.1'
-  gem 'chefspec',   '~> 4.0'
+  gem 'berkshelf',  '~> 3.0.0.beta6'
+  gem 'chefspec',   '~> 3.1'
 end
 
 group :kitchen_common do

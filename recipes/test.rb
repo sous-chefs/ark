@@ -121,11 +121,9 @@ end
 ark 'foo_txz' do
   url 'https://github.com/opscode-cookbooks/ark/raw/master/files/default/foo.txz'
   version '3'
-  # tar is too old in CENTOS < 6 (1.15.1 needs > 1.22)
-  not_if { platform?('centos') && node['platform_version'].to_f < 6.0 }
 end
 
-ark 'test_notification' do
+ark 'test notification' do
   url 'https://github.com/opscode-cookbooks/ark/raw/master/files/default/foo.zip'
   path '/tmp/foobarbaz'
   creates 'foo1.txt'

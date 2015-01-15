@@ -6,8 +6,9 @@ Encoding:
 
 LineLength:
   Max: 200
-  Exclude:
-    - '**/spec/**/*_spec.rb'
+
+HashSyntax:
+  EnforcedStyle: hash_rockets
 
 MethodLength:
   Max: 25
@@ -27,12 +28,4 @@ StringLiterals:
 SingleSpaceBeforeFirstArg:
   Enabled: true
   Exclude:
-    - '**/metadata.rb'
-
-TrivialAccessors:
-  Exclude:
-    - '**/spec/spec_helper.rb'
-
-Style/RegexpLiteral:
-  Exclude:
-    - 'Guardfile'
+    - metadata.rb
