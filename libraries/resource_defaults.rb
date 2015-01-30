@@ -1,4 +1,4 @@
-module Ark
+module ChefArk
   class ResourceDefaults
     def extension
       resource.extension || generate_extension_from_url(resource.url.clone)

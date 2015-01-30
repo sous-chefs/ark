@@ -1,10 +1,10 @@
 require "spec_helper"
 require './libraries/default'
 
-describe_helpers Ark::ProviderHelpers do
+describe_helpers ChefArk::ProviderHelpers do
 
   before(:each) do
-    allow_any_instance_of(Ark::ResourceDefaults).to receive(:file_cache_path).and_return("/var/chef/cache")
+    allow_any_instance_of(ChefArk::ResourceDefaults).to receive(:file_cache_path).and_return("/var/chef/cache")
   end
 
   describe "#owner_command" do

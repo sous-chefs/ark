@@ -1,7 +1,7 @@
 require 'spec_helper'
 require './libraries/default'
 
-describe Ark::WindowsOwner do
+describe ChefArk::WindowsOwner do
 
   let(:subject) { described_class.new(resource) }
 

@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: ark
-# Provider:: Ark
+# Provider:: ChefArk
 #
 # Author:: Bryan W. Berry <bryan.berry@gmail.com>
 # Author:: Sean OMeara <someara@opscode.com
@@ -23,7 +23,7 @@
 #
 
 use_inline_resources if defined?(use_inline_resources)
-include ::Ark::ProviderHelpers
+include ::ChefArk::ProviderHelpers
 
 #################
 # action :install
