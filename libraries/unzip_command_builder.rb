@@ -36,7 +36,7 @@ module Ark
       strip_dir = '*/' * resource.strip_components
       cmd = "unzip -q -u -o #{resource.release_file} -d #{tmpdir}"
       cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{resource.path}"
-      cmd += " && rm -rf #{tmpdir}"
+      cmd += " ; rm -rf #{tmpdir}"
       cmd
     end
 
