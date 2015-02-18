@@ -1,6 +1,6 @@
 name             'ark'
 maintainer       'Franklin Webber'
-maintainer_email 'frank@getchef.com'
+maintainer_email 'frank@chef.io'
 license          'Apache 2.0'
 description      'Installs/Configures ark'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
