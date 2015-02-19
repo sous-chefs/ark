@@ -107,6 +107,7 @@ env:
   - secure: hrXMJI33u1PJWxaodAqdGN+DV5IA62TyFkTmt+P41buOtW+RlhtrdpYwslNnUpU/LoX/MUga025h2EJgvO2bZZjlQnpNdk3LcZoO6KduOAEvSOKwrYDzozyRizu9WgcrASpOVCwsgT6H8Kr++IVQ9dLTIkuecFL1QMzbua8WSBo=
   - secure: XetQF9SdeN8/PPQhwe+Sc4GjO2Vdc5S+cKQBVQoJpJxWew3oq48aFLRctoje2tLLmG7AGdIkNr95DviRgL5NPqSd7oXlddDse30vChMa3XFWL9jib3ylBxNRaRMbWl84Q3+WhFCg7Fa40CnKyvw3obaTeAkDzahdQEM80ttHmeg=
   - secure: CW+tEuLQgPLVOcTEgRxTGZKUsJLEevIe9YdW6igS9Sd1mre0uQUOV4M+M51Usf8HCSSFUV7vKjzxJ+AFfAjNe6CaUhH2ML8YY2vKFqfQRXRntTPKp7XTZ4q6xkrThPc6Sjl59XmMMTiKIEU9VNfdLYiVIw+VDj99sRuNa3qs+xs=
+  - KITCHEN_LOCAL_YAML='.kitchen.cloud.yml'
   matrix:
   - KITCHEN_INSTANCE='default-centos-65'
   - KITCHEN_INSTANCE='default-debian-70'

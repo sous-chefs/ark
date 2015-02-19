@@ -1,4 +1,4 @@
-module Ark
+module ChefArk
   class SevenZipCommandBuilder
     def unpack
       sevenzip_command

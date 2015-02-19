@@ -1,4 +1,4 @@
-module Ark
+module ChefArk
   class ResourceDeprecations
     def self.on(resource)
       new(resource).warnings

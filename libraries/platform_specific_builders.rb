@@ -1,4 +1,4 @@
-module Ark
+module ChefArk
   module PlatformSpecificBuilders
     def generates_archive_commands_for(_name, options)
       condition = options[:when_the]

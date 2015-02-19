@@ -1,7 +1,7 @@
 require 'spec_helper'
 require './libraries/default'
 
-describe Ark::GeneralOwner do
+describe ChefArk::GeneralOwner do
 
   let(:subject) { described_class.new(resource) }
 
