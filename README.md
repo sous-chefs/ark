@@ -31,7 +31,7 @@ Ark provides many actions to accommodate different use cases, such as
 `:dump`, `:cherry_pick`, `:put`, and `:install_with_make`.
 
 At this time ark only handles files available from URLs using the
-[remote_file](http://docs.opscode.com/resource_remote_file.html) provider.
+[remote_file](http://docs.chef.io/resource_remote_file.html) provider.
 It does handle local files using the `file://` protocol.
 
 Requirements
@@ -41,7 +41,7 @@ This cookbook requires Chef 11 for the provider, as it uses the
 `use_inline_resources` method.
 
 More about
-[use_inline_resources](http://docs.opscode.com/lwrp_common_inline_compile.html)
+[use_inline_resources](http://docs.chef.io/lwrp_common_inline_compile.html)
 in the Chef documentation.
 
 Should work on common Unix/Linux systems with typical userland
@@ -89,6 +89,7 @@ Actions
 - `:put`: extract the archive to a specified path, does not create any
   symbolic links
 - `:remove`: removes the extracted directory and related symlink #TODO
+- `:setup_py`: runs the command "python setup.py" in the extracted directory
 - `:setup_py_build`: runs the command "python setup.py build" in the
   extracted directory
 - `:setup_py_install`: runs the comand "python setup.py install" in
@@ -231,7 +232,7 @@ Install Apache Ivy dependency resolution tool in /home/foobar/ivy, strip any
 leading directory if one exists:
 
      ark "ivy" do
-       path "/home/foobar
+       path "/home/foobar"
        url 'http://someurl.example.com/ivy.tar.gz'
        checksum '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
        action :put
@@ -286,11 +287,13 @@ License and Author
 - Author: Philip (flip) Kromer - Infochimps, Inc(<coders@infochimps.com>)
 - Author: Bryan W. Berry (<bryan.berry@gmail.com>)
 - Author: Denis Barishev (<denis.barishev@gmail.com>)
-- Author: Sean OMeara (<someara@opscode.com>)
+- Author: Sean OMeara (<someara@chef.io>)
+- Author: John Bellone (<jbellone@bloomberg.net>)
 - Copyright: 2011, Philip (flip) Kromer - Infochimps, Inc
 - Copyright: 2012, Bryan W. Berry
 - Copyright: 2012, Denis Barishev
-- Copyright: 2013, Opscode, Inc
+- Copyright: 2013, Chef Software, Inc
+- Copyright: 2014, Bloomberg L.P.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

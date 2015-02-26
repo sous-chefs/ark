@@ -1,6 +1,9 @@
-source "http://api.berkshelf.com"
+source "https://supermarket.chef.io"
 
 metadata
+
+cookbook '7-zip'
+cookbook 'windows'
 
 group :integration do
   cookbook 'apt'

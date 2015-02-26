@@ -3,6 +3,10 @@ require './libraries/default'
 
 describe Ark::ResourceDefaults do
 
+  before(:each) do
+    allow_any_instance_of(Ark::ResourceDefaults).to receive(:file_cache_path).and_return("/var/chef/cache")
+  end
+
   describe "#extension" do
     it "returns the extension parameter specified on the resource" do
       resource = double(extension: "me")
@@ -93,9 +97,17 @@ describe Ark::ResourceDefaults do
   end
 
   describe "#home_dir" do
+    context 'when the home dir has been specified' do
+      it "uses the value specified" do
+        resource = double(prefix_home: "prefix_home", name: "application", home_dir: "home_dir")
+        defaults = described_class.new(resource)
+        expect(defaults.home_dir).to eq "home_dir"
+      end
+    end
+
     context 'when the prefix home has been specified' do
       it "uses the value specified" do
-        resource = double(prefix_home: "prefix_home", name: "application")
+        resource = double(prefix_home: "prefix_home", name: "application", :home_dir => nil)
         defaults = described_class.new(resource)
         expect(defaults.home_dir).to eq "prefix_home/application"
       end
@@ -103,7 +115,7 @@ describe Ark::ResourceDefaults do
 
     context 'when the prefix home has not been specified' do
       it "uses the value on the node" do
-        resource = double(prefix_home: nil, name: "application")
+        resource = double(prefix_home: nil, name: "application", :home_dir => nil)
         defaults = described_class.new(resource)
         allow(defaults).to receive(:prefix_home_from_node_in_run_context) { "node_home" }
         expect(defaults.home_dir).to eq "node_home/application"

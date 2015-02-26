@@ -1,6 +1,6 @@
 name             'ark'
 maintainer       'Franklin Webber'
-maintainer_email 'frank@getchef.com'
+maintainer_email 'frank@chef.io'
 license          'Apache 2.0'
 description      'Installs/Configures ark'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
@@ -15,5 +15,6 @@ supported_operating_systems.each { |os| supports os }
 recipe 'ark::default', 'Installs and configures ark'
 
 depends 'build-essential'
-depends 'windows'
-depends '7-zip'
+
+suggests 'windows' # for windows os
+suggests '7-zip' # for windows os
