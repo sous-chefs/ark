@@ -13,7 +13,7 @@ describe_helpers Ark::ProviderHelpers do
         with_node_attributes(platform_family: "windows")
         with_resource_properties(owner: "Bobo", path: "C:\\temp")
 
-        expect(owner_command).to eq("icacls C:\\temp\\* /setowner Bobo")
+        expect(owner_command).to eq("icacls \"C:\\temp\\*\" /setowner \"Bobo\"")
       end
     end
 
