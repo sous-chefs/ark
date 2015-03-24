@@ -1,4 +1,4 @@
-module Ark
+module ChefArk
   class UnzipCommandBuilder
     def unpack
       if resource.strip_components > 0

@@ -1,4 +1,4 @@
-module Ark
+module ChefArk
   class WindowsOwner
     def initialize(resource)
       @resource = resource

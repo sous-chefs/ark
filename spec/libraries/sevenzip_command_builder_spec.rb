@@ -1,7 +1,7 @@
 require 'spec_helper'
 require './libraries/default'
 
-describe Ark::SevenZipCommandBuilder do
+describe ChefArk::SevenZipCommandBuilder do
 
   let(:subject) { described_class.new(resource) }
 
