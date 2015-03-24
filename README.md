@@ -131,9 +131,6 @@ links.
 
 - `path`: path to extract to.
   - Default: `/usr/local`
-- `has_binaries`: array of binary commands to symlink into
-  `/usr/local/bin/`, you must specify the relative path.
-  - Example: `[ 'bin/java', 'bin/javaws' ]`
 - `append_env_path`: boolean, if true, append the `./bin` directory of
   the extracted directory to the global `PATH` variable for all users.
 

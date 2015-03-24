@@ -4,12 +4,12 @@ module Ark
       if resource.strip_components > 0
         unzip_with_strip_components
       else
-        "unzip -q -u -o #{resource.release_file} -d #{resource.path}"
+        "unzip -q -o #{resource.release_file} -d #{resource.path}"
       end
     end
 
     def dump
-      "unzip  -j -q -u -o \"#{resource.release_file}\" -d \"#{resource.path}\""
+      "unzip  -j -q -o \"#{resource.release_file}\" -d \"#{resource.path}\""
     end
 
     def cherry_pick
@@ -34,7 +34,7 @@ module Ark
     def unzip_with_strip_components
       tmpdir = make_temp_directory
       strip_dir = '*/' * resource.strip_components
-      cmd = "unzip -q -u -o #{resource.release_file} -d #{tmpdir}"
+      cmd = "unzip -q -o #{resource.release_file} -d #{tmpdir}"
       cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{resource.path}"
       cmd += " && rm -rf #{tmpdir}"
       cmd
