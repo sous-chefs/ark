@@ -31,6 +31,11 @@ module Ark
       when_the: -> { true },
       with_klass: ::Ark::GeneralOwner
 
+    def make_temp_directory
+      require 'tmpdir'
+      Dir.mktmpdir
+    end
+
     def deprecations
       ::Ark::ResourceDeprecations.on(new_resource)
     end
@@ -73,8 +78,8 @@ module Ark
       new_resource.release_file = defaults.release_file_without_version
     end
 
-    def unpack_command
-      archive_application.unpack
+    def unpack_command(tmpdir)
+      archive_application.unpack(tmpdir)
     end
 
     def dump_command
@@ -85,8 +90,8 @@ module Ark
       archive_application.cherry_pick
     end
 
-    def unzip_command
-      archive_application.unpack
+    def unzip_command(tmpdir)
+      archive_application.unpack(tmpdir)
     end
 
     def owner_command

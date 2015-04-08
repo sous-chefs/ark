@@ -1,8 +1,8 @@
 module Ark
   class UnzipCommandBuilder
-    def unpack
+    def unpack(tmpdir)
       if resource.strip_components > 0
-        unzip_with_strip_components
+        unzip_with_strip_components(tmpdir)
       else
         "unzip -q -o #{resource.release_file} -d #{resource.path}"
       end
@@ -31,18 +31,12 @@ module Ark
 
     attr_reader :resource
 
-    def unzip_with_strip_components
-      tmpdir = make_temp_directory
+    def unzip_with_strip_components(tmpdir)
       strip_dir = '*/' * resource.strip_components
       cmd = "unzip -q -o #{resource.release_file} -d #{tmpdir}"
       cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{resource.path}"
       cmd += " && rm -rf #{tmpdir}"
       cmd
-    end
-
-    def make_temp_directory
-      require 'tmpdir'
-      Dir.mktmpdir
     end
   end
 end

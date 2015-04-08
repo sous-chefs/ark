@@ -1,6 +1,6 @@
 module Ark
   class TarCommandBuilder
-    def unpack
+    def unpack(_)
       "#{tar_binary} #{args} #{resource.release_file}#{strip_args}"
     end
 

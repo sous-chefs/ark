@@ -46,9 +46,15 @@ action :install do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  tmpdir = make_temp_directory
+
+  directory tmpdir do
+    action :nothing
+  end
+
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command unpack_command(tmpdir)
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -98,6 +104,12 @@ action :install do
       new_resource.append_env_path && ENV['PATH'].scan(bin_path).empty?
     end
   end
+
+  ruby_block "ensure temporary directory for #{new_resource.release_file} is deleted" do
+    block do
+    end
+    notifies :delete, "directory[#{tmpdir}]"
+  end
 end
 
 ##############
@@ -121,9 +133,15 @@ action :put do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  tmpdir = make_temp_directory
+
+  directory tmpdir do
+    action :nothing
+  end
+
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command unpack_command(tmpdir)
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -134,6 +152,12 @@ action :put do
   execute "set owner on #{new_resource.path}" do
     command owner_command
     action :nothing
+  end
+
+  ruby_block "ensure temporary directory for #{new_resource.release_file} is deleted" do
+    block do
+    end
+    notifies :delete, "directory[#{tmpdir}]"
   end
 end
 
@@ -197,9 +221,15 @@ action :unzip do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  tmpdir = make_temp_directory
+
+  directory tmpdir do
+    action :nothing
+  end
+
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
-    command unzip_command
+    command unzip_command(tmpdir)
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -210,6 +240,12 @@ action :unzip do
   execute "set owner on #{new_resource.path}" do
     command owner_command
     action :nothing
+  end
+
+  ruby_block "ensure temporary directory for #{new_resource.release_file} is deleted" do
+    block do
+    end
+    notifies :delete, "directory[#{tmpdir}]"
   end
 end
 
@@ -270,9 +306,15 @@ action :install_with_make do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  tmpdir = make_temp_directory
+
+  directory tmpdir do
+    action :nothing
+  end
+
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command unpack_command(tmpdir)
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -320,6 +362,11 @@ action :install_with_make do
     action :nothing
   end
 
+  ruby_block "ensure temporary directory for #{new_resource.release_file} is deleted" do
+    block do
+    end
+    notifies :delete, "directory[#{tmpdir}]"
+  end
 end
 
 action :setup_py_build do
@@ -340,9 +387,15 @@ action :setup_py_build do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  tmpdir = make_temp_directory
+
+  directory tmpdir do
+    action :nothing
+  end
+
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command unpack_command(tmpdir)
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -361,6 +414,12 @@ action :setup_py_build do
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
+  end
+
+  ruby_block "ensure temporary directory for #{new_resource.release_file} is deleted" do
+    block do
+    end
+    notifies :delete, "directory[#{tmpdir}]"
   end
 end
 
@@ -382,9 +441,15 @@ action :setup_py_install do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  tmpdir = make_temp_directory
+
+  directory tmpdir do
+    action :nothing
+  end
+
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command unpack_command(tmpdir)
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -403,6 +468,12 @@ action :setup_py_install do
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
+  end
+
+  ruby_block "ensure temporary directory for #{new_resource.release_file} is deleted" do
+    block do
+    end
+    notifies :delete, "directory[#{tmpdir}]"
   end
 end
 
@@ -424,9 +495,15 @@ action :setup_py do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  tmpdir = make_temp_directory
+
+  directory tmpdir do
+    action :nothing
+  end
+
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command unpack_command(tmpdir)
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -445,6 +522,12 @@ action :setup_py do
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
+  end
+
+  ruby_block "ensure temporary directory for #{new_resource.release_file} is deleted" do
+    block do
+    end
+    notifies :delete, "directory[#{tmpdir}]"
   end
 end
 
@@ -466,9 +549,15 @@ action :configure do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  tmpdir = make_temp_directory
+
+  directory tmpdir do
+    action :nothing
+  end
+
   # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
-    command unpack_command
+    command unpack_command(tmpdir)
     cwd new_resource.path
     environment new_resource.environment
     notifies :run, "execute[set owner on #{new_resource.path}]"
@@ -498,5 +587,11 @@ action :configure do
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
+  end
+
+  ruby_block "ensure temporary directory for #{new_resource.release_file} is deleted" do
+    block do
+    end
+    notifies :delete, "directory[#{tmpdir}]"
   end
 end

@@ -1,7 +1,7 @@
 module Ark
   class SevenZipCommandBuilder
-    def unpack
-      sevenzip_command
+    def unpack(tmpdir)
+      sevenzip_command(tmpdir)
     end
 
     def dump
@@ -20,13 +20,12 @@ module Ark
 
     attr_reader :resource
 
-    def sevenzip_command
+    def sevenzip_command(tmpdir)
       if resource.strip_components <= 0
         sevenzip_command_builder(resource.path, 'x')
         return
       end
 
-      tmpdir = make_temp_directory
       cmd = sevenzip_command_builder(tmpdir, 'e')
 
       cmd += " && "
@@ -54,11 +53,6 @@ module Ark
       else
         ""
       end
-    end
-
-    def make_temp_directory
-      require 'tmpdir'
-      Dir.mktmpdir
     end
   end
 end
