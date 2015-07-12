@@ -7,7 +7,7 @@ describe_resource "ark" do
     Chef::Config[:file_cache_path] = "/var/chef/cache"
   end
 
-  describe "install" do
+  describe "install", wip: true do
 
     let(:example_recipe) { "ark_spec::install" }
 
@@ -144,7 +144,7 @@ describe_resource "ark" do
     let(:example_recipe) { "ark_spec::install_windows" }
 
     def node_attributes
-      { platform: "windows", version: "2008R2" }
+      { platform: "windows", version: "2008R2", file_cache_path: "/var/chef/cache" }
     end
 
     it "installs" do
@@ -175,7 +175,20 @@ describe_resource "ark" do
     end
   end
 
-  describe "put" do
+  describe "install with clean_up_before_unpack == true", wip: true do
+
+    let(:example_recipe) { "ark_spec::install_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to install_ark("test_install")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_install-2.tar.gz")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_install-2 before unpack]")
+    end
+
+  end
+
+  describe "put", wip: true do
 
     let(:example_recipe) { "ark_spec::put" }
 
@@ -192,6 +205,19 @@ describe_resource "ark" do
 
       expect(chef_run).to_not run_execute("unpack /var/chef/cache/test_put.tar.gz")
       expect(chef_run).to_not run_execute("set owner on /usr/local/test_put")
+    end
+
+  end
+
+  describe "put with clean_up_before_unpack == true", wip: true do
+
+    let(:example_recipe) { "ark_spec::put_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to put_ark("test_put")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_put.tar.gz")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_put before unpack]")
     end
 
   end
@@ -216,6 +242,19 @@ describe_resource "ark" do
     end
   end
 
+  describe "dump with clean_up_before_unpack == true", wip: true do
+
+    let(:example_recipe) { "ark_spec::dump_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to dump_ark("test_dump")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_dump.zip")
+      expect(resource).to notify("ruby_block[clean up /usr/local/foo_dump before unpack]")
+    end
+
+  end
+
   describe "unzip" do
 
     let(:example_recipe) { "ark_spec::unzip" }
@@ -233,6 +272,18 @@ describe_resource "ark" do
 
       expect(chef_run).to_not run_execute("unpack /var/chef/cache/test_unzip.zip")
       expect(chef_run).to_not run_execute("set owner on /usr/local/foo_dump")
+    end
+  end
+
+  describe "unzip with clean_up_before_unpack == true", wip: true do
+
+    let(:example_recipe) { "ark_spec::unzip_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to unzip_ark("test_unzip")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_unzip.zip")
+      expect(resource).to notify("ruby_block[clean up /usr/local/foo_dump before unpack]")
     end
   end
 
@@ -260,6 +311,17 @@ describe_resource "ark" do
     end
   end
 
+  describe "cherry_pîck with clean_up_before_unpack == true", wip: true do
+    let(:example_recipe) { "ark_spec::cherry_pick_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to cherry_pick_ark("test_cherry_pick")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_cherry_pick.tar.gz")
+      expect(resource).to notify("ruby_block[clean up /usr/local/foo_cherry_pick before unpack]")
+    end
+  end
+
   describe "setup_py_build" do
     let (:example_recipe) { "ark_spec::setup_py_build" }
 
@@ -284,6 +346,17 @@ describe_resource "ark" do
     end
   end
 
+  describe "setup_py_build with clean_up_before_unpack == true", wip: true do
+    let(:example_recipe) { "ark_spec::setup_py_build_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to setup_py_build_ark("test_setup_py_build")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_setup_py_build-1.tar.gz")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py_build-1 before unpack]")
+    end
+  end
+
   describe "setup_py_install" do
     let (:example_recipe) { "ark_spec::setup_py_install" }
 
@@ -305,6 +378,17 @@ describe_resource "ark" do
     end
   end
 
+  describe "setup_py_install with clean_up_before_unpack == true", wip: true do
+    let(:example_recipe) { "ark_spec::setup_py_install_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to setup_py_install_ark("test_setup_py_install")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_setup_py_install-1.tar.gz")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py_install-1 before unpack]")
+    end
+  end
+
   describe "setup_py" do
     let (:example_recipe) { "ark_spec::setup_py" }
 
@@ -323,6 +407,17 @@ describe_resource "ark" do
 
       expect(chef_run).not_to run_execute("set owner on /usr/local/test_setup_py")
       expect(chef_run).not_to run_execute("python setup.py /usr/local/test_setup_py")
+    end
+  end
+
+  describe "setup_py with clean_up_before_unpack == true", wip: true do
+    let(:example_recipe) { "ark_spec::setup_py_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to setup_py_ark("test_setup_py")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_setup_py-1.tar.gz")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py-1 before unpack]")
     end
   end
 
@@ -357,6 +452,17 @@ describe_resource "ark" do
     end
   end
 
+  describe "install_with_make with clean_up_before_unpack == true", wip: true do
+    let(:example_recipe) { "ark_spec::install_with_make_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to install_with_make_ark("test_install_with_make")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_install_with_make-1.5.tar.gz")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_install_with_make-1.5 before unpack]")
+    end
+  end
+
   describe "configure" do
 
     let(:example_recipe) { "ark_spec::configure" }
@@ -385,4 +491,14 @@ describe_resource "ark" do
     end
   end
 
+  describe "configure with clean_up_before_unpack == true", wip: true do
+    let(:example_recipe) { "ark_spec::configure_with_clean_up_before_unpack" }
+
+    it "cleans up target directory before to unpack the archive" do
+      expect(chef_run).to configure_ark("test_configure")
+
+      resource = chef_run.remote_file("/var/chef/cache/test_configure-1.tar.gz")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_configure-1 before unpack]")
+    end
+  end
 end

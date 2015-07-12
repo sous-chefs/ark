@@ -38,11 +38,21 @@ action :install do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -113,11 +123,21 @@ action :put do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   # download
   remote_file new_resource.release_file do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -150,12 +170,22 @@ action :dump do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   # download
   remote_file new_resource.release_file do
     Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -188,12 +218,22 @@ action :unzip do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   # download
   remote_file new_resource.release_file do
     Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -227,11 +267,21 @@ action :cherry_pick do
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   # download
   remote_file new_resource.release_file do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
@@ -262,11 +312,21 @@ action :install_with_make do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -332,11 +392,21 @@ action :setup_py_build do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -374,11 +444,21 @@ action :setup_py_install do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -416,11 +496,21 @@ action :setup_py do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -458,11 +548,21 @@ action :configure do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
+  end
+
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -498,5 +598,16 @@ action :configure do
     cwd new_resource.path
     environment new_resource.environment
     action :nothing
+  end
+end
+
+# Delete all files and directories inside the given directory.
+# @param path Path of the directory.
+def delete_files_and_directories_inside(path)
+  # Ensure to have only / in path (windows path separator is not supported by Dir)
+  directory_content_pattern = ::File.join(new_resource.path, "*").gsub(%r:\\:, "/")
+
+  ::Dir[directory_content_pattern].each do |path|
+    ::FileUtils.rm_rf path
   end
 end
