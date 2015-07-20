@@ -182,6 +182,9 @@ describe_resource "ark" do
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to install_ark("test_install")
 
+      resource = chef_run.directory("/usr/local/test_install-2")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_install-2 before unpack]")
+
       resource = chef_run.remote_file("/var/chef/cache/test_install-2.tar.gz")
       expect(resource).to notify("ruby_block[clean up /usr/local/test_install-2 before unpack]")
     end
@@ -216,6 +219,9 @@ describe_resource "ark" do
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to put_ark("test_put")
 
+      resource = chef_run.directory("/usr/local/test_put")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_put before unpack]")
+
       resource = chef_run.remote_file("/var/chef/cache/test_put.tar.gz")
       expect(resource).to notify("ruby_block[clean up /usr/local/test_put before unpack]")
     end
@@ -249,6 +255,9 @@ describe_resource "ark" do
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to dump_ark("test_dump")
 
+      resource = chef_run.directory("/usr/local/foo_dump")
+      expect(resource).to notify("ruby_block[clean up /usr/local/foo_dump before unpack]")
+
       resource = chef_run.remote_file("/var/chef/cache/test_dump.zip")
       expect(resource).to notify("ruby_block[clean up /usr/local/foo_dump before unpack]")
     end
@@ -281,6 +290,9 @@ describe_resource "ark" do
 
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to unzip_ark("test_unzip")
+
+      resource = chef_run.directory("/usr/local/foo_dump")
+      expect(resource).to notify("ruby_block[clean up /usr/local/foo_dump before unpack]")
 
       resource = chef_run.remote_file("/var/chef/cache/test_unzip.zip")
       expect(resource).to notify("ruby_block[clean up /usr/local/foo_dump before unpack]")
@@ -317,6 +329,9 @@ describe_resource "ark" do
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to cherry_pick_ark("test_cherry_pick")
 
+      resource = chef_run.directory("/usr/local/foo_cherry_pick")
+      expect(resource).to notify("ruby_block[clean up /usr/local/foo_cherry_pick before unpack]")
+
       resource = chef_run.remote_file("/var/chef/cache/test_cherry_pick.tar.gz")
       expect(resource).to notify("ruby_block[clean up /usr/local/foo_cherry_pick before unpack]")
     end
@@ -352,6 +367,9 @@ describe_resource "ark" do
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to setup_py_build_ark("test_setup_py_build")
 
+      resource = chef_run.directory("/usr/local/test_setup_py_build-1")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py_build-1 before unpack]")
+
       resource = chef_run.remote_file("/var/chef/cache/test_setup_py_build-1.tar.gz")
       expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py_build-1 before unpack]")
     end
@@ -384,6 +402,9 @@ describe_resource "ark" do
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to setup_py_install_ark("test_setup_py_install")
 
+      resource = chef_run.directory("/usr/local/test_setup_py_install-1")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py_install-1 before unpack]")
+
       resource = chef_run.remote_file("/var/chef/cache/test_setup_py_install-1.tar.gz")
       expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py_install-1 before unpack]")
     end
@@ -415,6 +436,9 @@ describe_resource "ark" do
 
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to setup_py_ark("test_setup_py")
+
+      resource = chef_run.directory("/usr/local/test_setup_py-1")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py-1 before unpack]")
 
       resource = chef_run.remote_file("/var/chef/cache/test_setup_py-1.tar.gz")
       expect(resource).to notify("ruby_block[clean up /usr/local/test_setup_py-1 before unpack]")
@@ -458,6 +482,9 @@ describe_resource "ark" do
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to install_with_make_ark("test_install_with_make")
 
+      resource = chef_run.directory("/usr/local/test_install_with_make-1.5")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_install_with_make-1.5 before unpack]")
+
       resource = chef_run.remote_file("/var/chef/cache/test_install_with_make-1.5.tar.gz")
       expect(resource).to notify("ruby_block[clean up /usr/local/test_install_with_make-1.5 before unpack]")
     end
@@ -496,6 +523,9 @@ describe_resource "ark" do
 
     it "cleans up target directory before to unpack the archive" do
       expect(chef_run).to configure_ark("test_configure")
+
+      resource = chef_run.directory("/usr/local/test_configure-1")
+      expect(resource).to notify("ruby_block[clean up /usr/local/test_configure-1 before unpack]")
 
       resource = chef_run.remote_file("/var/chef/cache/test_configure-1.tar.gz")
       expect(resource).to notify("ruby_block[clean up /usr/local/test_configure-1 before unpack]")

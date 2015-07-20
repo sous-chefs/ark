@@ -35,6 +35,7 @@ action :install do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -120,6 +121,7 @@ action :put do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -167,6 +169,7 @@ action :dump do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -215,6 +218,7 @@ action :unzip do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -264,6 +268,7 @@ action :cherry_pick do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
@@ -309,6 +314,7 @@ action :install_with_make do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -389,6 +395,7 @@ action :setup_py_build do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -441,6 +448,7 @@ action :setup_py_install do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -493,6 +501,7 @@ action :setup_py do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -545,6 +554,7 @@ action :configure do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
