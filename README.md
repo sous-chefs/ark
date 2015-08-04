@@ -79,9 +79,8 @@ Actions
 - `:install`: extracts the file and creates a 'friendly' symbolic link
   to the extracted directory path
 - `:configure`: configure ahead of the install action
-- `:install_with_make`: extracts the archive to a path, runs `make`,
-  and `make install`. It does _not_ run the configure step at this
-  time
+- `:install_with_make`: extracts the archive to a path, runs `configure`,
+  `make`, and `make install`.
 - `:dump`: strips all directories from the archive and dumps the
   contained files into a specified path
 - `:cherry_pick`: extract a specified file from an archive and places
@@ -269,13 +268,12 @@ Build and install haproxy and use alternave values for `prefix_root`, `prefix_ho
        action :install_with_make
      end
 
-You can also pass multiple actions to ark and supply the file extension in case
-the file extension can not be determined by the URL:
+You can also supply the file extension in case the file extension can not be determined by the URL:
 
      ark "test_autogen" do
        url 'https://github.com/zeromq/libzmq/tarball/master'
        extension "tar.gz"
-       action [ :configure, :install_with_make ]
+       action :install_with_make
      end
 
 License and Author
