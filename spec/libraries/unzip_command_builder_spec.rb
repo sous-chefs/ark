@@ -17,7 +17,7 @@ describe Ark::UnzipCommandBuilder do
     context 'when the resource does not strip components' do
 
       it "generates the correct command" do
-        expected_command = "unzip -q -u -o release_file -d path"
+        expected_command = "unzip -q -o release_file -d path"
         expect(subject.unpack).to eq(expected_command)
       end
     end
@@ -32,7 +32,7 @@ describe Ark::UnzipCommandBuilder do
       end
 
       it "generates the correct command" do
-        expected_command = "unzip -q -u -o release_file -d temp_directory && rsync -a temp_directory/*/ path && rm -rf temp_directory"
+        expected_command = "unzip -q -o release_file -d temp_directory && rsync -a temp_directory/*/ path && rm -rf temp_directory"
         allow(subject).to receive(:make_temp_directory) { "temp_directory" }
         expect(subject.unpack).to eq(expected_command)
       end
@@ -41,7 +41,7 @@ describe Ark::UnzipCommandBuilder do
 
   describe "#dump" do
     it "generates the correct command" do
-      expected_command = "unzip  -j -q -u -o \"release_file\" -d \"path\""
+      expected_command = "unzip  -j -q -o \"release_file\" -d \"path\""
       expect(subject.dump).to eq(expected_command)
     end
   end

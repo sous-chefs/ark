@@ -13,7 +13,7 @@ describe_helpers Ark::ProviderHelpers do
         with_node_attributes(platform_family: "windows")
         with_resource_properties(owner: "Bobo", path: "C:\\temp")
 
-        expect(owner_command).to eq("icacls C:\\temp\\* /setowner Bobo")
+        expect(owner_command).to eq("icacls \"C:\\temp\\*\" /setowner \"Bobo\"")
       end
     end
 
@@ -251,7 +251,7 @@ describe_helpers Ark::ProviderHelpers do
             release_file: "/resource/release_file",
             path: "/resource/path")
 
-          expect(dump_command).to eq("unzip  -j -q -u -o \"/resource/release_file\" -d \"/resource/path\"")
+          expect(dump_command).to eq("unzip  -j -q -o \"/resource/release_file\" -d \"/resource/path\"")
         end
       end
     end
