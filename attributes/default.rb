@@ -3,7 +3,7 @@ default['ark']['prefix_root'] = '/usr/local'
 default['ark']['prefix_bin'] = '/usr/local/bin'
 default['ark']['prefix_home'] = '/usr/local'
 if node['platform_family'] == 'windows'
-  default['ark']['tar'] = "\"#{default['7-zip']['home']}\\7z.exe\""
+  default['ark']['tar'] = "\"#{node['7-zip']['home']}\\7z.exe\""
 else
   default['ark']['tar'] = '/bin/tar'
 end
