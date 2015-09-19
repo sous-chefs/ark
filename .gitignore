@@ -13,3 +13,6 @@ Gemfile.lock
 bin
 .kitchen.local.yml
 .coverage
+
+#IDE
+.idea/
