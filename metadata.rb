@@ -4,10 +4,10 @@ maintainer_email 'frank@chef.io'
 license          'Apache 2.0'
 description      'Installs/Configures ark'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.9.1'
+version          '0.9.3'
 
 def supported_operating_systems
-  %w( debian ubuntu centos redhat fedora windows )
+  %w( debian ubuntu centos redhat fedora windows mac_os_x )
 end
 
 supported_operating_systems.each { |os| supports os }
