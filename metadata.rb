@@ -17,4 +17,4 @@ recipe 'ark::default', 'Installs and configures ark'
 depends 'build-essential'
 
 suggests 'windows' # for windows os
-depends '7-zip' # for windows os
+suggests '7-zip' # for windows os

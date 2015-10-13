@@ -3,7 +3,7 @@ default['ark']['prefix_root'] = '/usr/local'
 default['ark']['prefix_bin'] = '/usr/local/bin'
 default['ark']['prefix_home'] = '/usr/local'
 default['ark']['tar'] = value_for_platform_family(
-    windows: ::File.join(node['7-zip']['home'], '7z.exe'),
+    windows: '7z.exe',
     mac_os_x: '/usr/bin/tar',
     default: '/bin/tar'
 )
