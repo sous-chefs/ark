@@ -1,0 +1,93 @@
+settings:
+  parallel: true
+
+driver:
+  name: docker
+  # privileged is required otherwise the container doesn't boot right
+  privileged: true
+
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: latest
+
+- name: centos-6
+  driver:
+      image: centos:6
+      platform: rhel
+      run_command: /sbin/init
+      provision_command:
+        - /usr/bin/yum install -y initscripts net-tools wget
+
+- name: centos-7
+  driver:
+    image: centos:7
+    platform: rhel
+    run_command: /usr/lib/systemd/systemd
+    provision_command:
+      - /bin/yum install -y initscripts net-tools wget
+
+- name: debian-7
+  driver:
+    image: debian:7
+    platform: debian
+    disable_upstart: false
+    run_command: /sbin/init
+    provision_command:
+      - /usr/bin/apt-get update
+      - /usr/bin/apt-get install apt-transport-https net-tools -y
+  run_list:
+  - recipe[apt]
+
+- name: ubuntu-10.04
+  driver:
+    image: ubuntu:10.04
+    platform: ubuntu
+    run_command: /sbin/init
+    provision_command:
+      - /usr/bin/apt-get update
+      - /usr/bin/apt-get install apt-transport-https net-tools -y
+  run_list:
+  - recipe[apt]
+
+- name: ubuntu-12.04
+  driver:
+    image: ubuntu:12.04
+    platform: ubuntu
+    run_command: /sbin/init
+    provision_command:
+      - /usr/bin/apt-get update
+      - /usr/bin/apt-get install apt-transport-https net-tools -y
+  run_list:
+  - recipe[apt]
+
+- name: ubuntu-14.04
+  driver:
+    image: ubuntu:14.04
+    platform: ubuntu
+    run_command: /sbin/init
+    provision_command:
+      - /usr/bin/apt-get update
+      - /usr/bin/apt-get install apt-transport-https net-tools -y
+  run_list:
+  - recipe[apt]
+
+# - name: smartos-1330
+#   driver_plugin: joyent
+#   driver_config:
+#     joyent_image_id: 87b9f4ac-5385-11e3-a304-fb868b82fe10
+#     joyent_flavor_id: g3-standard-4-smartos
+#     username: root
+#     ssh_key: <%= ENV['SDC_CLI_IDENTITY'] %>
+#   provisioner:
+#     name: chef_zero
+#     sudo: false
+#     chef_omnibus_url: https://raw.github.com/test-kitchen/kitchen-joyent/master/scripts/install-smartos.sh
+
+suites:
+- name: default
+  run_list:
+  - recipe[minitest-handler]
+  - recipe[build-essential]
+  - recipe[ark]
+  - recipe[ark_spec]
+  attributes: {}

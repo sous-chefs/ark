@@ -26,6 +26,10 @@ group :kitchen_cloud do
   gem 'kitchen-joyent'
 end
 
+group :kitchen_docker do
+  gem 'kitchen-docker', '~> 2.1.0'
+end
+
 group :development do
   gem 'ruby_gntp'
   gem 'growl'
