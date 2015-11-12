@@ -2,7 +2,6 @@ require 'spec_helper'
 require './libraries/default'
 
 describe Ark::TarCommandBuilder do
-
   let(:subject) { described_class.new(resource) }
 
   let(:resource) do
@@ -26,7 +25,6 @@ describe Ark::TarCommandBuilder do
     end
 
     context "when the extension is tar (only tar)" do
-
       let(:resource) do
         double(release_file: "release_file",
                creates: "creates",
@@ -42,7 +40,6 @@ describe Ark::TarCommandBuilder do
     end
 
     context "when the extension is not supported" do
-
       let(:resource) do
         double(release_file: "release_file",
                url: "http://website.com/files/content.stuffit",
@@ -56,7 +53,6 @@ describe Ark::TarCommandBuilder do
         expect { subject.unpack }.to raise_error("Don't know how to expand http://website.com/files/content.stuffit (extension: stuffit)")
       end
     end
-
   end
 
   describe "#dump" do

@@ -1,16 +1,11 @@
 language: ruby
 bundler_args: --without kitchen_vagrant --without development
 rvm:
-- 2.1.0
-before_install:
-- sudo apt-get update -qq
-- sudo apt-get install libgecode-dev
-- echo -n $DO_KEY_CHUNK_{0..30} >> ~/.ssh/id_do.base64
-- cat ~/.ssh/id_do.base64 | tr -d ' ' | base64 --decode > ~/.ssh/id_do.pem
-- echo -n $EC2_KEY_CHUNK_{0..30} >> ~/.ssh/id_ec2.base64
-- cat ~/.ssh/id_ec2.base64 | tr -d ' ' | base64 --decode > ~/.ssh/id_ec2.pem
-- echo -n $JOYENT_KEY_CHUNK_{0..30} >> ~/.ssh/id_joyent.base64
-- cat ~/.ssh/id_joyent.base64 | tr -d ' ' | base64 --decode > ~/.ssh/id_joyent.pem
+- 2.0.0
+- 2.1
+- 2.2
+before_script:
+- source <(curl -sL https://raw.githubusercontent.com/zuazo/kitchen-in-travis/0.3.0/scripts/start_docker.sh)
 script:
 - bundle exec rake style
 - bundle exec kitchen test $KITCHEN_INSTANCE

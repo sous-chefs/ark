@@ -22,7 +22,7 @@ TARGET = File.join(File.dirname(__FILE__), "..", "MAINTAINERS.md")
 
 begin
   require 'tomlrb'
-  task :default => :generate
+  task default: :generate
 
   namespace :maintainers do
     desc "Generate MarkDown version of MAINTAINERS file"
@@ -39,7 +39,7 @@ begin
       }
     end
   end
-  
+
 rescue LoadError
   STDERR.puts "\n*** TomlRb not available.\n\n"
 end
