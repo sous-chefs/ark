@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe_recipe "ark::default" do
-
   def node_attributes
     { platform: "centos", version: "5.10" }
   end
@@ -15,5 +14,4 @@ describe_recipe "ark::default" do
       expect(chef_run).to install_package(package)
     end
   end
-
 end

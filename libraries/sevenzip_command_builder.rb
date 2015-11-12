@@ -30,7 +30,7 @@ module Ark
       cmd = sevenzip_command_builder(tmpdir, 'e')
 
       cmd += " && "
-      currdir = tmpdir.gsub('/', '\\')
+      currdir = tmpdir.tr('/', '\\')
 
       1.upto(resource.strip_components).each do |count|
         cmd += "for /f %#{count} in ('dir /ad /b \"#{currdir}\"') do "

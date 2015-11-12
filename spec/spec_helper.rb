@@ -21,7 +21,6 @@ def stringify_keys(hash)
 end
 
 RSpec.shared_context "recipe tests", type: :recipe do
-
   let(:chef_run) { ChefSpec::SoloRunner.new(node_attributes).converge(described_recipe) }
 
   let(:node) { chef_run.node }
@@ -45,7 +44,6 @@ RSpec.shared_context "recipe tests", type: :recipe do
   def default_cookbook_attribute(attribute_name)
     node[cookbook_name][attribute_name]
   end
-
 end
 
 RSpec.shared_context "helpers tests", type: :helpers do
@@ -75,7 +73,6 @@ RSpec.shared_context "helpers tests", type: :helpers do
 end
 
 RSpec.shared_context "resource tests", type: :resource do
-
   let(:chef_run) do
     ChefSpec::SoloRunner.new(node_attributes.merge(step_into)).converge(example_recipe)
   end
@@ -112,5 +109,4 @@ Please specify the name of the test recipe that executes your recipe:
   def recipe_name
     cookbook_recipe_names.last
   end
-
 end

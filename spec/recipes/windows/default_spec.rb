@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe_recipe "ark::default" do
-
   def node_attributes
     { platform: "windows", version: "2008R2" }
   end
@@ -28,11 +27,8 @@ describe_recipe "ark::default" do
   end
 
   context "sets default attributes" do
-
     it "tar binary" do
       expect(default_cookbook_attribute("tar")).to eq %("\\7-zip\\7z.exe")
     end
-
   end
-
 end

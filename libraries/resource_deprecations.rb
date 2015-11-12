@@ -11,7 +11,7 @@ module Ark
     attr_reader :resource
 
     def warnings
-      applicable_deprecrations.map { | _, message| message }
+      applicable_deprecrations.map { |_, message| message }
     end
 
     def applicable_deprecrations
