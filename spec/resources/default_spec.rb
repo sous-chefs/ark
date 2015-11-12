@@ -3,10 +3,6 @@ require './libraries/default'
 
 describe_resource "ark" do
 
-  before(:each) do
-    Chef::Config[:file_cache_path] = "/var/chef/cache"
-  end
-
   describe "install" do
 
     let(:example_recipe) { "ark_spec::install" }

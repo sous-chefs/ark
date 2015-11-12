@@ -11,7 +11,7 @@ describe_recipe "ark::default" do
   # as a suggestion or recommendation the attributes are not proprerly loaded
   # unless the recipe is on the run_list.
   #
-  let(:chef_run) { ChefSpec::Runner.new(node_attributes).converge("7-zip", described_recipe) }
+  let(:chef_run) { ChefSpec::SoloRunner.new(node_attributes).converge("7-zip", described_recipe) }
 
   let(:expected_packages) do
     %w( libtool autoconf unzip rsync make gcc autogen xz-lzma-compat )
