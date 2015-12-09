@@ -33,7 +33,7 @@ module Ark
 
     def unzip_with_strip_components
       tmpdir = make_temp_directory
-      strip_dir = '*/' * resource.strip_components
+      strip_dir = '*' * resource.strip_components
       cmd = "unzip -q -o #{resource.release_file} -d #{tmpdir}"
       cmd += " && rsync -a #{tmpdir}/#{strip_dir} #{resource.path}"
       cmd += " && rm -rf #{tmpdir}"

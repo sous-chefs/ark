@@ -32,7 +32,7 @@ describe Ark::UnzipCommandBuilder do
       end
 
       it "generates the correct command" do
-        expected_command = "unzip -q -o release_file -d temp_directory && rsync -a temp_directory/*/ path && rm -rf temp_directory"
+        expected_command = "unzip -q -o release_file -d temp_directory && rsync -a temp_directory/* path && rm -rf temp_directory"
         allow(subject).to receive(:make_temp_directory) { "temp_directory" }
         expect(subject.unpack).to eq(expected_command)
       end
