@@ -78,7 +78,7 @@ RSpec.shared_context "resource tests", type: :resource do
   end
 
   let(:example_recipe) do
-    fail %(
+    raise %(
 Please specify the name of the test recipe that executes your recipe:
 
     let(:example_recipe) do

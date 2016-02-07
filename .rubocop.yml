@@ -24,7 +24,7 @@ Documentation:
 StringLiterals:
   Enabled: false
 
-SingleSpaceBeforeFirstArg:
+SpaceBeforeFirstArg:
   Enabled: true
   Exclude:
     - '**/metadata.rb'

@@ -34,7 +34,7 @@ module Ark
       when /^(tar.gz|tgz)$/  then "xzf"
       when /^(tar.bz2|tbz)$/ then "xjf"
       when /^(tar.xz|txz)$/  then "xJf"
-      else fail unsupported_extension
+      else raise unsupported_extension
       end
     end
 
