@@ -238,7 +238,7 @@ describe_resource "ark" do
   end
 
   describe "setup_py_build" do
-    let (:example_recipe) { "ark_spec::setup_py_build" }
+    let(:example_recipe) { "ark_spec::setup_py_build" }
 
     it "builds with python setup.py" do
       expect(chef_run).to setup_py_build_ark('test_setup_py_build')
@@ -262,7 +262,7 @@ describe_resource "ark" do
   end
 
   describe "setup_py_install" do
-    let (:example_recipe) { "ark_spec::setup_py_install" }
+    let(:example_recipe) { "ark_spec::setup_py_install" }
 
     it "installs with python setup.py" do
       expect(chef_run).to setup_py_install_ark('test_setup_py_install')
@@ -283,7 +283,7 @@ describe_resource "ark" do
   end
 
   describe "setup_py" do
-    let (:example_recipe) { "ark_spec::setup_py" }
+    let(:example_recipe) { "ark_spec::setup_py" }
 
     it "runs with python setup.py" do
       expect(chef_run).to setup_py_ark('test_setup_py')

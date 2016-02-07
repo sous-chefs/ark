@@ -12,6 +12,7 @@ module Ark
       "unzip  -j -q -o \"#{resource.release_file}\" -d \"#{resource.path}\""
     end
 
+    # rubocop:disable Metrics/AbcSize
     def cherry_pick
       cmd = "unzip -t #{resource.release_file} \"*/#{resource.creates}\" ; stat=$? ;"
       cmd += "if [ $stat -eq 11 ] ; then "
@@ -22,6 +23,7 @@ module Ark
       cmd += "fi"
       cmd
     end
+    # rubocop:enable Metrics/AbcSize
 
     def initialize(resource)
       @resource = resource
