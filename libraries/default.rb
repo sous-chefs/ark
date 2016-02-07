@@ -43,6 +43,7 @@ module Ark
       @resource_defaults ||= ::Ark::ResourceDefaults.new(new_resource)
     end
 
+    # rubocop:disable Metrics/AbcSize
     def set_paths
       new_resource.extension = defaults.extension
       new_resource.prefix_bin = defaults.prefix_bin
@@ -57,6 +58,7 @@ module Ark
       new_resource.path = defaults.path
       new_resource.release_file = defaults.release_file
     end
+    # rubocop:enable Metrics/AbcSize
 
     def set_put_paths
       new_resource.extension = defaults.extension
