@@ -2,7 +2,6 @@ require "spec_helper"
 require './libraries/default'
 
 describe_helpers Ark::ProviderHelpers do
-
   before(:each) do
     allow_any_instance_of(Ark::ResourceDefaults).to receive(:file_cache_path).and_return("/var/chef/cache")
   end
@@ -39,7 +38,6 @@ describe_helpers Ark::ProviderHelpers do
         expect(Chef::Log).to receive(:warn)
         show_deprecations
       end
-
     end
 
     context "when the strip_leading_dir property is not set on the resource" do
@@ -60,7 +58,6 @@ describe_helpers Ark::ProviderHelpers do
   end
 
   describe "#set_put_paths" do
-
     context "when the resource path is not set" do
       it "sets the resource's release_file and path" do
         with_resource_properties(extension: "jar", name: "gustav-moomoo")
@@ -83,11 +80,9 @@ describe_helpers Ark::ProviderHelpers do
         expect(new_resource.path).to eq("/path/piece/gustav-tootoo")
       end
     end
-
   end
 
   describe "#set_paths" do
-
     it "uses all the defaults" do
       with_resource_properties(extension: "jar", name: "resource_name")
 
@@ -119,7 +114,6 @@ describe_helpers Ark::ProviderHelpers do
 
       expect(new_resource.release_file).to eq("#{chef_config_file_cache_path}/resource_name-23.jar")
     end
-
   end
 
   describe "#cherry_pick_command" do
@@ -141,7 +135,6 @@ describe_helpers Ark::ProviderHelpers do
     context "when the node's platform_family is not windows" do
       context 'when the unpack_type is tar_xzf' do
         it "generates a cherry pick tar command with the correct options" do
-
           with_resource_properties(
             url: "http://website.com/package.tar.gz",
             path: "/resource/path",
@@ -157,7 +150,6 @@ describe_helpers Ark::ProviderHelpers do
 
       context 'when the unpack_type is tar_xjf' do
         it "generates a cherry pick tar command with the correct options" do
-
           with_resource_properties(
             url: "http://website.com/package.tar.bz2",
             path: "/resource/path",
@@ -173,7 +165,6 @@ describe_helpers Ark::ProviderHelpers do
 
       context 'when the unpack_type is tar_xJf' do
         it "generates a cherry pick tar command with the correct options" do
-
           with_resource_properties(
             url: "http://website.com/package.txz",
             path: "/resource/path",
@@ -206,7 +197,6 @@ describe_helpers Ark::ProviderHelpers do
   describe "#dump_command" do
     context "when the node's platform_family is windows" do
       it "generates a 7-zip command" do
-
       end
     end
 

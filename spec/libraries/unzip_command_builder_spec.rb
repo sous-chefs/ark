@@ -2,7 +2,6 @@ require 'spec_helper'
 require './libraries/default'
 
 describe Ark::UnzipCommandBuilder do
-
   let(:subject) { described_class.new(resource) }
 
   let(:resource) do
@@ -13,9 +12,7 @@ describe Ark::UnzipCommandBuilder do
   end
 
   describe "#unpack" do
-
     context 'when the resource does not strip components' do
-
       it "generates the correct command" do
         expected_command = "unzip -q -o release_file -d path"
         expect(subject.unpack).to eq(expected_command)
@@ -23,7 +20,6 @@ describe Ark::UnzipCommandBuilder do
     end
 
     context 'when the resource does strip components' do
-
       let(:resource) do
         double(release_file: "release_file",
                creates: "creates",
