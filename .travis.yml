@@ -1,4 +1,5 @@
 language: ruby
+sudo: required
 bundler_args: --without kitchen_vagrant --without development
 rvm:
 - 2.0.0
