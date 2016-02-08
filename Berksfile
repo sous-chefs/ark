@@ -11,5 +11,4 @@ group :integration do
   cookbook 'build-essential'
 end
 
-
 cookbook "ark_spec", path: "spec/fixtures/cookbooks/ark_spec"

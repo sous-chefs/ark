@@ -9,6 +9,7 @@ RSpec.configure do |config|
   config.alias_example_group_to :describe_recipe, type: :recipe
   config.alias_example_group_to :describe_helpers, type: :helpers
   config.alias_example_group_to :describe_resource, type: :resource
+  config.file_cache_path = '/var/chef/cache'
 end
 
 def stringify_keys(hash)
@@ -20,8 +21,7 @@ def stringify_keys(hash)
 end
 
 RSpec.shared_context "recipe tests", type: :recipe do
-
-  let(:chef_run) { ChefSpec::Runner.new(node_attributes).converge(described_recipe) }
+  let(:chef_run) { ChefSpec::SoloRunner.new(node_attributes).converge(described_recipe) }
 
   let(:node) { chef_run.node }
 
@@ -44,7 +44,6 @@ RSpec.shared_context "recipe tests", type: :recipe do
   def default_cookbook_attribute(attribute_name)
     node[cookbook_name][attribute_name]
   end
-
 end
 
 RSpec.shared_context "helpers tests", type: :helpers do
@@ -74,13 +73,12 @@ RSpec.shared_context "helpers tests", type: :helpers do
 end
 
 RSpec.shared_context "resource tests", type: :resource do
-
   let(:chef_run) do
-    ChefSpec::Runner.new(node_attributes.merge(step_into)).converge(example_recipe)
+    ChefSpec::SoloRunner.new(node_attributes.merge(step_into)).converge(example_recipe)
   end
 
   let(:example_recipe) do
-    fail %(
+    raise %(
 Please specify the name of the test recipe that executes your recipe:
 
     let(:example_recipe) do
@@ -111,5 +109,4 @@ Please specify the name of the test recipe that executes your recipe:
   def recipe_name
     cookbook_recipe_names.last
   end
-
 end
