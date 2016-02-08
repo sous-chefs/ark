@@ -1,10 +1,13 @@
 driver:
-  name: vagrant
+  name: docker
 
 provisioner:
   name: chef_zero
 
 platforms:
+  - name: centos-6
+  - name: debian-7
+  - name: ubuntu-12.04
   - name: ubuntu-14.04
 
 suites:
