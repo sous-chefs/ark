@@ -8,7 +8,7 @@ group :lint do
 end
 
 group :unit do
-  gem 'berkshelf',  '~> 3.1'
+  gem 'berkshelf',  '~> 4.1'
   gem 'chefspec',   '~> 4.0'
 end
 
@@ -18,6 +18,10 @@ end
 
 group :kitchen_vagrant do
   gem 'kitchen-vagrant', '~> 0.11'
+end
+
+group :kitchen_docker do
+  gem 'kitchen-docker'
 end
 
 group :kitchen_cloud do
