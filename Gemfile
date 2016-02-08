@@ -20,6 +20,10 @@ group :kitchen_vagrant do
   gem 'kitchen-vagrant', '~> 0.19.0'
 end
 
+group :kitchen_docker do
+  gem 'kitchen-docker'
+end
+
 group :kitchen_cloud do
   gem 'kitchen-digitalocean'
   gem 'kitchen-ec2'
