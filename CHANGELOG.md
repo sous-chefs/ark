@@ -51,30 +51,30 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## v0.5.0 (2014-02-21)
 ### Bug
-- **[COOK-4288](https://tickets.chef.io/browse/COOK-4288)** - Cleanup the Kitchen
+- **[COOK-4288](https://tickets.opscode.com/browse/COOK-4288)** - Cleanup the Kitchen
 
 ### Improvement
-- **[COOK-4264](https://tickets.chef.io/browse/COOK-4264)** - Add node['ark']['package_dependencies'] to allow tuning packages.
+- **[COOK-4264](https://tickets.opscode.com/browse/COOK-4264)** - Add node['ark']['package_dependencies'] to allow tuning packages.
 
 ## v0.4.2
 ### Improvement
-- **[COOK-3854](https://tickets.chef.io/browse/COOK-3854)** - Capability with mac_os_x: '/bin/chown' - No such file or directory
+- **[COOK-3854](https://tickets.opscode.com/browse/COOK-3854)** - Capability with mac_os_x: '/bin/chown' - No such file or directory
 - Cleaning up some style for rubucop
 - Updating test harness
 
 ## v0.4.0
 ### Improvement
-- **[COOK-3539](https://tickets.chef.io/browse/COOK-3539)** - Allow dumping of bz2 and gzip files
+- **[COOK-3539](https://tickets.opscode.com/browse/COOK-3539)** - Allow dumping of bz2 and gzip files
 
 ## v0.3.2
 ### Bug
-- **[COOK-3191](https://tickets.chef.io/browse/COOK-3191)** - Propogate unzip failures
-- **[COOK-3118](https://tickets.chef.io/browse/COOK-3118)** - Set cookbook attribute in provider
-- **[COOK-3055](https://tickets.chef.io/browse/COOK-3055)** - Use proper scope in helper module
-- **[COOK-3054](https://tickets.chef.io/browse/COOK-3054)** - Fix notification resource updating
+- **[COOK-3191](https://tickets.opscode.com/browse/COOK-3191)** - Propogate unzip failures
+- **[COOK-3118](https://tickets.opscode.com/browse/COOK-3118)** - Set cookbook attribute in provider
+- **[COOK-3055](https://tickets.opscode.com/browse/COOK-3055)** - Use proper scope in helper module
+- **[COOK-3054](https://tickets.opscode.com/browse/COOK-3054)** - Fix notification resource updating
 
 ### Improvement
-- **[COOK-3179](https://tickets.chef.io/browse/COOK-3179)** - README updates and refactor
+- **[COOK-3179](https://tickets.opscode.com/browse/COOK-3179)** - README updates and refactor
 
 ## v0.3.0
 ### Improvement
