@@ -1,4 +1,5 @@
-# <a name="title"></a> chef-ark [![Build Status](https://secure.travis-ci.org/burtlo/ark.png?branch=master)](https://travis-ci.org/burtlo/ark)
+# ark cookbook
+[![Build Status](https://travis-ci.org/burtlo/ark.svg?branch=master)](https://travis-ci.org/burtlo/ark) [![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
 
 Overview
 ========
