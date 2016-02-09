@@ -4,10 +4,13 @@ This file is used to list changes made in each version of the ark cookbook.
 ## v0.10.0 (2016-02-09)
 - Added the pkg-config package to the debian platform family
 - Added tar, xz-lzma-compat, and bzip2 packages to the RHEL and fedora platform families
-- Removed has_binaries attribute from put action documentation in the readme file since this isn't supported here
+- Updated FreeBSD to install gmake instead of make
+- Added OS X, SmartOS, and FreeBSD to the tar path attributes to support those platforms
+- Removed the has_binaries attribute from put action documentation in the readme file since this isn't supported there
 - Moved the libraries module locations to no longer be under Opscode:: and broke out libraries into more logical units
 - Fixed issues with spaces in Windows paths that could cause failures
-- Fixed a bad attribute for the 7zip home on windows
+- Fixed a bad attribute for the 7zip home on windows. Instead of using a node attribute use the value directly to avoid computed attribute overiding issues
+- Switched from the 7-zip cookbook to seven_zip since the 7-zip cookbook is now deprecated
 - Changed unzip commands to not use -u so that a newer archive can overwrite an existing directory
 - Added support for actions py_setup, py_setup_install, py_setup_build
 - Fixed setting home_dir attribute
