@@ -1,18 +1,10 @@
 # ark cookbook
 [![Build Status](https://travis-ci.org/burtlo/ark.svg?branch=master)](https://travis-ci.org/burtlo/ark) [![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
 
-Overview
-========
+# Overview
+This cookbook provides `ark`, a resource for managing software archives. It manages the fetch-unpack-configure-build-install process common to installing software from source, or from binary distributions that are not fully fledged OS packages.
 
-This cookbook provides `ark`, a resource for managing software
-archives. It manages the fetch-unpack-configure-build-install process
-common to installing software from source, or from binary
-distributions that are not fully fledged OS packages.
-
-This is a modified verion of Infochimp's awesome
-[install_from cookbook](http://github.com/infochimps-cookbooks/install_from).
-It has been heavily refactored and extended to meet different use
-cases.
+This is a modified version of Infochimp's awesome [install_from cookbook](http://github.com/infochimps-cookbooks/install_from). It has been heavily refactored and extended to meet different use cases.
 
 Given a simple project archive available at a url:
 
@@ -279,20 +271,19 @@ the file extension can not be determined by the URL:
        action [ :configure, :install_with_make ]
      end
 
-License and Author
-==================
-
-- Author: Philip (flip) Kromer - Infochimps, Inc(<coders@infochimps.com>)
-- Author: Bryan W. Berry (<bryan.berry@gmail.com>)
-- Author: Denis Barishev (<denis.barishev@gmail.com>)
-- Author: Sean OMeara (<someara@chef.io>)
-- Author: John Bellone (<jbellone@bloomberg.net>)
+# License and Authors
+- Author: Philip (flip) Kromer - Infochimps, Inc([coders@infochimps.com](mailto:coders@infochimps.com))
+- Author: Bryan W. Berry ([bryan.berry@gmail.com](mailto:bryan.berry@gmail.com))
+- Author: Denis Barishev ([denis.barishev@gmail.com](mailto:denis.barishev@gmail.com))
+- Author: Sean OMeara ([someara@chef.io](mailto:someara@chef.io))
+- Author: John Bellone ([jbellone@bloomberg.net](mailto:jbellone@bloomberg.net))
 - Copyright: 2011, Philip (flip) Kromer - Infochimps, Inc
 - Copyright: 2012, Bryan W. Berry
 - Copyright: 2012, Denis Barishev
 - Copyright: 2013, Chef Software, Inc
 - Copyright: 2014, Bloomberg L.P.
 
+```
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -304,3 +295,4 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+```
