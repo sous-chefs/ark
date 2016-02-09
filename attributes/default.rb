@@ -22,7 +22,7 @@ default['ark']['prefix_bin'] = '/usr/local/bin'
 default['ark']['prefix_home'] = '/usr/local'
 default['ark']['tar'] = case node['platform_family']
                         when 'windows'
-                          "\"#{node['7-zip']['home']}\\7z.exe\""
+                          "\"#{ENV['SYSTEMDRIVE']}\\7-zip\\7z.exe\""
                         when 'mac_os_x', 'freebsd'
                           '/usr/bin/tar'
                         when 'smartos'

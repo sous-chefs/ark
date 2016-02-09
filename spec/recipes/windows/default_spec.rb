@@ -16,7 +16,7 @@ describe_recipe "ark::default" do
   end
 
   it "does include the 7-zip recipe" do
-    expect(chef_run).to include_recipe("7-zip")
+    expect(chef_run).to include_recipe("seven_zip")
   end
 
   context "sets default attributes" do

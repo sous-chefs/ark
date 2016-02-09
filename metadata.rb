@@ -8,13 +8,13 @@ version          '0.9.1'
 
 recipe 'ark::default', 'Installs packages needed by the custom resource'
 
-%w(ubuntu debian redhat centos suse scientific oracle amazon windows mac_os_x).each do |os|
+%w(ubuntu debian redhat centos suse scientific oracle amazon windows mac_os_x smartos freebsd).each do |os|
   supports os
 end
 
 depends 'build-essential'
 depends 'windows' # for windows os
-depends '7-zip' # for windows os
+depends 'seven_zip' # for windows os
 
 source_url 'https://github.com/burtlo/ark' if respond_to?(:source_url)
 issues_url 'https://github.com/burtlo/ark/issues' if respond_to?(:issues_url)
