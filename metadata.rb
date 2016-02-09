@@ -2,22 +2,19 @@ name             'ark'
 maintainer       'Franklin Webber'
 maintainer_email 'frank@chef.io'
 license          'Apache 2.0'
-description      'Installs/Configures ark'
+description      'Provides a custom resource for installing runtime artifacts in a predictable fashion'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '0.9.1'
 
-source_url 'https://github.com/burtlo/ark' if respond_to(:source_url)
-issues_url 'https://github.com/burtlo/ark/issues' if respond_to?(:issues_url)
+recipe 'ark::default', 'Installs packages needed by the custom resource'
 
-def supported_operating_systems
-  %w( debian ubuntu centos redhat fedora windows )
+%w(ubuntu debian redhat centos suse scientific oracle amazon windows).each do |os|
+  supports os
 end
 
-supported_operating_systems.each { |os| supports os }
-
-recipe 'ark::default', 'Installs and configures ark'
-
 depends 'build-essential'
+depends 'windows' # for windows os
+depends '7-zip' # for windows os
 
-suggests 'windows' # for windows os
-suggests '7-zip' # for windows os
+source_url 'https://github.com/burtlo/ark' if respond_to?(:source_url)
+issues_url 'https://github.com/burtlo/ark/issues' if respond_to?(:issues_url)
