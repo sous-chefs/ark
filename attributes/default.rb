@@ -14,6 +14,6 @@ pkgs += %w(autogen) unless platform_family?('rhel', 'fedora', 'mac_os_x', 'suse'
 pkgs += %w(gtar) if platform?('freebsd')
 pkgs += %w(xz-lzma-compat bzip2) if platform?('centos')
 pkgs += %w(tar) if platform_family?('rhel')
-pkgs += %w(shtool) if platform_family?('debian')
+pkgs += %w(shtool pkg-config) if platform_family?('debian')
 
 default['ark']['package_dependencies'] = pkgs

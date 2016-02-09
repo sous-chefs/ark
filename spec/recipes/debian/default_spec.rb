@@ -6,7 +6,7 @@ describe_recipe "ark::default" do
   end
 
   let(:expected_packages) do
-    %w( libtool autoconf unzip rsync make gcc shtool )
+    %w( libtool autoconf unzip rsync make gcc shtool pkg-config )
   end
 
   it "installs core packages" do
