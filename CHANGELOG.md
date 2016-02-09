@@ -1,6 +1,38 @@
 # ark Cookbook CHANGELOG
 This file is used to list changes made in each version of the ark cookbook.
 
+## v0.10.0 (2016-02-09)
+- Added the pkg-config package to the debian platform family
+- Added tar, xz-lzma-compat, and bzip2 packages to the RHEL and fedora platform families
+- Updated FreeBSD to install gmake instead of make
+- Added OS X, SmartOS, and FreeBSD to the tar path attributes to support those platforms
+- Removed the has_binaries attribute from put action documentation in the readme file since this isn't supported there
+- Moved the libraries module locations to no longer be under Opscode:: and broke out libraries into more logical units
+- Fixed issues with spaces in Windows paths that could cause failures
+- Fixed a bad attribute for the 7zip home on windows. Instead of using a node attribute use the value directly to avoid computed attribute overiding issues
+- Switched from the 7-zip cookbook to seven_zip since the 7-zip cookbook is now deprecated
+- Changed unzip commands to not use -u so that a newer archive can overwrite an existing directory
+- Added support for actions py_setup, py_setup_install, py_setup_build
+- Fixed setting home_dir attribute
+- Added source_url and issues_url to the metadata.rb
+- Expanded the supported platforms in metadata.rb
+- Removed all references to Opscode
+- Improved error logging when an unknown extension is encountered
+- Added support for .tar files
+- Improved overall testing:
+  - Removed the kitchen.cloud.yml file and gem dependencies
+  - Added integration testing in Travis with Kitchen-Docker and Travis tests now run using the nightly build of ChefDK
+  - Expanded platforms tested in the .kitchen.yml file
+  - Updated the Gemfile with the latest testing dependencies
+  - Added full Chefspec coverage
+  - Greatly expanded the ark_spec test cookbook
+  - Removed the original minitests
+- Added standard Chef .gitignore and chefignore files
+- Resolved a large number of rubocop warnings
+- Removed old Opscode contributing and testing docs
+- Added a cookbook version badge to the readme
+- Removed the Toftfile
+
 ## v0.9.0 (2014-06-06)
 - [COOK-3642] Add Windows support
 
