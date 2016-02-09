@@ -11,8 +11,7 @@ namespace :style do
   desc 'Run Chef style checks'
   FoodCritic::Rake::LintTask.new(:chef) do |t|
     t.options = {
-      fail_tags: ['any'],
-      tags: ['~FC005', '~FC007', '~FC052']
+      fail_tags: ['any']
     }
   end
 end
@@ -23,6 +22,20 @@ task style: ['style:chef', 'style:ruby']
 # Rspec and ChefSpec
 desc 'Run ChefSpec examples'
 RSpec::Core::RakeTask.new(:spec)
+
+# Integration tests. Kitchen.ci
+namespace :integration do
+  desc 'Run Test Kitchen with Vagrant'
+  task :vagrant do
+    Kitchen.logger = Kitchen.default_file_logger
+    Kitchen::Config.new.instances.each do |instance|
+      instance.test(:always)
+    end
+  end
+end
+
+desc 'Run all tests on Travis'
+task travis: ['style', 'spec', 'integration:cloud']
 
 # Default
 task default: %w(style spec)
