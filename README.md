@@ -25,11 +25,23 @@ By default, the ark will not run again if the `:path` is not empty. Ark provides
 At this time ark only handles files available from URLs using the [remote_file](http://docs.chef.io/resource_remote_file.html) provider. It does handle local files using the `file://` protocol.
 
 ## Requirements
-This cookbook requires Chef 11 for the provider, as it uses the `use_inline_resources` method.
-
-More about [use_inline_resources](http://docs.chef.io/lwrp_common_inline_compile.html) in the Chef documentation.
+### Platforms
+- Debian/Ubuntu
+- RHEL/CentOS/Scientific/Oracle
+- Fedora
+- FreeBSD
+- SmartOS
+- Mac OS X
 
 Should work on common Unix/Linux systems with typical userland utilities like tar, gzip, etc. May require the installation of build tools for compiling from source, but that installation is outside the scope of this cookbook.
+
+### Chef
+- Chef 11+
+
+### Cookbooks
+- build-essential
+- seven_zip
+- windows
 
 ## Attributes
 Customize the attributes to suit site specific conventions and defaults.
@@ -92,22 +104,30 @@ Extract the archive to a specified path, does not create any symbolic links.
 - `prefix_root`: default `prefix_root`, for use with `:install*` actions.
 - `prefix_home`: default directory prefix for a friendly symlink to the path.
   - Example: `/usr/local/maven` -> `/usr/local/maven-2.2.1`
+
 - `prefix_bin`: default directory to place a symlink to a binary command.
   - Example: `/opt/bin/mvn` -> `/opt/maven-2.2.1/bin/mvn`, where the `prefix_bin` is `/opt/bin`
+
 - `path`: path to extract the ark to. The `:install*` actions overwrite any user-provided values for `:path`.
   - Default: `/usr/local/<name>-<version>` for the `:install`, `:install_with_make` actions
+
 - `home_dir`: symbolic link to the path `:prefix_root/:name-:version`, does not apply to `:dump`, `:put`, or `:cherry_pick` actions.
   - Default: `:prefix_root/:name`
+
 - `has_binaries`: array of binary commands to symlink into `/usr/local/bin/`, you must specify the relative path.
   - Example: `[ 'bin/java', 'bin/javaws' ]`
+
 - `append_env_path`: boolean, similar to `has_binaries` but less granular. If true, append the `./bin` directory of the extracted directory to. the `PATH` environment variable for all users, by placing a file in `/etc/profile.d/`. The commands are symbolically linked into `/usr/bin/*`. This option provides more granularity than the boolean option.
   - Example: `mvn`, `java`, `javac`, etc.
+
 - `environment`: hash of environment variables to pass to invoked shell commands like `tar`, `unzip`, `configure`, and `make`.
 - `strip_components`: number of components in path to strip when extracting archive. With default value of `1`, ark strips the leading directory from an archive, which is the default for both `unzip` and `tar` commands.
 - `autoconf_opts`: an array of command line options for use with the GNU `autoconf` script.
   - Example: `[ '--include=/opt/local/include', '--force' ]`
+
 - `make_opts`: an array of command line options for use with `make`.
   - Example: `[ '--warn-undefined-variables', '--load-average=2' ]`
+
 - `owner`: owner of extracted directory.
   - Default: `root`
 
