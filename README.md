@@ -4,7 +4,7 @@
 ## Overview
 This cookbook provides `ark`, a resource for managing software archives. It manages the fetch-unpack-configure-build-install process common to installing software from source, or from binary distributions that are not fully fledged OS packages.
 
-This is a modified version of Infochimp's awesome [install_from cookbook](http://github.com/infochimps-cookbooks/install_from). It has been heavily refactored and extended to meet different use cases.
+This cookbook started its life as a modified version of Infochimp's install_from cookbook. It has since been heavily refactored and extended to meet different use cases.
 
 Given a simple project archive available at a url:
 
