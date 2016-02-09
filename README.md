@@ -1,7 +1,7 @@
 # ark cookbook
 [![Build Status](https://travis-ci.org/burtlo/ark.svg?branch=master)](https://travis-ci.org/burtlo/ark) [![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
 
-# Overview
+## Overview
 This cookbook provides `ark`, a resource for managing software archives. It manages the fetch-unpack-configure-build-install process common to installing software from source, or from binary distributions that are not fully fledged OS packages.
 
 This is a modified version of Infochimp's awesome [install_from cookbook](http://github.com/infochimps-cookbooks/install_from). It has been heavily refactored and extended to meet different use cases.
@@ -24,14 +24,14 @@ By default, the ark will not run again if the `:path` is not empty. Ark provides
 
 At this time ark only handles files available from URLs using the [remote_file](http://docs.chef.io/resource_remote_file.html) provider. It does handle local files using the `file://` protocol.
 
-# Requirements
+## Requirements
 This cookbook requires Chef 11 for the provider, as it uses the `use_inline_resources` method.
 
 More about [use_inline_resources](http://docs.chef.io/lwrp_common_inline_compile.html) in the Chef documentation.
 
 Should work on common Unix/Linux systems with typical userland utilities like tar, gzip, etc. May require the installation of build tools for compiling from source, but that installation is outside the scope of this cookbook.
 
-# Attributes
+## Attributes
 Customize the attributes to suit site specific conventions and defaults.
 - `node['ark']['apache_mirror']` - if the URL is an apache mirror, use the attribute as the default.
 - `node['ark']['prefix_root']` - default base location if the `prefix_root` is not passed into the resource.
@@ -40,10 +40,10 @@ Customize the attributes to suit site specific conventions and defaults.
 - `node['ark']['win_install_dir']` - directory where the files will be put on windows
 - `node['ark']['package_dependencies']` - prerequisite system packages that need to be installed to support ark.
 
-# Resources
+## Resources
 - `ark` - does the extract/build/configure dance
 
-## Actions
+### Actions
 - `:install`: extracts the file and creates a 'friendly' symbolic link to the extracted directory path
 - `:configure`: configure ahead of the install action
 - `:install_with_make`: extracts the archive to a path, runs `make`, and `make install`. It does _not_ run the configure step at this time
@@ -55,35 +55,35 @@ Customize the attributes to suit site specific conventions and defaults.
 - `:setup_py_build`: runs the command "python setup.py build" in the extracted directory
 - `:setup_py_install`: runs the command "python setup.py install" in the extracted directory
 
-## :cherry_pick
+### :cherry_pick
 Extract a specified file from an archive and places in specified path.
 
-### Relevant Attribute Parameters for :cherry_pick
+#### Relevant Attribute Parameters for :cherry_pick
 - `path`: directory to place file in.
 - `creates`: specific file to cherry-pick.
 
-## :dump
+### :dump
 Strips all directories from the archive and dumps the contained files into a specified path.
 
 NOTE: This currently only works for zip archives
 
-### Attribute Parameters for :dump
+#### Attribute Parameters for :dump
 - `path`: path to dump files to.
 - `mode`: file mode for `app_home`, as an integer.
   - Example: `0775`
 
 - `creates`: if you are appending files to a given directory, ark needs a condition to test whether the file has already been extracted. You can specify with creates, a file whose existence indicates the ark has previously been extracted and does not need to be extracted again.
 
-## :put
+### :put
 Extract the archive to a specified path, does not create any symbolic links.
 
-### Attribute Parameters for :put
+#### Attribute Parameters for :put
 - `path`: path to extract to.
   - Default: `/usr/local`
 
 - `append_env_path`: boolean, if true, append the `./bin` directory of the extracted directory to the global `PATH` variable for all users.
 
-## Attribute Parameters
+### Attribute Parameters
 - `name`: name of the package, defaults to the resource name.
 - `url`: url for tarball, `.tar.gz`, `.bin` (oracle-specific), `.war`, and `.zip` currently supported. Also supports special syntax
 - `:name:version:apache_mirror:` that will auto-magically construct download url from the apache mirrors site.
@@ -92,34 +92,26 @@ Extract the archive to a specified path, does not create any symbolic links.
 - `prefix_root`: default `prefix_root`, for use with `:install*` actions.
 - `prefix_home`: default directory prefix for a friendly symlink to the path.
   - Example: `/usr/local/maven` -> `/usr/local/maven-2.2.1`
-
 - `prefix_bin`: default directory to place a symlink to a binary command.
   - Example: `/opt/bin/mvn` -> `/opt/maven-2.2.1/bin/mvn`, where the `prefix_bin` is `/opt/bin`
-
 - `path`: path to extract the ark to. The `:install*` actions overwrite any user-provided values for `:path`.
   - Default: `/usr/local/<name>-<version>` for the `:install`, `:install_with_make` actions
-
 - `home_dir`: symbolic link to the path `:prefix_root/:name-:version`, does not apply to `:dump`, `:put`, or `:cherry_pick` actions.
   - Default: `:prefix_root/:name`
-
 - `has_binaries`: array of binary commands to symlink into `/usr/local/bin/`, you must specify the relative path.
   - Example: `[ 'bin/java', 'bin/javaws' ]`
-
 - `append_env_path`: boolean, similar to `has_binaries` but less granular. If true, append the `./bin` directory of the extracted directory to. the `PATH` environment variable for all users, by placing a file in `/etc/profile.d/`. The commands are symbolically linked into `/usr/bin/*`. This option provides more granularity than the boolean option.
   - Example: `mvn`, `java`, `javac`, etc.
-
 - `environment`: hash of environment variables to pass to invoked shell commands like `tar`, `unzip`, `configure`, and `make`.
 - `strip_components`: number of components in path to strip when extracting archive. With default value of `1`, ark strips the leading directory from an archive, which is the default for both `unzip` and `tar` commands.
 - `autoconf_opts`: an array of command line options for use with the GNU `autoconf` script.
   - Example: `[ '--include=/opt/local/include', '--force' ]`
-
 - `make_opts`: an array of command line options for use with `make`.
   - Example: `[ '--warn-undefined-variables', '--load-average=2' ]`
-
 - `owner`: owner of extracted directory.
   - Default: `root`
 
-### Examples
+#### Examples
 This example copies `ivy.tar.gz` to `/var/cache/chef/ivy-2.2.0.tar.gz`, unpacks its contents to `/usr/local/ivy-2.2.0/` -- stripping the leading directory, and symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`
 
 ```ruby
