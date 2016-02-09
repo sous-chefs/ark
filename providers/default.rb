@@ -319,7 +319,6 @@ action :install_with_make do
     environment new_resource.environment
     action :nothing
   end
-
 end
 
 action :setup_py_build do

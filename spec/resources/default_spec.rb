@@ -2,13 +2,7 @@ require 'spec_helper'
 require './libraries/default'
 
 describe_resource "ark" do
-
-  before(:each) do
-    Chef::Config[:file_cache_path] = "/var/chef/cache"
-  end
-
   describe "install" do
-
     let(:example_recipe) { "ark_spec::install" }
 
     it "installs" do
@@ -34,7 +28,6 @@ describe_resource "ark" do
   end
 
   describe "install with binaries" do
-
     let(:example_recipe) { "ark_spec::install_with_binaries" }
 
     it "installs" do
@@ -64,9 +57,7 @@ describe_resource "ark" do
   end
 
   describe "install with append_env_path" do
-
     context "binary is not already in the environment path" do
-
       let(:example_recipe) { "ark_spec::install_with_append_env_path" }
 
       it "installs" do
@@ -91,11 +82,9 @@ describe_resource "ark" do
         expect(chef_run).to create_template("/etc/profile.d/test_install_with_append_env_path.sh")
         expect(chef_run).to run_ruby_block("adding '/usr/local/test_install_with_append_env_path-7.0.26/bin' to chef-client ENV['PATH']")
       end
-
     end
 
     context "binary is already in the environment path" do
-
       let(:example_recipe) { "ark_spec::install_with_append_env_path" }
 
       # TODO: Using the ENV is terrible -- attempts to replace it with a helper
@@ -112,7 +101,6 @@ describe_resource "ark" do
       end
 
       it "installs" do
-
         expect(chef_run).to install_ark("test_install_with_append_env_path")
 
         expect(chef_run).to create_directory("/usr/local/test_install_with_append_env_path-7.0.26")
@@ -133,14 +121,11 @@ describe_resource "ark" do
 
         expect(chef_run).to create_template("/etc/profile.d/test_install_with_append_env_path.sh")
         expect(chef_run).not_to run_ruby_block("adding '/usr/local/test_install_with_append_env_path-7.0.26/bin' to chef-client ENV['PATH']")
-
       end
-
     end
   end
 
   describe "install on windows" do
-
     let(:example_recipe) { "ark_spec::install_windows" }
 
     def node_attributes
@@ -148,7 +133,6 @@ describe_resource "ark" do
     end
 
     it "installs" do
-
       expect(chef_run).to install_ark("test_install")
 
       expect(chef_run).to create_directory("C:\\install")
@@ -171,12 +155,10 @@ describe_resource "ark" do
 
       expect(chef_run).not_to create_template("/etc/profile.d/test_install.sh")
       expect(chef_run).not_to run_ruby_block("adding 'C:\\install/bin' to chef-client ENV['PATH']")
-
     end
   end
 
   describe "put" do
-
     let(:example_recipe) { "ark_spec::put" }
 
     it "puts" do
@@ -193,11 +175,9 @@ describe_resource "ark" do
       expect(chef_run).to_not run_execute("unpack /var/chef/cache/test_put.tar.gz")
       expect(chef_run).to_not run_execute("set owner on /usr/local/test_put")
     end
-
   end
 
   describe "dump" do
-
     let(:example_recipe) { "ark_spec::dump" }
 
     it "dumps" do
@@ -217,7 +197,6 @@ describe_resource "ark" do
   end
 
   describe "unzip" do
-
     let(:example_recipe) { "ark_spec::unzip" }
 
     it "unzips" do
@@ -237,11 +216,9 @@ describe_resource "ark" do
   end
 
   describe "cherry_pick" do
-
     let(:example_recipe) { "ark_spec::cherry_pick" }
 
     it "cherry picks" do
-
       expect(chef_run).to cherry_pick_ark("test_cherry_pick")
 
       expect(chef_run).to create_directory("/usr/local/foo_cherry_pick")
@@ -261,7 +238,7 @@ describe_resource "ark" do
   end
 
   describe "setup_py_build" do
-    let (:example_recipe) { "ark_spec::setup_py_build" }
+    let(:example_recipe) { "ark_spec::setup_py_build" }
 
     it "builds with python setup.py" do
       expect(chef_run).to setup_py_build_ark('test_setup_py_build')
@@ -285,7 +262,7 @@ describe_resource "ark" do
   end
 
   describe "setup_py_install" do
-    let (:example_recipe) { "ark_spec::setup_py_install" }
+    let(:example_recipe) { "ark_spec::setup_py_install" }
 
     it "installs with python setup.py" do
       expect(chef_run).to setup_py_install_ark('test_setup_py_install')
@@ -306,7 +283,7 @@ describe_resource "ark" do
   end
 
   describe "setup_py" do
-    let (:example_recipe) { "ark_spec::setup_py" }
+    let(:example_recipe) { "ark_spec::setup_py" }
 
     it "runs with python setup.py" do
       expect(chef_run).to setup_py_ark('test_setup_py')
@@ -327,7 +304,6 @@ describe_resource "ark" do
   end
 
   describe "install_with_make" do
-
     let(:example_recipe) { "ark_spec::install_with_make" }
 
     it "installs with make" do
@@ -358,11 +334,9 @@ describe_resource "ark" do
   end
 
   describe "configure" do
-
     let(:example_recipe) { "ark_spec::configure" }
 
     it "configures" do
-
       expect(chef_run).to configure_ark("test_configure")
 
       expect(chef_run).to create_directory("/usr/local/test_configure-1")
@@ -384,5 +358,4 @@ describe_resource "ark" do
       expect(chef_run).not_to run_execute("configure /usr/local/test_configure-1")
     end
   end
-
 end

@@ -1,7 +1,6 @@
 require "spec_helper"
 
 describe_recipe "ark::default" do
-
   let(:expected_core_packages) do
     %w( libtool autoconf unzip rsync make gcc autogen )
   end
@@ -21,7 +20,6 @@ describe_recipe "ark::default" do
   end
 
   context "sets default attributes" do
-
     it "apache mirror" do
       expect(default_cookbook_attribute("apache_mirror")).to eq "http://apache.mirrors.tds.net"
     end
@@ -41,7 +39,5 @@ describe_recipe "ark::default" do
     it "tar binary" do
       expect(default_cookbook_attribute("tar")).to eq "/bin/tar"
     end
-
   end
-
 end

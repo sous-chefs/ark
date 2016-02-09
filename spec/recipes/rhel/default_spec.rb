@@ -2,11 +2,11 @@ require "spec_helper"
 
 describe_recipe "ark::default" do
   def node_attributes
-    { platform: "freebsd", version: "9.2" }
+    { platform: "redhat", platform_family: 'rhel', version: "6.5" }
   end
 
   let(:expected_packages) do
-    %w( libtool autoconf unzip rsync make gcc autogen gtar )
+    %w( libtool autoconf unzip rsync make gcc tar)
   end
 
   it "installs core packages" do

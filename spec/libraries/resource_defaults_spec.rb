@@ -2,7 +2,6 @@ require 'spec_helper'
 require './libraries/default'
 
 describe Ark::ResourceDefaults do
-
   before(:each) do
     allow_any_instance_of(Ark::ResourceDefaults).to receive(:file_cache_path).and_return("/var/chef/cache")
   end
@@ -15,7 +14,6 @@ describe Ark::ResourceDefaults do
     end
 
     context "when the extension is nil" do
-
       it "creates an extension based on the file specified in the URL" do
         resource = double(extension: nil, url: "http://localhost/file.tgz")
         defaults = described_class.new(resource)
@@ -35,25 +33,20 @@ describe Ark::ResourceDefaults do
       end
 
       context "when the archive format is not supported" do
-
         it "it returns a nil extension" do
           resource = double(extension: nil, url: "http://localhost/file.stuffit")
           defaults = described_class.new(resource)
           expect(defaults.extension).to eq nil
         end
-
       end
 
       context "when the url contains a query string" do
-
         it "creates an extension based on the file specified in the URL" do
           resource = double(extension: nil, url: "http://localhost/file.version.txz-bin?latest=true")
           defaults = described_class.new(resource)
           expect(defaults.extension).to eq "txz"
         end
-
       end
-
     end
   end
 
@@ -82,7 +75,6 @@ describe Ark::ResourceDefaults do
         resource = double(prefix_root: "prefix_root")
         defaults = described_class.new(resource)
         expect(defaults.prefix_root).to eq "prefix_root"
-
       end
     end
 
@@ -107,7 +99,7 @@ describe Ark::ResourceDefaults do
 
     context 'when the prefix home has been specified' do
       it "uses the value specified" do
-        resource = double(prefix_home: "prefix_home", name: "application", :home_dir => nil)
+        resource = double(prefix_home: "prefix_home", name: "application", home_dir: nil)
         defaults = described_class.new(resource)
         expect(defaults.home_dir).to eq "prefix_home/application"
       end
@@ -115,7 +107,7 @@ describe Ark::ResourceDefaults do
 
     context 'when the prefix home has not been specified' do
       it "uses the value on the node" do
-        resource = double(prefix_home: nil, name: "application", :home_dir => nil)
+        resource = double(prefix_home: nil, name: "application", home_dir: nil)
         defaults = described_class.new(resource)
         allow(defaults).to receive(:prefix_home_from_node_in_run_context) { "node_home" }
         expect(defaults.home_dir).to eq "node_home/application"
@@ -195,5 +187,4 @@ describe Ark::ResourceDefaults do
       expect(defaults.release_file_without_version).to eq "/var/chef/cache/filename.zip"
     end
   end
-
 end
