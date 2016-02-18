@@ -44,6 +44,7 @@ action :install do
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+    backup new_resource.backup
   end
 
   # unpack based on file extension
@@ -119,6 +120,7 @@ action :put do
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+    backup new_resource.backup
   end
 
   # unpack based on file extension

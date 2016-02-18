@@ -131,6 +131,10 @@ Extract the archive to a specified path, does not create any symbolic links.
 - `owner`: owner of extracted directory.
   - Default: `root`
 
+- `backup`: The number of backups to be kept in /var/chef/backup (for UNIX- and Linux-based platforms) or C:/chef/backup (for the Microsoft Windows platform). Set to false to prevent backups from being kept.
+  - Default: `5`
+
+
 #### Examples
 This example copies `ivy.tar.gz` to `/var/cache/chef/ivy-2.2.0.tar.gz`, unpacks its contents to `/usr/local/ivy-2.2.0/` -- stripping the leading directory, and symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`
 
@@ -168,7 +172,7 @@ Install Apache Ivy dependency resolution tool in <path>/resource_name in this ca
  end
 ```
 
-Install Apache Ivy dependency resolution tool in /home/foobar/ivy, strip any leading directory if one exists:
+Install Apache Ivy dependency resolution tool in /home/foobar/ivy, strip any leading directory if one exists, don't keep backup copies of ivy.tar.gz:
 
 ```ruby
  ark "ivy" do
@@ -176,6 +180,7 @@ Install Apache Ivy dependency resolution tool in /home/foobar/ivy, strip any lea
    url 'http://someurl.example.com/ivy.tar.gz'
    checksum '89ba5fde0c596db388c3bbd265b63007a9cc3df3a8e6d79a46780c1a39408cb5'
    action :put
+   backup false
  end
 ```
 
