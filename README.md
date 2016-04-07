@@ -58,7 +58,7 @@ Customize the attributes to suit site specific conventions and defaults.
 ### Actions
 - `:install`: extracts the file and creates a 'friendly' symbolic link to the extracted directory path
 - `:configure`: configure ahead of the install action
-- `:install_with_make`: extracts the archive to a path, runs `make`, and `make install`. It does _not_ run the configure step at this time
+- `:install_with_make`: extracts the archive to a path, runs `make`, and `make install`.
 - `:dump`: strips all directories from the archive and dumps the contained files into a specified path
 - `:cherry_pick`: extract a specified file from an archive and places in specified path
 - `:put`: extract the archive to a specified path, does not create any symbolic links
