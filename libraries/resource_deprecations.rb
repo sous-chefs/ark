@@ -27,7 +27,7 @@ module Ark
     end
 
     def strip_leading_dir_feature_message
-      "strip_leading_dir attribute was deprecated. Use strip_components instead."
+      'strip_leading_dir attribute was deprecated. Use strip_components instead.'
     end
   end
 end

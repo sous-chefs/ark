@@ -30,7 +30,7 @@ module Ark
       tmpdir = make_temp_directory
       cmd = sevenzip_command_builder(tmpdir, 'e')
 
-      cmd += " && "
+      cmd += ' && '
       currdir = tmpdir.tr('/', '\\')
 
       1.upto(resource.strip_components).each do |count|
@@ -54,7 +54,7 @@ module Ark
       if resource.extension =~ /tar.gz|tgz|tar.bz2|tbz|tar.xz|txz/
         " -so | #{sevenzip_binary} x -aoa -si -ttar"
       else
-        ""
+        ''
       end
     end
 

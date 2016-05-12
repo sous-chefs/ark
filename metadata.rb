@@ -1,6 +1,6 @@
 name             'ark'
-maintainer       'Franklin Webber'
-maintainer_email 'frank@chef.io'
+maintainer       'Chef Software, Inc.'
+maintainer_email 'cookbooks@chef.io'
 license          'Apache 2.0'
 description      'Provides a custom resource for installing runtime artifacts in a predictable fashion'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
@@ -16,5 +16,5 @@ depends 'build-essential'
 depends 'windows' # for windows os
 depends 'seven_zip' # for windows os
 
-source_url 'https://github.com/burtlo/ark' if respond_to?(:source_url)
-issues_url 'https://github.com/burtlo/ark/issues' if respond_to?(:issues_url)
+source_url 'https://github.com/chef-cookbooks/ark' if respond_to?(:source_url)
+issues_url 'https://github.com/chef-cookbooks/ark/issues' if respond_to?(:issues_url)

@@ -8,4 +8,4 @@ group :integration do
   cookbook 'freebsd'
 end
 
-cookbook "ark_spec", path: "spec/fixtures/cookbooks/ark_spec"
+cookbook 'ark_spec', path: 'spec/fixtures/cookbooks/ark_spec'

@@ -6,7 +6,7 @@ group :rake do
 end
 
 group :lint do
-  gem 'foodcritic', '~> 6.0'
+  gem 'foodcritic', '~> 6.2'
   gem 'rubocop', '~> 0.38'
 end
 
@@ -17,14 +17,15 @@ end
 
 group :kitchen_common do
   gem 'test-kitchen', '~> 1.7'
+  gem 'kitchen-inspec', '~> 0.12'
 end
 
 group :kitchen_vagrant do
   gem 'kitchen-vagrant', '~> 0.20'
 end
 
-group :kitchen_docker do
-  gem 'kitchen-docker'
+group :kitchen_dokken do
+  gem 'kitchen-dokken'
 end
 
 group :release do

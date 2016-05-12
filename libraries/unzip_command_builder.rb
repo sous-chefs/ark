@@ -15,12 +15,12 @@ module Ark
     # rubocop:disable Metrics/AbcSize
     def cherry_pick
       cmd = "unzip -t #{resource.release_file} \"*/#{resource.creates}\" ; stat=$? ;"
-      cmd += "if [ $stat -eq 11 ] ; then "
+      cmd += 'if [ $stat -eq 11 ] ; then '
       cmd += "unzip  -j -o #{resource.release_file} \"#{resource.creates}\" -d #{resource.path} ;"
-      cmd += "elif [ $stat -ne 0 ] ; then false ;"
-      cmd += "else "
+      cmd += 'elif [ $stat -ne 0 ] ; then false ;'
+      cmd += 'else '
       cmd += "unzip  -j -o #{resource.release_file} \"*/#{resource.creates}\" -d #{resource.path} ;"
-      cmd += "fi"
+      cmd += 'fi'
       cmd
     end
     # rubocop:enable Metrics/AbcSize

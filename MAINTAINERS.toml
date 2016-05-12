@@ -19,18 +19,23 @@ for details on the process and how to become a maintainer or the project lead.
     [Org.Components.Core]
       title = "Project Maintainer"
 
-      lieutenant = 'burtlo'
+      lieutenant = 'tas50'
     
       maintainers = [
-        'burtlo',
-        'tas50'
+        'sigje',
+        'tas50',
+        'thommay'
       ]
 
 [people]
-  [people.burtlo]
-    name = "Franklin Webber"
-    github = "burtlo"
+  [people.sigje]
+    name = "Jennifer Davis"
+    github = "sigje"
 
   [people.tas50]
     name = "Tim Smith"
     github = "tas50"
+
+  [people.thommay]
+    name = "Thom May"
+    github = "thommay"

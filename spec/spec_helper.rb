@@ -20,7 +20,7 @@ def stringify_keys(hash)
   end
 end
 
-RSpec.shared_context "recipe tests", type: :recipe do
+RSpec.shared_context 'recipe tests', type: :recipe do
   let(:chef_run) { ChefSpec::SoloRunner.new(node_attributes).converge(described_recipe) }
 
   let(:node) { chef_run.node }
@@ -30,7 +30,7 @@ RSpec.shared_context "recipe tests", type: :recipe do
   end
 
   def cookbook_recipe_names
-    described_recipe.split("::", 2)
+    described_recipe.split('::', 2)
   end
 
   def cookbook_name
@@ -46,7 +46,7 @@ RSpec.shared_context "recipe tests", type: :recipe do
   end
 end
 
-RSpec.shared_context "helpers tests", type: :helpers do
+RSpec.shared_context 'helpers tests', type: :helpers do
   include described_class
 
   let(:new_resource) { OpenStruct.new(resource_properties) }
@@ -72,7 +72,7 @@ RSpec.shared_context "helpers tests", type: :helpers do
   end
 end
 
-RSpec.shared_context "resource tests", type: :resource do
+RSpec.shared_context 'resource tests', type: :resource do
   let(:chef_run) do
     ChefSpec::SoloRunner.new(node_attributes.merge(step_into)).converge(example_recipe)
   end
@@ -99,7 +99,7 @@ Please specify the name of the test recipe that executes your recipe:
   end
 
   def cookbook_recipe_names
-    described_recipe.split("::", 2)
+    described_recipe.split('::', 2)
   end
 
   def cookbook_name

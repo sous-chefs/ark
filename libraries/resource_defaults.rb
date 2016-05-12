@@ -86,7 +86,7 @@ module Ark
     end
 
     def default_version
-      "1"
+      '1'
     end
 
     def file_cache_path

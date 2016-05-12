@@ -1,5 +1,5 @@
 # ark cookbook
-[![Build Status](https://travis-ci.org/burtlo/ark.svg?branch=master)](https://travis-ci.org/burtlo/ark) [![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
+[![Build Status](https://travis-ci.org/chef-cookbooks/ark.svg?branch=master)](https://travis-ci.org/chef-cookbooks/ark) [![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
 
 ## Overview
 This cookbook provides `ark`, a resource for managing software archives. It manages the fetch-unpack-configure-build-install process common to installing software from source, or from binary distributions that are not fully fledged OS packages.
@@ -232,7 +232,7 @@ You can also pass multiple actions to ark and supply the file extension in case 
  end
 ```
 
-## License and Authors
+## License & Authors
 - Author: Philip (flip) Kromer - Infochimps, Inc([coders@infochimps.com](mailto:coders@infochimps.com))
 - Author: Bryan W. Berry ([bryan.berry@gmail.com](mailto:bryan.berry@gmail.com))
 - Author: Denis Barishev ([denis.barishev@gmail.com](mailto:denis.barishev@gmail.com))
@@ -241,7 +241,7 @@ You can also pass multiple actions to ark and supply the file extension in case 
 - Copyright: 2011, Philip (flip) Kromer - Infochimps, Inc
 - Copyright: 2012, Bryan W. Berry
 - Copyright: 2012, Denis Barishev
-- Copyright: 2013, Chef Software, Inc
+- Copyright: 2013-2016, Chef Software, Inc
 - Copyright: 2014, Bloomberg L.P.
 
 ```
