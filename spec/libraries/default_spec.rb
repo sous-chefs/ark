@@ -73,7 +73,8 @@ describe_helpers Ark::ProviderHelpers do
         with_resource_properties(
           extension: 'jar',
           name: 'gustav-tootoo',
-          path: '/path/piece')
+          path: '/path/piece'
+        )
         set_put_paths
 
         expect(new_resource.release_file).to eq('/var/chef/cache/gustav-tootoo.jar')
@@ -104,7 +105,8 @@ describe_helpers Ark::ProviderHelpers do
         prefix_bin: '/resource/prefix/bin',
         prefix_home: '/resource/prefix/home',
         version: '23',
-        name: 'resource_name')
+        name: 'resource_name'
+      )
 
       allow(defaults).to receive(:path) { '/default/path' }
 
@@ -206,7 +208,8 @@ describe_helpers Ark::ProviderHelpers do
           with_resource_properties(
             url: 'http://website.com/package.tgz',
             release_file: '/resource/release_file',
-            path: '/resource/path')
+            path: '/resource/path'
+          )
 
           expect(dump_command).to eq('tar -mxf "/resource/release_file" -C "/resource/path"')
         end
@@ -217,7 +220,8 @@ describe_helpers Ark::ProviderHelpers do
           with_resource_properties(
             url: 'http://website.com/package.tbz',
             release_file: '/resource/release_file',
-            path: '/resource/path')
+            path: '/resource/path'
+          )
 
           expect(dump_command).to eq('tar -mxf "/resource/release_file" -C "/resource/path"')
         end
@@ -228,7 +232,8 @@ describe_helpers Ark::ProviderHelpers do
           with_resource_properties(
             url: 'http://website.com/package.tar.xz',
             release_file: '/resource/release_file',
-            path: '/resource/path')
+            path: '/resource/path'
+          )
 
           expect(dump_command).to eq('tar -mxf "/resource/release_file" -C "/resource/path"')
         end
@@ -239,7 +244,8 @@ describe_helpers Ark::ProviderHelpers do
           with_resource_properties(
             url: 'http://website.com/package.jar',
             release_file: '/resource/release_file',
-            path: '/resource/path')
+            path: '/resource/path'
+          )
 
           expect(dump_command).to eq('unzip  -j -q -o "/resource/release_file" -d "/resource/path"')
         end

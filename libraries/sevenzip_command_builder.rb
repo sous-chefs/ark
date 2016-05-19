@@ -20,7 +20,6 @@ module Ark
 
     attr_reader :resource
 
-    # rubocop:disable Metrics/AbcSize
     def sevenzip_command
       if resource.strip_components <= 0
         sevenzip_command_builder(resource.path, 'x')
