@@ -4,7 +4,7 @@ maintainer_email 'cookbooks@chef.io'
 license          'Apache 2.0'
 description      'Provides a custom resource for installing runtime artifacts in a predictable fashion'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '1.0.2'
+version          '1.1.0'
 
 recipe 'ark::default', 'Installs packages needed by the custom resource'
 
