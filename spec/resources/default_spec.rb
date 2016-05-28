@@ -126,6 +126,8 @@ describe_resource 'ark' do
   end
 
   describe 'install on windows' do
+    include_context('seven zip installed')
+
     let(:example_recipe) { 'ark_spec::install_windows' }
 
     before(:each) do

@@ -110,3 +110,24 @@ Please specify the name of the test recipe that executes your recipe:
     cookbook_recipe_names.last
   end
 end
+
+shared_context 'seven zip installed' do
+  let(:fake_hkey_local_machine) do
+    fake_hkey_local_machine = double('fake_hkey_local_machine')
+    seven_zip_win32_registry = double('seven_zip_registry')
+    allow(seven_zip_win32_registry).to receive(:read_s).with('Path').and_return('C:\\Program Files\\7-Zip')
+    allow(fake_hkey_local_machine).to receive(:open).with('SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe', ::Win32::Registry::KEY_READ).and_return(seven_zip_win32_registry)
+    fake_hkey_local_machine
+  end
+
+  before(:each) do
+    unless defined? ::Win32
+      module Win32
+        class Registry
+        end
+      end
+    end
+    stub_const('::Win32::Registry::KEY_READ', double('win32_registry_key_read')) unless defined? ::Win32::Registry::KEY_READ
+    stub_const('::Win32::Registry::HKEY_LOCAL_MACHINE', fake_hkey_local_machine)
+  end
+end
