@@ -1,5 +1,7 @@
 
 if defined?(ChefSpec)
+  ChefSpec.define_matcher :ark
+
   def install_ark(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:ark, :install, resource_name)
   end
