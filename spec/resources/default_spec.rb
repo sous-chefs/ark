@@ -128,6 +128,11 @@ describe_resource 'ark' do
   describe 'install on windows' do
     let(:example_recipe) { 'ark_spec::install_windows' }
 
+    before(:each) do
+      allow(ENV).to receive(:fetch).and_call_original
+      allow(ENV).to receive(:fetch).with('SystemRoot').and_return('C:\\Windows')
+    end
+
     def node_attributes
       { platform: 'windows', version: '2008R2' }
     end

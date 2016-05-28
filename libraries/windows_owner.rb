@@ -7,7 +7,7 @@ module Ark
     attr_reader :resource
 
     def command
-      "icacls \"#{resource.path}\\*\" /setowner \"#{resource.owner}\""
+      "#{ENV.fetch('SystemRoot')}\\System32\\icacls \"#{resource.path}\\*\" /setowner \"#{resource.owner}\""
     end
   end
 end

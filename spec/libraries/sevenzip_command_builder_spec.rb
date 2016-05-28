@@ -15,12 +15,14 @@ describe Ark::SevenZipCommandBuilder do
 
   before(:each) do
     allow(subject).to receive(:sevenzip_binary) { '"C:\\Program Files\\7-zip\\7z.exe"' }
+    allow(ENV).to receive(:fetch).and_call_original
+    allow(ENV).to receive(:fetch).with('SystemRoot').and_return('c:\\Windows')
   end
 
   describe '#unpack' do
     it 'generates the correct command' do
       allow(subject).to receive(:make_temp_directory) { 'temp_directory' }
-      expected_command = "\"C:\\Program Files\\7-zip\\7z.exe\" e \"release_file\" -so | \"C:\\Program Files\\7-zip\\7z.exe\" x -aoa -si -ttar -o\"temp_directory\" -uy && for /f %1 in ('dir /ad /b \"temp_directory\"') do xcopy \"temp_directory\\%1\" \"home_dir\" /s /e"
+      expected_command = "\"C:\\Program Files\\7-zip\\7z.exe\" e \"release_file\" -so | \"C:\\Program Files\\7-zip\\7z.exe\" x -aoa -si -ttar -o\"temp_directory\" -uy && for /f %1 in ('dir /ad /b \"temp_directory\"') do c:\\Windows\\System32\\xcopy \"temp_directory\\%1\" \"home_dir\" /s /e"
       expect(subject.unpack).to eq(expected_command)
     end
   end
