@@ -15,14 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 default['ark']['apache_mirror'] = 'http://apache.mirrors.tds.net'
 default['ark']['prefix_root'] = '/usr/local'
 default['ark']['prefix_bin'] = '/usr/local/bin'
 default['ark']['prefix_home'] = '/usr/local'
 default['ark']['tar'] = case node['platform_family']
                         when 'windows'
-                          "\"#{ENV['SYSTEMDRIVE']}\\7-zip\\7z.exe\""
+                          "\"#{::Win32::Registry::HKEY_LOCAL_MACHINE.open(
+                            'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe', ::Win32::Registry::KEY_READ).read_s('Path')}\\7z.exe\""
                         when 'mac_os_x', 'freebsd'
                           '/usr/bin/tar'
                         when 'smartos'
