@@ -4,6 +4,8 @@ require './libraries/default'
 describe_helpers Ark::ProviderHelpers do
   before(:each) do
     allow_any_instance_of(Ark::ResourceDefaults).to receive(:file_cache_path).and_return('/var/chef/cache')
+    allow(ENV).to receive(:fetch).and_call_original
+    allow(ENV).to receive(:fetch).with('SystemRoot').and_return('C:\\Windows')
   end
 
   describe '#owner_command' do
@@ -12,7 +14,7 @@ describe_helpers Ark::ProviderHelpers do
         with_node_attributes(platform_family: 'windows')
         with_resource_properties(owner: 'Bobo', path: 'C:\\temp')
 
-        expect(owner_command).to eq('icacls "C:\\temp\\*" /setowner "Bobo"')
+        expect(owner_command).to eq('C:\\Windows\\System32\\icacls "C:\\temp\\*" /setowner "Bobo"')
       end
     end
 
