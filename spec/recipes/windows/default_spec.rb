@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe_recipe 'ark::default' do
+  include_context 'seven zip installed'
+
   def node_attributes
     { platform: 'windows', version: '2012R2' }
   end
@@ -21,7 +23,7 @@ describe_recipe 'ark::default' do
 
   context 'sets default attributes' do
     it 'tar binary' do
-      expect(default_cookbook_attribute('tar')).to eq %("\\7-zip\\7z.exe")
+      expect(default_cookbook_attribute('tar')).to eq %("C:\\Program Files\\7-Zip\\7z.exe")
     end
   end
 end
