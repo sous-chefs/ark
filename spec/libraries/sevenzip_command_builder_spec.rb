@@ -40,4 +40,18 @@ describe Ark::SevenZipCommandBuilder do
       expect(subject.cherry_pick).to eq(expected_command)
     end
   end
+
+  context 'strip_components == 0' do
+    before(:each) do
+      allow(resource).to receive(:strip_components).and_return(0)
+    end
+
+    describe '#unpack' do
+      it 'generates the correct command' do
+        allow(subject).to receive(:make_temp_directory) { 'temp_directory' }
+        expected_command = '"C:\\Program Files\\7-zip\\7z.exe" e "release_file" -so | "C:\\Program Files\\7-zip\\7z.exe" x -aoa -si -ttar -o"temp_directory" -uy'
+        expect(subject.unpack).to eq(expected_command)
+      end
+    end
+  end
 end
