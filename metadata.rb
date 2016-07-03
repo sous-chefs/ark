@@ -8,7 +8,7 @@ version          '1.1.0'
 
 recipe 'ark::default', 'Installs packages needed by the custom resource'
 
-%w(ubuntu debian redhat centos suse scientific oracle amazon windows mac_os_x smartos freebsd).each do |os|
+%w(ubuntu debian redhat centos suse opensuse opensuseleap scientific oracle amazon windows mac_os_x smartos freebsd).each do |os|
   supports os
 end
 
