@@ -2,6 +2,15 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## [1.2](https://github.com/chef-cookbooks/ark/tree/1.2) (2016-07-03)
+
+[Full Changelog](https://github.com/chef-cookbooks/ark/compare/v1.1.0...1.2)
+
+- Create seven_zip unpack command when strip_components is 0 [#155](https://github.com/chef-cookbooks/ark/pull/155) ([terkill](https://github.com/terkill))
+- Get 7zip path from the windows registry. [#153](https://github.com/chef-cookbooks/ark/pull/153) ([buri17](https://github.com/buri17))
+- Use fullpath for xcopy and icacls. [#152](https://github.com/chef-cookbooks/ark/pull/152) ([buri17](https://github.com/buri17))
+- Define custom matcher helper for notification testing, fixes #139 [#144](https://github.com/chef-cookbooks/ark/pull/144) ([szymonpk](https://github.com/szymonpk))
+
 ## v1.1.0 (2016-05-19)
 
 - Add support for RHEL 7
