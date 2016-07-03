@@ -32,6 +32,7 @@ At this time ark only handles files available from URLs using the [remote_file](
 - FreeBSD
 - SmartOS
 - Mac OS X
+- openSUSE / SUSE Linux Enterprises
 
 Should work on common Unix/Linux systems with typical userland utilities like tar, gzip, etc. May require the installation of build tools for compiling from source, but that installation is outside the scope of this cookbook.
 
