@@ -2,14 +2,13 @@ require 'chefspec'
 require 'chefspec/berkshelf'
 require 'pry'
 
-at_exit { ChefSpec::Coverage.report! }
-
 RSpec.configure do |config|
   config.color = true
   config.alias_example_group_to :describe_recipe, type: :recipe
   config.alias_example_group_to :describe_helpers, type: :helpers
   config.alias_example_group_to :describe_resource, type: :resource
   config.file_cache_path = '/var/chef/cache'
+  config.log_level = :fatal
 end
 
 def stringify_keys(hash)
