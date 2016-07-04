@@ -17,7 +17,6 @@ user 'foobarbaz' do
   group 'foobarbaz'
 end
 
-
 directory '/opt/bin' do
   recursive true
 end
