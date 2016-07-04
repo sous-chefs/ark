@@ -22,7 +22,6 @@ module Ark
       cmd += 'fi'
       cmd
     end
-    # rubocop:enable Metrics/AbcSize
 
     def initialize(resource)
       @resource = resource

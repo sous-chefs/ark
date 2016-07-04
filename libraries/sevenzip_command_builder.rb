@@ -38,7 +38,6 @@ module Ark
 
       cmd += "#{ENV.fetch('SystemRoot')}\\System32\\xcopy \"#{currdir}\" \"#{resource.home_dir}\" /s /e"
     end
-    # rubocop:enable Metrics/AbcSize
 
     def sevenzip_binary
       resource.run_context.node['ark']['tar']
