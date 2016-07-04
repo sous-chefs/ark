@@ -15,3 +15,19 @@ describe_recipe 'ark::default' do
     end
   end
 end
+
+describe_recipe 'ark::default' do
+  def node_attributes
+    { platform: 'centos', version: '7.2.1511' }
+  end
+
+  let(:expected_packages) do
+    %w( libtool autoconf unzip rsync make gcc xz bzip2 tar )
+  end
+
+  it 'installs core packages' do
+    expected_packages.each do |package|
+      expect(chef_run).to install_package(package)
+    end
+  end
+end
