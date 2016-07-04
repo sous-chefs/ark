@@ -139,11 +139,9 @@ ark 'test_notification' do
 end
 
 ark 'test_autogen' do
-  url 'https://github.com/zeromq/libzmq/tarball/master'
+  url 'http://zlib.net/zlib-1.2.8.tar.gz'
   extension 'tar.gz'
   action :configure
-  # autoconf in RHEL < 6 is too old
-  not_if { platform_family?('rhel') && node['platform_version'].to_f < 6.0 }
 end
 
 ark 'foo_sub' do
