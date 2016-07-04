@@ -6,7 +6,7 @@
 # Author:: Sean OMeara <someara@chef.io
 # Author:: John Bellone <jbellone@bloomberg.net>
 # Copyright 2012, Bryan W. Berry
-# Copyright 2013, Chef Software, Inc.
+# Copyright 2013-2016, Chef Software, Inc.
 # Copyright 2014, Bloomberg L.P.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
