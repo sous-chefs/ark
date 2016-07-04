@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe_recipe 'ark::default' do
   def node_attributes
-    { platform: 'freebsd', version: '10.2' }
+    { platform: 'freebsd', version: '10.3' }
   end
 
   let(:expected_packages) do

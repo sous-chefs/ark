@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe_recipe 'ark::default' do
   def node_attributes
-    { platform: 'ubuntu', platform_family: 'debian', version: '14.04' }
+    { platform: 'ubuntu', platform_family: 'debian', version: '16.04' }
   end
 
   let(:expected_packages) do
