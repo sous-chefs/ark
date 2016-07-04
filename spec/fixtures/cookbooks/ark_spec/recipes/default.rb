@@ -11,7 +11,12 @@ ruby_block 'test_notification' do
   action :nothing
 end
 
-user 'foobarbaz'
+group 'foobarbaz'
+
+user 'foobarbaz' do
+  group 'foobarbaz'
+end
+
 
 directory '/opt/bin' do
   recursive true
