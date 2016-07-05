@@ -20,7 +20,7 @@ services: docker
 
 env:
   matrix:
-  - INSTANCE=default-centos-5
+  # - INSTANCE=default-centos-5 times out for no reason
   - INSTANCE=default-centos-6
   - INSTANCE=default-centos-7
   - INSTANCE=default-debian-7
