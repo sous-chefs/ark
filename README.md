@@ -37,7 +37,7 @@ At this time ark only handles files available from URLs using the [remote_file](
 Should work on common Unix/Linux systems with typical userland utilities like tar, gzip, etc. May require the installation of build tools for compiling from source, but that installation is outside the scope of this cookbook.
 
 ### Chef
-- Chef 11+
+- Chef 12.1+
 
 ### Cookbooks
 - build-essential
