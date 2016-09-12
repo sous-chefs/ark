@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
-## [1.2](https://github.com/chef-cookbooks/ark/tree/1.2) (2016-07-03)
+## [v1.2.0](https://github.com/chef-cookbooks/ark/tree/1.2) (2016-07-03)
 
 [Full Changelog](https://github.com/chef-cookbooks/ark/compare/v1.1.0...1.2)
 
