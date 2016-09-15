@@ -2,6 +2,14 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## 2.0.0 (2016-09-15)
+
+- Add CentOS 7.2, Fedora 23, and Suse specs
+- Add centos 5, debian, and opensuse travis testing
+- Add a contributing doc
+- Fix cookstyle warnings
+- Require Chef 12.1+
+
 ## [v1.2.0](https://github.com/chef-cookbooks/ark/tree/v1.2.0) (2016-07-03)
 
 [Full Changelog](https://github.com/chef-cookbooks/ark/compare/v1.1.0...v1.2.0)
