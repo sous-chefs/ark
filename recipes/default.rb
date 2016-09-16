@@ -18,8 +18,6 @@
 # limitations under the License.
 #
 
-Array(node['ark']['package_dependencies']).each do |pkg|
-  package pkg
-end
+package node['ark']['package_dependencies']
 
 include_recipe 'seven_zip' if node['platform_family'] == 'windows'
