@@ -5,13 +5,7 @@ describe_recipe 'ark::default' do
     { platform: 'freebsd', version: '10.3' }
   end
 
-  let(:expected_packages) do
-    %w( libtool autoconf unzip rsync gmake gcc autogen gtar )
-  end
-
   it 'installs core packages' do
-    expected_packages.each do |package|
-      expect(chef_run).to install_package(package)
-    end
+    expect(chef_run).to install_package(%w(libtool autoconf unzip rsync gcc autogen gtar gmake))
   end
 end

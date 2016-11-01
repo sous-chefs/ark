@@ -1,14 +1,8 @@
 require 'spec_helper'
 
 describe_recipe 'ark::default' do
-  let(:expected_core_packages) do
-    %w( libtool autoconf unzip rsync make gcc autogen )
-  end
-
   it 'installs core packages' do
-    expected_core_packages.each do |package|
-      expect(chef_run).to install_package(package)
-    end
+    expect(chef_run).to install_package(['libtool', 'autoconf', 'make', 'unzip', 'rsync', 'gcc', 'autogen'])
   end
 
   it 'does not install the gcc-c++ package' do
