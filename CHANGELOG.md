@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## 2.1.0 (2016-11-01)
+- Use multipackage installs to speed up installation
+- Avoid installation package dependencies on Windows entirely
+- Remove the testing bin stubs
+
 ## 2.0.0 (2016-09-15)
 
 - Add CentOS 7.2, Fedora 23, and Suse specs
