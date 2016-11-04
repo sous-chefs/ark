@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## 2.0.2 (2016-11-03)
+- Fix suse support and centos < 6
+
 ## 2.1.0 (2016-11-01)
 - Use multipackage installs to speed up installation
 - Avoid installation package dependencies on Windows entirely
