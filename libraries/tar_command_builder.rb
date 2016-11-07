@@ -18,14 +18,21 @@ module Ark
 
     private
 
+    def tar_binary
+      @tar_binary ||= node['ark']['tar'] || case node['platform_family']
+                                            when 'mac_os_x', 'freebsd'
+                                              '/usr/bin/tar'
+                                            when 'smartos'
+                                              '/bin/gtar'
+                                            else
+                                              '/bin/tar'
+                                            end
+    end
+
     attr_reader :resource
 
     def node
       resource.run_context.node
-    end
-
-    def tar_binary
-      resource.run_context.node['ark']['tar']
     end
 
     def args

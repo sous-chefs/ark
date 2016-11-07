@@ -5,6 +5,6 @@ ark 'test_unzip' do
   path '/usr/local/foo_dump'
   creates 'foo1.txt'
   owner 'foobarbaz'
-  group 'foobarbaz'
+  group 'foobarbaz_group'
   action :unzip
 end

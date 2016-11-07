@@ -5,7 +5,7 @@ ark 'test_install' do
   version '2'
   prefix_root '/usr/local'
   owner 'foobarbaz'
-  group 'foobarbaz'
+  group 'foobarbaz_group'
   has_binaries ['bin/do_foo', 'bin/do_more_foo']
   action :install
 end

@@ -20,17 +20,12 @@ default['ark']['apache_mirror'] = 'http://apache.mirrors.tds.net'
 default['ark']['prefix_root'] = '/usr/local'
 default['ark']['prefix_bin'] = '/usr/local/bin'
 default['ark']['prefix_home'] = '/usr/local'
-default['ark']['tar'] = case node['platform_family']
-                        when 'windows'
-                          "\"#{::Win32::Registry::HKEY_LOCAL_MACHINE.open(
-                            'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe', ::Win32::Registry::KEY_READ).read_s('Path')}\\7z.exe\""
-                        when 'mac_os_x', 'freebsd'
-                          '/usr/bin/tar'
-                        when 'smartos'
-                          '/bin/gtar'
-                        else
-                          '/bin/tar'
-                        end
+
+# the default path will be determined based on platform, but can be overridden here
+default['ark']['tar'] = nil
+
+# the default path will be determined from the registry, but you may override here
+default['ark']['sevenzip_binary'] = nil
 
 pkgs = %w(libtool autoconf) unless platform_family?('mac_os_x')
 pkgs += %w(make) unless platform_family?('mac_os_x', 'freebsd')
