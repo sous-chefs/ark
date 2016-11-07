@@ -1,7 +1,8 @@
-# require 'fileutils'
+apt_update 'update'
+
+include_recipe 'ark'
 
 # remove file so we can test sending notification on its creation
-
 FileUtils.rm_f '/tmp/foobarbaz/foo1.txt' if ::File.exist? '/tmp/foobarbaz/foo1.txt'
 
 ruby_block 'test_notification' do
