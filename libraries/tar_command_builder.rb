@@ -19,7 +19,7 @@ module Ark
     private
 
     def tar_binary
-      @tar_binary ||= node['ark']['tar'] || case node['platform_family']
+      @tar_binary ||= resource.run_context.node['ark']['tar'] || case node['platform_family']
                                             when 'mac_os_x', 'freebsd'
                                               '/usr/bin/tar'
                                             when 'smartos'

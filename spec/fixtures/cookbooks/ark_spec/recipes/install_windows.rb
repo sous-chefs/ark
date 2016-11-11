@@ -6,7 +6,7 @@ ark 'test_install' do
   prefix_root 'C:\\'
   win_install_dir 'C:\\install'
   owner 'foobarbaz'
-  group 'foobarbaz_group'
+  group 'foobarbaz'
   # has_binaries %w( bin\do_foo bin\do_more_foo )
   action :install
 end

@@ -40,7 +40,7 @@ module Ark
     end
 
     def sevenzip_binary
-      @tar_binary ||= node['ark']['sevenzip_binary'] ||
+      @tar_binary ||= resource.run_context.node['ark']['sevenzip_binary'] ||
                       "\"#{::Win32::Registry::HKEY_LOCAL_MACHINE.open(
                         'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe', ::Win32::Registry::KEY_READ).read_s('Path')}\\7z.exe\""
     end

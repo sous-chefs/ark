@@ -5,6 +5,6 @@ ark 'test_dump' do
   path '/usr/local/foo_dump'
   creates 'foo1.txt'
   owner 'foobarbaz'
-  group 'foobarbaz_group'
+  group 'foobarbaz'
   action :dump
 end
