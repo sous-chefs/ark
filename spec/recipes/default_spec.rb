@@ -29,9 +29,5 @@ describe_recipe 'ark::default' do
     it 'prefix home' do
       expect(default_cookbook_attribute('prefix_home')).to eq '/usr/local'
     end
-
-    it 'tar binary' do
-      expect(default_cookbook_attribute('tar')).to eq '/bin/tar'
-    end
   end
 end
