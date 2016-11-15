@@ -1,6 +1,6 @@
 include_recipe 'ark'
 
-group 'foobarbaz'
+group 'foobar'
 
 user 'foobarbaz' do
   group 'foobarbaz'
