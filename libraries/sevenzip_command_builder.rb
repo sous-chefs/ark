@@ -1,5 +1,7 @@
 module Ark
   class SevenZipCommandBuilder
+    include Chef::DSL::RegistryHelper # for the registry helper method
+
     def unpack
       sevenzip_command
     end
@@ -41,8 +43,9 @@ module Ark
 
     def sevenzip_binary
       @tar_binary ||= resource.run_context.node['ark']['sevenzip_binary'] ||
-                      "\"#{::Win32::Registry::HKEY_LOCAL_MACHINE.open(
-                        'SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe', ::Win32::Registry::KEY_READ).read_s('Path')}\\7z.exe\""
+                      if registry_key_exists?('HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe\Path')
+                        "\"#{registry_get_values('HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe\Path')}\\7z.exe\""
+                      end
     end
 
     def sevenzip_command_builder(dir, command)
