@@ -20,6 +20,10 @@ module Ark
 
     attr_reader :resource
 
+    def node
+      resource.run_context.node
+    end
+
     def sevenzip_command
       if resource.strip_components <= 0
         return sevenzip_command_builder(resource.path, 'x')
@@ -40,7 +44,18 @@ module Ark
     end
 
     def sevenzip_binary
-      resource.run_context.node['ark']['tar']
+      @tar_binary ||= (node['ark']['sevenzip_binary'] || sevenzip_path_from_registry)
+    end
+
+    def sevenzip_path_from_registry
+      begin
+        basepath = ::Win32::Registry::HKEY_LOCAL_MACHINE.open('SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe').read_s('Path')
+
+      # users like pretty errors
+      rescue ::Win32::Registry::Error
+        raise 'Failed to find the path of 7zip binary by searching checking HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\7zFM.exe\Path. Make sure to install 7zip before using this resource. If 7zip is installed and you still receive this message you can also specify the 7zip binary path by setting node["ark"]["sevenzip_binary"]'
+      end
+      "#{basepath}7z.exe"
     end
 
     def sevenzip_command_builder(dir, command)

@@ -18,11 +18,32 @@ platforms:
     run_list: yum::dnf_yum_compat
   - name: opensuse-13.2
   - name: opensuse-leap-42.1
+  - name: sles-12-sp1
+    driver:
+      box: chef/sles-12-sp1-x86_64 # private box
+  - name: solaris-11.3
+    driver:
+      box: chef/solaris-11.3 # private box
   - name: ubuntu-12.04
   - name: ubuntu-14.04
   - name: ubuntu-16.04
+  - name: windows-2008r2
+    driver:
+      box: chef/windows-server-2008r2-standard # private box
+  - name: windows-2012r2
+    driver:
+      box: chef/windows-server-2012r2-standard # private box
 
 suites:
 - name: default
   run_list:
   - recipe[ark_spec]
+  excludes:
+  - windows-2008r2
+  - windows-2012r2
+- name: windows
+  run_list:
+  - recipe[ark_spec::windows]
+  includes:
+  - windows-2008r2
+  - windows-2012r2

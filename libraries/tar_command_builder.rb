@@ -25,7 +25,14 @@ module Ark
     end
 
     def tar_binary
-      resource.run_context.node['ark']['tar']
+      @tar_binary ||= node['ark']['tar'] || case node['platform_family']
+                                            when 'mac_os_x', 'freebsd'
+                                              '/usr/bin/tar'
+                                            when 'smartos'
+                                              '/bin/gtar'
+                                            else
+                                              '/bin/tar'
+                                            end
     end
 
     def args

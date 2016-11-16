@@ -1,4 +1,4 @@
-apt_update 'update'
+apt_update 'update' if platform_family?('debian')
 
 include_recipe 'ark'
 
@@ -12,10 +12,10 @@ ruby_block 'test_notification' do
   action :nothing
 end
 
-group 'foobarbaz'
+group 'foobarbaz_group'
 
 user 'foobarbaz' do
-  group 'foobarbaz'
+  group 'foobarbaz_group'
 end
 
 directory '/opt/bin' do
@@ -28,7 +28,7 @@ ark 'foo' do
   version '2'
   prefix_root '/usr/local'
   owner 'foobarbaz'
-  group 'foobarbaz'
+  group 'foobarbaz_group'
   has_binaries ['bin/do_foo', 'bin/do_more_foo']
   action :install
 end
@@ -37,7 +37,7 @@ ark 'test_put' do
   url 'https://github.com/burtlo/ark/raw/master/files/default/foo.tar.gz'
   checksum '5996e676f17457c823d86f1605eaa44ca8a81e70d6a0e5f8e45b51e62e0c52e8'
   owner 'foobarbaz'
-  group 'foobarbaz'
+  group 'foobarbaz_group'
   action :put
 end
 
@@ -47,7 +47,7 @@ ark 'test_dump' do
   path '/usr/local/foo_dump'
   creates 'foo1.txt'
   owner 'foobarbaz'
-  group 'foobarbaz'
+  group 'foobarbaz_group'
   action :dump
 end
 
@@ -56,7 +56,7 @@ ark 'cherry_pick_test' do
   checksum '5996e676f17457c823d86f1605eaa44ca8a81e70d6a0e5f8e45b51e62e0c52e8'
   path '/usr/local/foo_cherry_pick'
   owner 'foobarbaz'
-  group 'foobarbaz'
+  group 'foobarbaz_group'
   creates 'foo_sub/foo1.txt'
   action :cherry_pick
 end
@@ -108,7 +108,7 @@ ark 'foo_alt_bin' do
   prefix_home '/opt'
   prefix_bin '/opt/bin'
   owner 'foobarbaz'
-  group 'foobarbaz'
+  group 'foobarbaz_group'
   has_binaries ['bin/do_foo']
   action :install
 end
