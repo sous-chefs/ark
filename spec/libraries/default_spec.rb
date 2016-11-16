@@ -121,6 +121,8 @@ describe_helpers Ark::ProviderHelpers do
   end
 
   describe '#cherry_pick_command' do
+    include_context 'seven zip installed'
+
     context "when the node's platform_family is windows" do
       it 'generates a 7-zip command' do
         with_node_attributes(platform_family: 'windows')
@@ -132,7 +134,7 @@ describe_helpers Ark::ProviderHelpers do
           run_context: double(node: { 'ark' => { 'tar' => 'sevenzip_command' } })
         )
 
-        expect(cherry_pick_command).to eq('sevenzip_command e "/resource/release_file" -o"/resource/path" -uy -r /resource/creates')
+        expect(cherry_pick_command).to eq('C:\\Program Files\\7-Zip7z.exe e "/resource/release_file" -o"/resource/path" -uy -r /resource/creates')
       end
     end
 
