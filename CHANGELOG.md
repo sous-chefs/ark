@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## 2.1.0 (2016-11-15)
+- Move tar/7zip path logic out of attributes and into helpers to prevent failures when 7zip is not installed before the chef run starts
+- Improve platform testing in Test Kitchen
+- Recognize Windows as a supported platform in the readme
+- Introduce a new attribute for overriding the 7-zip location: node['ark']['sevenzip_binary']
+
 ## 2.0.2 (2016-11-03)
 - Fix suse support and centos < 6
 
