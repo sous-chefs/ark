@@ -32,6 +32,12 @@ describe Ark::ResourceDefaults do
         expect(defaults.extension).to eq 'tar'
       end
 
+      it 'creates an extension for 7z files' do
+        resource = double(extension: nil, url: 'https://sourceforge.net/projects/boost/files/boost/1.62.0/boost_1_62_0.7z')
+        defaults = described_class.new(resource)
+        expect(defaults.extension).to eq '7z'
+      end
+
       context 'when the archive format is not supported' do
         it 'it returns a nil extension' do
           resource = double(extension: nil, url: 'http://localhost/file.stuffit')
