@@ -40,11 +40,11 @@ module Ark
         currdir += "\\%#{count}"
       end
 
-      cmd += "#{ENV.fetch('SystemRoot')}\\System32\\xcopy \"#{currdir}\" \"#{resource.home_dir}\" /s /e"
+      cmd += "\"#{ENV.fetch('SystemRoot')}\\System32\\xcopy\" \"#{currdir}\" \"#{resource.home_dir}\" /s /e"
     end
 
     def sevenzip_binary
-      @tar_binary ||= (node['ark']['sevenzip_binary'] || sevenzip_path_from_registry)
+      @tar_binary ||= "\"#{(node['ark']['sevenzip_binary'] || sevenzip_path_from_registry)}\""
     end
 
     def sevenzip_path_from_registry
