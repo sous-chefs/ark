@@ -29,11 +29,11 @@ module Ark
         return sevenzip_command_builder(resource.path, 'x')
       end
 
-      tmpdir = make_temp_directory
+      tmpdir = make_temp_directory.tr('/', '\\')
       cmd = sevenzip_command_builder(tmpdir, 'e')
 
       cmd += ' && '
-      currdir = tmpdir.tr('/', '\\')
+      currdir = tmpdir
 
       1.upto(resource.strip_components).each do |count|
         cmd += "for /f %#{count} in ('dir /ad /b \"#{currdir}\"') do "
