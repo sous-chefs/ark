@@ -33,6 +33,10 @@ module Ark
       end
     end
 
+    def owner
+      resource.owner || default_owner
+    end
+
     def windows?
       node_in_run_context['platform_family'] == 'windows'
     end
@@ -87,6 +91,21 @@ module Ark
 
     def default_version
       '1'
+    end
+
+    def default_owner
+      if windows?
+        wmi_property_from_query(:name, "select * from Win32_UserAccount where sid like 'S-1-5-21-%-500' and LocalAccount=True")
+      else
+        'root'
+      end
+    end
+
+    def wmi_property_from_query(wmi_property, wmi_query)
+      @wmi = ::WIN32OLE.connect('winmgmts://')
+      result = @wmi.ExecQuery(wmi_query)
+      return nil unless result.each.count > 0
+      result.each.next.send(wmi_property)
     end
 
     def file_cache_path

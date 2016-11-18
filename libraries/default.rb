@@ -49,6 +49,7 @@ module Ark
       new_resource.prefix_root = defaults.prefix_root
       new_resource.home_dir = defaults.home_dir
       new_resource.version = defaults.version
+      new_resource.owner = defaults.owner
 
       # TODO: what happens when the path is already set --
       #   with the current logic we overwrite it
