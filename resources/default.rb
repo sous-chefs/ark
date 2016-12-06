@@ -41,7 +41,7 @@ attr_accessor :extension,
   :release_file,
   :version
 
-attribute :owner, kind_of: String, default: 'root'
+attribute :owner, kind_of: String, default: nil
 attribute :group, kind_of: [String, Fixnum], default: 0
 attribute :url, kind_of: String, required: true
 attribute :path, kind_of: String, default: nil
