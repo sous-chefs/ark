@@ -9,7 +9,7 @@ module Ark
     end
 
     def cherry_pick
-      "#{sevenzip_command_builder(resource.path, 'e')} -r #{resource.creates}"
+      "#{sevenzip_command_builder(resource.path, 'x')} -r #{resource.creates}"
     end
 
     def initialize(resource)
@@ -30,7 +30,7 @@ module Ark
       end
 
       tmpdir = make_temp_directory
-      cmd = sevenzip_command_builder(tmpdir, 'e')
+      cmd = sevenzip_command_builder(tmpdir, 'x')
 
       cmd += ' && '
       currdir = tmpdir.tr('/', '\\')
