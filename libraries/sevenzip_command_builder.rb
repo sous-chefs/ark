@@ -29,18 +29,18 @@ module Ark
         return sevenzip_command_builder(resource.path, 'x')
       end
 
-      tmpdir = make_temp_directory
+      tmpdir = make_temp_directory.tr('/', '\\')
       cmd = sevenzip_command_builder(tmpdir, 'e')
 
       cmd += ' && '
-      currdir = tmpdir.tr('/', '\\')
+      currdir = tmpdir
 
       1.upto(resource.strip_components).each do |count|
         cmd += "for /f %#{count} in ('dir /ad /b \"#{currdir}\"') do "
         currdir += "\\%#{count}"
       end
 
-      cmd += "#{ENV.fetch('SystemRoot')}\\System32\\xcopy \"#{currdir}\" \"#{resource.home_dir}\" /s /e"
+      cmd += "(#{ENV.fetch('SystemRoot')}\\System32\\robocopy \"#{currdir}\" \"#{resource.home_dir}\" /s /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0"
     end
 
     def sevenzip_binary
