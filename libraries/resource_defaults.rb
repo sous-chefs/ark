@@ -62,13 +62,13 @@ module Ark
 
     def generate_extension_from_url(url)
       # purge any trailing redirect
-      url =~ %r{^https?:\/\/.*(.bin|bz2|gz|jar|tbz|tgz|txz|war|xz|zip)(\/.*\/)}
+      url =~ %r{^https?:\/\/.*(.bin|bz2|gz|jar|tbz|tgz|txz|war|xz|zip|7z)(\/.*\/)}
       url.gsub!(Regexp.last_match(2), '') unless Regexp.last_match(2).nil?
-      # remove tailing query string
+      # remove trailing query string
       release_basename = ::File.basename(url.gsub(/\?.*\z/, '')).gsub(/-bin\b/, '')
       # (\?.*)? accounts for a trailing querystring
       Chef::Log.debug("DEBUG: release_basename is #{release_basename}")
-      release_basename =~ /^(.+?)\.(jar|tar\.bz2|tar\.gz|tar\.xz|tbz|tgz|txz|war|zip|tar)(\?.*)?/
+      release_basename =~ /^(.+?)\.(jar|tar\.bz2|tar\.gz|tar\.xz|tbz|tgz|txz|war|zip|tar|7z)(\?.*)?/
       Chef::Log.debug("DEBUG: file_extension is #{Regexp.last_match(2)}")
       Regexp.last_match(2)
     end
