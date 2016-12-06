@@ -165,6 +165,10 @@ Extract the archive to a specified path, does not create any symbolic links.
 
   - Default: `root`
 
+- `group`: group of extracted directory.
+
+  - Default: `root`
+
 - `backup`: The number of backups to be kept in /var/chef/backup (for UNIX- and Linux-based platforms) or C:/chef/backup (for the Microsoft Windows platform). Set to false to prevent backups from being kept.
 
   - Default: `5`
