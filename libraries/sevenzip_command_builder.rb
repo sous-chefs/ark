@@ -40,7 +40,7 @@ module Ark
         currdir += "\\%#{count}"
       end
 
-      cmd += "\"(#{ENV.fetch('SystemRoot')}\\System32\\robocopy\" \"#{currdir}\" \"#{resource.home_dir}\" /s /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0"
+      cmd += "\"(#{ENV.fetch('SystemRoot')}\\System32\\robocopy\" \"#{currdir}\" \"#{resource.path}\" /s /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0"
     end
 
     def sevenzip_binary
@@ -66,7 +66,7 @@ module Ark
       if resource.extension =~ /tar.gz|tgz|tar.bz2|tbz|tar.xz|txz/
         " -so | #{sevenzip_binary} x -aoa -si -ttar"
       else
-        ''
+        ' -aoa' # force overwrite, Fixes #164
       end
     end
 
