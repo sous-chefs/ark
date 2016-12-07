@@ -18,6 +18,6 @@
 # limitations under the License.
 #
 
-package node['ark']['package_dependencies'] unless %w{windows mac_os_x}.include?(node['platform_family'])
+package node['ark']['package_dependencies'] unless %w(windows mac_os_x).include?(node['platform_family'])
 
 include_recipe 'seven_zip' if node['platform_family'] == 'windows'
