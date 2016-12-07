@@ -134,7 +134,7 @@ describe_helpers Ark::ProviderHelpers do
           run_context: double(node: { 'ark' => { 'tar' => 'sevenzip_command' } })
         )
 
-        expect(cherry_pick_command).to eq('C:\\Program Files\\7-Zip7z.exe e "/resource/release_file" -aoa -o"/resource/path" -uy -r /resource/creates')
+        expect(cherry_pick_command).to eq('"C:\\Program Files\\7-Zip7z.exe" x "/resource/release_file" -aoa -o"/resource/path" -uy -r /resource/creates')
       end
     end
 
