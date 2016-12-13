@@ -40,7 +40,7 @@ module Ark
         currdir += "\\%#{count}"
       end
 
-      cmd += "\"(#{ENV.fetch('SystemRoot')}\\System32\\robocopy\" \"#{currdir}\" \"#{resource.path}\" /s /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0"
+      cmd += "(\"#{ENV.fetch('SystemRoot')}\\System32\\robocopy\" \"#{currdir}\" \"#{resource.path}\" /s /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0"
     end
 
     def sevenzip_binary
