@@ -94,6 +94,7 @@ describe_helpers Ark::ProviderHelpers do
       allow(defaults).to receive(:home_dir) { '/default/prefix/home' }
       allow(defaults).to receive(:version) { '99' }
       allow(defaults).to receive(:path) { '/default/path' }
+      allow(defaults).to receive(:windows?) { false }
 
       set_paths
 
@@ -111,6 +112,7 @@ describe_helpers Ark::ProviderHelpers do
       )
 
       allow(defaults).to receive(:path) { '/default/path' }
+      allow(defaults).to receive(:windows?) { false }
 
       set_paths
 
