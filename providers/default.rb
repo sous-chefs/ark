@@ -80,8 +80,8 @@ action :install do
     template "/etc/profile.d/#{new_resource.name}.sh" do
       cookbook 'ark'
       source 'add_to_path.sh.erb'
-      owner 'root'
-      group 'root'
+      owner 0
+      group 0
       mode '0755'
       cookbook 'ark'
       variables(directory: "#{new_resource.path}/bin")
