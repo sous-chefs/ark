@@ -35,6 +35,7 @@ default_action :install
 
 attr_accessor :extension,
   :home_dir,
+  :owner,
   :path,
   :prefix_bin,
   :prefix_root,
