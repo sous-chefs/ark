@@ -62,7 +62,7 @@ action :install do
     action :nothing
   end
 
-  # usually on windows there is no central directory with executables where the applciations are linked
+  # usually on windows there is no central directory with executables where the applications are linked
   unless node['platform_family'] == 'windows'
     # symlink binaries
     new_resource.has_binaries.each do |bin|
@@ -81,7 +81,7 @@ action :install do
       cookbook 'ark'
       source 'add_to_path.sh.erb'
       owner 'root'
-      group 'root'
+      group node['root_group']
       mode '0755'
       cookbook 'ark'
       variables(directory: "#{new_resource.path}/bin")
