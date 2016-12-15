@@ -81,7 +81,7 @@ action :install do
       cookbook 'ark'
       source 'add_to_path.sh.erb'
       owner 'root'
-      group platform?('mac_os_x') ? 'wheel' : 'root'
+      group node['root_group']
       mode '0755'
       cookbook 'ark'
       variables(directory: "#{new_resource.path}/bin")
