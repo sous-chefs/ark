@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## 2.2.1 (2016-12-16)
+- Use Ohai root_group attribute to avoid trying to set the group to root on BSD/macOS.
+- Add missing accessor for owner property
+
 ## 2.2.0 (2016-12-14)
 
 - Add detection of .7z file extensions
