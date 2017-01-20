@@ -139,7 +139,7 @@ ark 'test_notification' do
 end
 
 ark 'test_autogen' do
-  url 'http://zlib.net/zlib-1.2.8.tar.gz'
+  url 'http://zlib.net/zlib-1.2.11.tar.gz'
   extension 'tar.gz'
   action :configure
 end
