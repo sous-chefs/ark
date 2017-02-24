@@ -41,7 +41,7 @@ describe Ark::SevenZipCommandBuilder do
     end
   end
 
-  context 'strip_components.zero?' do
+  context 'strip_components == 0' do
     describe '#unpack' do
       it 'generates the correct command' do
         allow(resource).to receive(:strip_components).and_return(0)
