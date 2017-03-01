@@ -110,6 +110,7 @@ action :put do
 
   directory new_resource.path do
     recursive true
+    mode new_resource.mode
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
