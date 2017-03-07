@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: ark
+# Cookbook:: ark
 # Attributes:: default
 #
 #

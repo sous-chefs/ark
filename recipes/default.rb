@@ -1,9 +1,9 @@
 #
-# Cookbook Name:: ark
+# Cookbook:: ark
 # Recipe:: default
 #
 # Author:: Bryan W. Berry <bryan.berry@gmail.com>
-# Copyright 2012, Bryan W. Berry
+# Copyright:: 2012-2017, Bryan W. Berry
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
