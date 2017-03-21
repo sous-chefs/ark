@@ -1,7 +1,7 @@
 name             'ark'
 maintainer       'Chef Software, Inc.'
 maintainer_email 'cookbooks@chef.io'
-license          'Apache 2.0'
+license          'Apache-2.0'
 description      'Provides a custom resource for installing runtime artifacts in a predictable fashion'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version          '2.2.1'
@@ -18,4 +18,4 @@ depends 'seven_zip' # for windows os
 
 source_url 'https://github.com/chef-cookbooks/ark'
 issues_url 'https://github.com/chef-cookbooks/ark/issues'
-chef_version '>= 12.1' if respond_to?(:chef_version)
+chef_version '>= 12.5' if respond_to?(:chef_version)
