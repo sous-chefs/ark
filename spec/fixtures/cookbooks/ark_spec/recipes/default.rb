@@ -144,13 +144,13 @@ ark 'test_autogen' do
   action :configure
 end
 
-ark 'foo_sub' do
+ark 'foo_sub_tar' do
   url 'https://github.com/burtlo/ark/raw/master/files/default/foo_sub.tar.gz'
   version '1'
   strip_components 2
 end
 
-ark 'foo_sub' do
+ark 'foo_sub_zip' do
   url 'https://github.com/burtlo/ark/raw/master/files/default/foo_sub.zip'
   version '2'
   strip_components 2
