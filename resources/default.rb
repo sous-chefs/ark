@@ -46,8 +46,6 @@ property :autoconf_opts, Array, default: []
 property :extension, String
 property :backup, [FalseClass, Integer], default: 5
 
-include ::Ark::ProviderHelpers
-
 #################
 # action :install
 #################
@@ -523,4 +521,8 @@ action :configure do
     environment new_resource.environment
     action :nothing
   end
+end
+
+action_class.class_eval do
+  include ::Ark::ProviderHelpers
 end
