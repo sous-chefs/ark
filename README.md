@@ -16,7 +16,7 @@ ark 'pig' do
 end
 ```
 
-The provider will:
+The `ark` resource will:
 
 - fetch it to to `/var/cache/chef/`
 - unpack it to the default path (`/usr/local/pig-0.8.0`)
@@ -44,7 +44,7 @@ Should work on common Unix/Linux systems with typical userland utilities like ta
 
 ### Chef
 
-- Chef 12.1+
+- Chef 12.5+
 
 ### Cookbooks
 
@@ -66,7 +66,7 @@ Customize the attributes to suit site specific conventions and defaults.
 
 ## Resources
 
-- `ark` - does the extract/build/configure dance
+- `ark` - does the extract/build/configure 
 
 ### Actions
 
@@ -281,7 +281,7 @@ You can also supply the file extension in case the file extension can not be det
 - Copyright: 2011, Philip (flip) Kromer - Infochimps, Inc
 - Copyright: 2012, Bryan W. Berry
 - Copyright: 2012, Denis Barishev
-- Copyright: 2013-2016, Chef Software, Inc
+- Copyright: 2013-2017, Chef Software, Inc
 - Copyright: 2014, Bloomberg L.P.
 
 ```

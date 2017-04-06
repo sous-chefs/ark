@@ -2,6 +2,11 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## 3.0.0 (2017-04-05)
+- Rewrite of resource to custom resources.
+- Remove EOL platforms from testing.
+- Update zlib URL
+- 
 ## 2.2.1 (2016-12-16)
 - Use Ohai root_group attribute to avoid trying to set the group to root on BSD/macOS.
 - Add missing accessor for owner property
