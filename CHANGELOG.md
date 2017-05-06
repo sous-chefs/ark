@@ -2,7 +2,13 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## 3.1.0 (2017-05-06)
+
+- Ensure the dependencies get installed on Chef 13 Amazon Linux systems
+- Require Chef 12.7+ and remove action_class.class_eval usage
+
 ## 3.0.0 (2017-04-05)
+
 - Rewrite of resource to custom resources.
 - Remove EOL platforms from testing.
 - Update zlib URL
