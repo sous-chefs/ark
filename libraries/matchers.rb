@@ -1,33 +1,44 @@
-module Ark
-  class ResourceDeprecations
-    def self.on(resource)
-      new(resource).warnings
-    end
 
-    def initialize(resource)
-      @resource = resource
-    end
+if defined?(ChefSpec)
+  ChefSpec.define_matcher :ark
 
-    attr_reader :resource
+  def install_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :install, resource_name)
+  end
 
-    def warnings
-      applicable_deprecrations.map { |_, message| message }
-    end
+  def dump_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :dump, resource_name)
+  end
 
-    def applicable_deprecrations
-      deprecations.select { |condition, _| send(condition) }
-    end
+  def cherry_pick_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :cherry_pick, resource_name)
+  end
 
-    def deprecations
-      { strip_leading_dir_feature: strip_leading_dir_feature_message }
-    end
+  def put_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :put, resource_name)
+  end
 
-    def strip_leading_dir_feature
-      [true, false].include?(resource.strip_leading_dir)
-    end
+  def install_with_make_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :install_with_make, resource_name)
+  end
 
-    def strip_leading_dir_feature_message
-      'strip_leading_dir attribute was deprecated. Use strip_components instead.'
-    end
+  def configure_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :configure, resource_name)
+  end
+
+  def setup_py_build_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :setup_py_build, resource_name)
+  end
+
+  def setup_py_install_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :setup_py_install, resource_name)
+  end
+
+  def setup_py_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :setup_py, resource_name)
+  end
+
+  def unzip_ark(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:ark, :unzip, resource_name)
   end
 end

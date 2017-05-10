@@ -1,9 +1,6 @@
 require 'chefspec'
 require 'chefspec/berkshelf'
 
-<<<<<<< HEAD
-at_exit { ChefSpec::Coverage.report! }
-=======
 RSpec.configure do |config|
   config.color = true
   config.alias_example_group_to :describe_recipe, type: :recipe
@@ -132,4 +129,3 @@ shared_context 'seven zip installed' do
     stub_const('::Win32::Registry::Error', double('win32_registry_error')) unless defined? ::Win32::Registry::Error
   end
 end
->>>>>>> chef-cookbooks/master
