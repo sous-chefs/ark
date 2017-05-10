@@ -1,16 +1,21 @@
 name             'ark'
-maintainer       'Bryan W. Berry'
-maintainer_email 'bryan.berry@gmail.com'
-license          'Apache 2.0'
-description      'Installs/Configures ark'
+maintainer       'Chef Software, Inc.'
+maintainer_email 'cookbooks@chef.io'
+license          'Apache-2.0'
+description      'Provides a custom resource for installing runtime artifacts in a predictable fashion'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.9.0'
+version          '3.1.0'
 
-%w( debian ubuntu centos redhat fedora windows ).each do |os|
+recipe 'ark::default', 'Installs packages needed by the custom resource'
+
+%w(ubuntu debian redhat centos suse opensuse opensuseleap scientific oracle amazon windows mac_os_x smartos freebsd).each do |os|
   supports os
 end
 
-recipe 'ark::default', 'Installs and configures ark'
+depends 'build-essential'
+depends 'windows' # for windows os
+depends 'seven_zip' # for windows os
 
-depends 'windows'
-depends '7-zip'
+source_url 'https://github.com/chef-cookbooks/ark'
+issues_url 'https://github.com/chef-cookbooks/ark/issues'
+chef_version '>= 12.7' if respond_to?(:chef_version)
