@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe_recipe 'ark::default' do
   def node_attributes
-    { platform: 'fedora', version: '25' }
+    { platform: 'fedora', version: '27' }
   end
 
   it 'installs core packages' do

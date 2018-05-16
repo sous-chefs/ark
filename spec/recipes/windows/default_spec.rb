@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe_recipe 'ark::default' do
   def node_attributes
-    { platform: 'windows', version: '2012R2' }
+    { platform: 'windows', version: '2016' }
   end
 
   it 'does include the 7-zip recipe' do
