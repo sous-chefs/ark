@@ -260,7 +260,6 @@ action :cherry_pick do
 
   execute "cherry_pick #{new_resource.creates} from #{new_resource.release_file}" do
     command cherry_pick_command
-    creates "#{new_resource.path}/#{new_resource.creates}"
     notifies :run, "execute[set owner on #{new_resource.path}]"
     action :nothing
   end
