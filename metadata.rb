@@ -17,4 +17,4 @@ depends 'seven_zip' # for windows os
 
 source_url 'https://github.com/chef-cookbooks/ark'
 issues_url 'https://github.com/chef-cookbooks/ark/issues'
-chef_version '>= 12.7'
+chef_version '>= 13.4'

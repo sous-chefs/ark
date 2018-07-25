@@ -44,7 +44,7 @@ Should work on common Unix/Linux systems with typical userland utilities like ta
 
 ### Chef
 
-- Chef 12.7+
+- Chef 13.4+
 
 ### Cookbooks
 
