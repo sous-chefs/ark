@@ -25,7 +25,7 @@ The `ark` resource will:
 
 By default, the ark will not run again if the `:path` is not empty. Ark provides many actions to accommodate different use cases, such as `:dump`, `:cherry_pick`, `:put`, and `:install_with_make`.
 
-At this time ark only handles files available from URLs using the [remote_file](http://docs.chef.io/resource_remote_file.html) provider. It does handle local files using the `file://` protocol.
+For remote files ark supports URLs using the [remote_file](http://docs.chef.io/resource_remote_file.html) resource. Local files are accessed with the `file://` syntax.
 
 ## Requirements
 
