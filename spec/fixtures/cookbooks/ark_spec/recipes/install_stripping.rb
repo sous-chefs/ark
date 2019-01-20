@@ -1,4 +1,3 @@
-
 ark 'foo_zip_strip' do
   version '2'
   url 'https://github.com/burtlo/ark/raw/master/files/default/foo.zip'

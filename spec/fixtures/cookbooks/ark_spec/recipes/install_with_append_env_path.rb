@@ -1,4 +1,3 @@
-
 ark 'test_install_with_append_env_path' do
   version '7.0.26'
   url 'https://github.com/burtlo/ark/raw/master/files/default/foo.tar.gz'

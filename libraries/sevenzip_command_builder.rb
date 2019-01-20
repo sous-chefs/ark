@@ -25,9 +25,7 @@ module Ark
     end
 
     def sevenzip_command
-      if resource.strip_components <= 0
-        return sevenzip_command_builder(resource.path, 'x')
-      end
+      return sevenzip_command_builder(resource.path, 'x') if resource.strip_components <= 0
 
       tmpdir = make_temp_directory.tr('/', '\\')
       cmd = sevenzip_command_builder(tmpdir, 'x')
