@@ -5,9 +5,9 @@ describe Ark::SevenZipCommandBuilder do
   let(:subject) { described_class.new(resource) }
 
   let(:resource) do
-    double(release_file: 'release_file',
+    double(_release_file: 'release_file',
            creates: 'creates',
-           path: 'path',
+           _deploy_path: 'path',
            home_dir: 'home_dir',
            strip_components: 1,
            extension: 'tar.gz')

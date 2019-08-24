@@ -51,12 +51,9 @@ module Ark
       new_resource.version = defaults.version
       new_resource.owner = defaults.owner
 
-      # TODO: what happens when the path is already set --
-      #   with the current logic we overwrite it
-      #   if you are in windows we overwrite it
-      #   otherwise we overwrite it with the root/name-version
-      new_resource.path = defaults.path
-      new_resource.release_file = defaults.release_file
+      # Calculate internal properties
+      new_resource._deploy_path = defaults.path
+      new_resource._release_file = defaults.release_file
     end
 
     def set_put_paths
@@ -65,13 +62,18 @@ module Ark
       # TODO: Should we be setting the prefix_root -
       #   as the prefix_root could be used in the path_with_version
       # new_resource.prefix_root = default.prefix_root
-      new_resource.path = defaults.path_without_version
-      new_resource.release_file = defaults.release_file_without_version
+
+      # Calculate internal properties
+      new_resource._deploy_path = defaults.path_without_version
+      new_resource._release_file = defaults.release_file_without_version
     end
 
     def set_dump_paths
       new_resource.extension = defaults.extension
-      new_resource.release_file = defaults.release_file_without_version
+
+      # Calculate internal properties
+      new_resource._deploy_path = new_resource.path
+      new_resource._release_file = defaults.release_file_without_version
     end
 
     def unpack_command

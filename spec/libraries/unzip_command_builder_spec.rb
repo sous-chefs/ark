@@ -5,9 +5,9 @@ describe Ark::UnzipCommandBuilder do
   let(:subject) { described_class.new(resource) }
 
   let(:resource) do
-    double(release_file: 'release_file',
+    double(_release_file: 'release_file',
            creates: 'creates',
-           path: 'path',
+           _deploy_path: 'path',
            strip_components: 0)
   end
 
@@ -21,9 +21,9 @@ describe Ark::UnzipCommandBuilder do
 
     context 'when the resource does strip components' do
       let(:resource) do
-        double(release_file: 'release_file',
+        double(_release_file: 'release_file',
                creates: 'creates',
-               path: 'path',
+               _deploy_path: 'path',
                strip_components: 1)
       end
 

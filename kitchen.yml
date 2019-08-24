@@ -3,6 +3,7 @@ driver:
 
 provisioner:
   name: chef_zero
+  chef_license: accept
   deprecations_as_errors: true
 
 platforms:

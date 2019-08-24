@@ -5,9 +5,9 @@ describe Ark::TarCommandBuilder do
   let(:subject) { described_class.new(resource) }
 
   let(:resource) do
-    double(release_file: 'release_file',
+    double(_release_file: 'release_file',
            creates: 'creates',
-           path: 'path',
+           _deploy_path: 'path',
            strip_components: 1,
            extension: 'tar.gz')
   end
@@ -26,9 +26,9 @@ describe Ark::TarCommandBuilder do
 
     context 'when the extension is tar (only tar)' do
       let(:resource) do
-        double(release_file: 'release_file',
+        double(_release_file: 'release_file',
                creates: 'creates',
-               path: 'path',
+               _deploy_path: 'path',
                strip_components: 1,
                extension: 'tar')
       end
@@ -41,10 +41,10 @@ describe Ark::TarCommandBuilder do
 
     context 'when the extension is not supported' do
       let(:resource) do
-        double(release_file: 'release_file',
+        double(_release_file: 'release_file',
                url: 'http://website.com/files/content.stuffit',
                creates: 'creates',
-               path: 'path',
+               _deploy_path: 'path',
                strip_components: 1,
                extension: 'stuffit')
       end
