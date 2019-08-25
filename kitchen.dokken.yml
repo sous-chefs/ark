@@ -67,6 +67,6 @@ platforms:
 suites:
 - name: default
   run_list:
-  - recipe[build-essential]
+  - recipe[ark_spec::build_essential]
   - recipe[ark]
   - recipe[ark_spec]

@@ -12,7 +12,6 @@ recipe 'ark::default', 'Installs packages needed by the custom resource'
   supports os
 end
 
-depends 'build-essential'
 depends 'seven_zip' # for windows os
 
 source_url 'https://github.com/chef-cookbooks/ark'
