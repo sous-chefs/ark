@@ -11,11 +11,19 @@ provisioner:
   name: dokken
   deprecations_as_errors: true
 
+verifier:
+  name: inspec
+
 platforms:
 - name: amazonlinux
   driver:
     image: dokken/amazonlinux
     pid_one_command: /sbin/init
+
+- name: amazonlinux-2
+  driver:
+    image: dokken/amazonlinux-2
+    pid_one_command: /usr/lib/systemd/systemd
 
 - name: debian-9
   driver:
@@ -41,6 +49,11 @@ platforms:
     image: dokken/centos-7
     pid_one_command: /usr/lib/systemd/systemd
 
+- name: centos-8
+  driver:
+    image: dokken/centos-8
+    pid_one_command: /usr/lib/systemd/systemd
+
 - name: fedora-latest
   driver:
     image: dokken/fedora-latest
@@ -60,9 +73,9 @@ platforms:
     intermediate_instructions:
       - RUN /usr/bin/apt-get update
 
-- name: opensuse-leap
+- name: opensuse-leap-15
   driver:
-    image: dokken/opensuse-leap
+    image: dokken/opensuse-leap-15
     pid_one_command: /bin/systemd
 
 suites:
