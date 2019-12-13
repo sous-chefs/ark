@@ -36,7 +36,7 @@ For remote files ark supports URLs using the [remote_file](http://docs.chef.io/r
 - Fedora
 - FreeBSD
 - SmartOS
-- Mac OS X
+- macOS
 - openSUSE / SUSE Linux Enterprises
 - Windows
 
