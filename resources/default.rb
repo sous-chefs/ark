@@ -24,7 +24,7 @@ property :group, [String, Integer], default: 0
 property :url, String, required: true
 property :path, String
 property :full_path, String
-property :append_env_path, [TrueClass, FalseClass], default: false
+property :append_env_path, [true, false], default: false
 property :checksum, regex: /^[a-zA-Z0-9]{64}$/, default: nil
 property :has_binaries, Array, default: []
 property :creates, String
