@@ -44,11 +44,10 @@ Should work on common Unix/Linux systems with typical userland utilities like ta
 
 ### Chef
 
-- Chef 13.4+
+- Chef 14+
 
 ### Cookbooks
 
-- build-essential
 - seven_zip
 
 ## Attributes

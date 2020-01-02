@@ -2,6 +2,16 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## 5.0.0 (2020-01-02)
+
+- Require Chef Infra Client 14+ and remove the need for the build_essential dependency - [@tas50](https://github.com/tas50)
+- Use Ruby classes in resource properties - [@tas50](https://github.com/tas50)
+- Simplify the platform check logic - [@tas50](https://github.com/tas50)
+- Remove the .foocritic file - [@tas50](https://github.com/tas50)
+- Remove long_description and recipe metadata - [@tas50](https://github.com/tas50)
+- Expand testing - [@tas50](https://github.com/tas50)
+- Remove Ubuntu 14.04 testing - [@tas50](https://github.com/tas50)
+
 ## 4.0.0 (2018-07-25)
 
 - Support append_env_path property on Windows, which increases the minimum required Chef release to Chef 13.4
@@ -23,7 +33,7 @@ This file is used to list changes made in each version of the ark cookbook.
 - Rewrite of resource to custom resources.
 - Remove EOL platforms from testing.
 - Update zlib URL
-- 
+-
 ## 2.2.1 (2016-12-16)
 - Use Ohai root_group attribute to avoid trying to set the group to root on BSD/macOS.
 - Add missing accessor for owner property
