@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe_recipe 'ark::default' do
   def node_attributes
-    { platform: 'ubuntu', version: '16.04' }
+    { platform: 'ubuntu' }
   end
 
   it 'installs core packages' do
