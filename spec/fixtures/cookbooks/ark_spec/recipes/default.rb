@@ -4,10 +4,22 @@ include_recipe 'ark'
 
 # remove file so we can test sending notification on its creation
 FileUtils.rm_f '/tmp/foobarbaz/foo1.txt' if ::File.exist? '/tmp/foobarbaz/foo1.txt'
+FileUtils.rm_f '/tmp/foobarbaz/foo1_before.txt' if ::File.exist? '/tmp/foobarbaz/foo1_before.txt'
 
 ruby_block 'test_notification' do
   block do
-    FileUtils.touch '/tmp/foobarbaz/notification_successful.txt' if ::File.exist? '/tmp/foobarbaz/foo1.txt'
+    if ::File.exist? '/tmp/foobarbaz/foo1.txt'
+      FileUtils.touch '/tmp/foobarbaz/notification_successful.txt'
+    end
+  end
+  action :nothing
+end
+
+ruby_block 'test_notification_before' do
+  block do
+    if ::File.exist? '/tmp/foobarbaz_before/foo1.txt'
+      FileUtils.touch '/tmp/foobarbaz_before/notification_successful.txt'
+    end
   end
   action :nothing
 end
@@ -92,13 +104,15 @@ ark 'foo_zip_strip' do
   action :install
 end
 
-ark 'haproxy' do
-  url 'https://github.com/dosyfier/ark/raw/develop/files/default/haproxy-ss-20120403.tar.gz'
-  version '1.5'
-  checksum 'ba0424bf7d23b3a607ee24bbb855bb0ea347d7ffde0bec0cb12a89623cbaf911'
-  make_opts ['TARGET=linux26']
-  action :install_with_make
-end unless platform?('freebsd')
+unless platform?('freebsd')
+  ark 'haproxy' do
+    url 'https://github.com/dosyfier/ark/raw/develop/files/default/haproxy-ss-20120403.tar.gz'
+    version '1.5'
+    checksum 'ba0424bf7d23b3a607ee24bbb855bb0ea347d7ffde0bec0cb12a89623cbaf911'
+    make_opts ['TARGET=linux26']
+    action :install_with_make
+  end
+end
 
 ark 'foo_alt_bin' do
   url 'https://github.com/burtlo/ark/raw/master/files/default/foo.tar.gz'
@@ -136,6 +150,14 @@ ark 'test_notification' do
   creates 'foo1.txt'
   action :dump
   notifies :create, 'ruby_block[test_notification]', :immediately
+end
+
+ark 'test_notification_before' do
+  url 'https://github.com/burtlo/ark/raw/master/files/default/foo.zip'
+  path '/tmp/foobarbaz_before'
+  creates 'foo1.txt'
+  action :dump
+  notifies :create, 'ruby_block[test_notification_before]', :before
 end
 
 ark 'test_autogen' do

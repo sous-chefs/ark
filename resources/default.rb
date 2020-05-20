@@ -23,12 +23,10 @@ property :owner, String
 property :group, [String, Integer], default: 0
 property :url, String, required: true
 property :path, String
-property :full_path, String
 property :append_env_path, [true, false], default: false
 property :checksum, regex: /^[a-zA-Z0-9]{64}$/, default: nil
 property :has_binaries, Array, default: []
 property :creates, String
-property :release_file, String, default: ''
 property :strip_leading_dir, [true, false, NilClass]
 property :strip_components, Integer, default: 1
 property :mode, [Integer, String], default: 0755
@@ -47,6 +45,10 @@ property :extension, String
 property :backup, [FalseClass, Integer], default: 5
 property :clean_up_before_unpack, [true, false], default: false
 
+# Internal properties (overwritten by ark's actions)
+property :_deploy_path, String
+property :_release_file, String
+
 #################
 # action :install
 #################
@@ -54,43 +56,43 @@ action :install do
   show_deprecations
   set_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
+  remote_file new_resource._release_file do
+    Chef::Log.debug('DEBUG: new_resource._release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
     backup new_resource.backup
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command unpack_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
@@ -100,7 +102,7 @@ action :install do
     # so ignore has_binaries for now
 
     # Add to PATH permanently on Windows if append_env_path
-    windows_path "#{new_resource.path}/bin" do
+    windows_path "#{new_resource._deploy_path}/bin" do
       action :add
       only_if { new_resource.append_env_path }
     end
@@ -108,13 +110,13 @@ action :install do
     # symlink binaries
     new_resource.has_binaries.each do |bin|
       link ::File.join(new_resource.prefix_bin, ::File.basename(bin)) do
-        to ::File.join(new_resource.path, bin)
+        to ::File.join(new_resource._deploy_path, bin)
       end
     end
 
     # action_link_paths
     link new_resource.home_dir do
-      to new_resource.path
+      to new_resource._deploy_path
     end
 
     # Add to path for interactive bash sessions
@@ -125,13 +127,13 @@ action :install do
       group node['root_group']
       mode '0755'
       cookbook 'ark'
-      variables(directory: "#{new_resource.path}/bin")
+      variables(directory: "#{new_resource._deploy_path}/bin")
       only_if { new_resource.append_env_path }
     end
   end
 
   # Add to path for the current chef-client converge.
-  bin_path = ::File.join(new_resource.path, 'bin')
+  bin_path = ::File.join(new_resource._deploy_path, 'bin')
   ruby_block "adding '#{bin_path}' to chef-client ENV['PATH']" do
     block do
       ENV['PATH'] = bin_path + ':' + ENV['PATH']
@@ -149,43 +151,43 @@ action :put do
   show_deprecations
   set_put_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
   # download
-  remote_file new_resource.release_file do
+  remote_file new_resource._release_file do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
     backup new_resource.backup
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command unpack_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
@@ -198,43 +200,43 @@ action :dump do
   show_deprecations
   set_dump_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
   # download
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
+  remote_file new_resource._release_file do
+    Chef::Log.debug("DEBUG: new_resource._release_file #{new_resource._release_file}")
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command dump_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
@@ -247,43 +249,43 @@ action :unzip do
   show_deprecations
   set_dump_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
   # download
-  remote_file new_resource.release_file do
-    Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
+  remote_file new_resource._release_file do
+    Chef::Log.debug("DEBUG: new_resource._release_file #{new_resource._release_file}")
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command unzip_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
@@ -297,40 +299,40 @@ action :cherry_pick do
   set_dump_paths
   Chef::Log.debug("DEBUG: new_resource.creates #{new_resource.creates}")
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
   # download
-  remote_file new_resource.release_file do
+  remote_file new_resource._release_file do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource._release_file}]"
   end
 
-  execute "cherry_pick #{new_resource.creates} from #{new_resource.release_file}" do
+  execute "cherry_pick #{new_resource.creates} from #{new_resource._release_file}" do
     command cherry_pick_command
-    creates "#{new_resource.path}/#{new_resource.creates}"
-    notifies :run, "execute[set owner on #{new_resource.path}]"
+    creates "#{new_resource._deploy_path}/#{new_resource.creates}"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
@@ -343,77 +345,77 @@ action :install_with_make do
   show_deprecations
   set_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
+  remote_file new_resource._release_file do
+    Chef::Log.debug('DEBUG: new_resource._release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command unpack_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    notifies :run, "execute[autogen #{new_resource.path}]"
-    notifies :run, "execute[configure #{new_resource.path}]"
-    notifies :run, "execute[make #{new_resource.path}]"
-    notifies :run, "execute[make install #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
+    notifies :run, "execute[autogen #{new_resource._deploy_path}]"
+    notifies :run, "execute[configure #{new_resource._deploy_path}]"
+    notifies :run, "execute[make #{new_resource._deploy_path}]"
+    notifies :run, "execute[make install #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
 
-  execute "autogen #{new_resource.path}" do
+  execute "autogen #{new_resource._deploy_path}" do
     command './autogen.sh'
-    only_if { ::File.exist? "#{new_resource.path}/autogen.sh" }
-    cwd new_resource.path
+    only_if { ::File.exist? "#{new_resource._deploy_path}/autogen.sh" }
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
     ignore_failure true
   end
 
-  execute "configure #{new_resource.path}" do
+  execute "configure #{new_resource._deploy_path}" do
     command "./configure #{new_resource.autoconf_opts.join(' ')}"
-    only_if { ::File.exist? "#{new_resource.path}/configure" }
-    cwd new_resource.path
+    only_if { ::File.exist? "#{new_resource._deploy_path}/configure" }
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
   end
 
-  execute "make #{new_resource.path}" do
+  execute "make #{new_resource._deploy_path}" do
     command "make #{new_resource.make_opts.join(' ')}"
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
   end
 
-  execute "make install #{new_resource.path}" do
+  execute "make install #{new_resource._deploy_path}" do
     command "make install #{new_resource.make_opts.join(' ')}"
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
   end
@@ -423,50 +425,50 @@ action :setup_py_build do
   show_deprecations
   set_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
+  remote_file new_resource._release_file do
+    Chef::Log.debug('DEBUG: new_resource._release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command unpack_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    notifies :run, "execute[python setup.py build #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
+    notifies :run, "execute[python setup.py build #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
 
-  execute "python setup.py build #{new_resource.path}" do
+  execute "python setup.py build #{new_resource._deploy_path}" do
     command "python setup.py build #{new_resource.make_opts.join(' ')}"
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
   end
@@ -476,50 +478,50 @@ action :setup_py_install do
   show_deprecations
   set_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
+  remote_file new_resource._release_file do
+    Chef::Log.debug('DEBUG: new_resource._release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command unpack_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    notifies :run, "execute[python setup.py install #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
+    notifies :run, "execute[python setup.py install #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
 
-  execute "python setup.py install #{new_resource.path}" do
+  execute "python setup.py install #{new_resource._deploy_path}" do
     command "python setup.py install #{new_resource.make_opts.join(' ')}"
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
   end
@@ -529,50 +531,50 @@ action :setup_py do
   show_deprecations
   set_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
+  remote_file new_resource._release_file do
+    Chef::Log.debug('DEBUG: new_resource._release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command unpack_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    notifies :run, "execute[python setup.py #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
+    notifies :run, "execute[python setup.py #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
 
-  execute "python setup.py #{new_resource.path}" do
+  execute "python setup.py #{new_resource._deploy_path}" do
     command "python setup.py #{new_resource.make_opts.join(' ')}"
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
   end
@@ -582,61 +584,61 @@ action :configure do
   show_deprecations
   set_paths
 
-  directory new_resource.path do
+  directory new_resource._deploy_path do
     recursive true
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # clean up existing path content if requested
-  ruby_block "clean up #{new_resource.path} before unpack" do
+  ruby_block "clean up #{new_resource._deploy_path} before unpack" do
     block do
-      delete_files_and_directories_inside(new_resource.path)
+      delete_files_and_directories_inside(new_resource._deploy_path)
     end
     action :nothing
     only_if { new_resource.clean_up_before_unpack }
   end
 
-  remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
+  remote_file new_resource._release_file do
+    Chef::Log.debug('DEBUG: new_resource._release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
-    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
-    notifies :run, "execute[unpack #{new_resource.release_file}]"
+    notifies :run, "ruby_block[clean up #{new_resource._deploy_path} before unpack]"
+    notifies :run, "execute[unpack #{new_resource._release_file}]"
   end
 
   # unpack based on file extension
-  execute "unpack #{new_resource.release_file}" do
+  execute "unpack #{new_resource._release_file}" do
     command unpack_command
-    cwd new_resource.path
+    cwd new_resource._deploy_path
     environment new_resource.environment
-    notifies :run, "execute[set owner on #{new_resource.path}]"
-    notifies :run, "execute[autogen #{new_resource.path}]"
-    notifies :run, "execute[configure #{new_resource.path}]"
+    notifies :run, "execute[set owner on #{new_resource._deploy_path}]"
+    notifies :run, "execute[autogen #{new_resource._deploy_path}]"
+    notifies :run, "execute[configure #{new_resource._deploy_path}]"
     action :nothing
   end
 
   # set_owner
-  execute "set owner on #{new_resource.path}" do
+  execute "set owner on #{new_resource._deploy_path}" do
     command owner_command
     action :nothing
   end
 
-  execute "autogen #{new_resource.path}" do
+  execute "autogen #{new_resource._deploy_path}" do
     command './autogen.sh'
-    only_if { ::File.exist? "#{new_resource.path}/autogen.sh" }
-    cwd new_resource.path
+    only_if { ::File.exist? "#{new_resource._deploy_path}/autogen.sh" }
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
     ignore_failure true
   end
 
-  execute "configure #{new_resource.path}" do
+  execute "configure #{new_resource._deploy_path}" do
     command "./configure #{new_resource.autoconf_opts.join(' ')}"
-    only_if { ::File.exist? "#{new_resource.path}/configure" }
-    cwd new_resource.path
+    only_if { ::File.exist? "#{new_resource._deploy_path}/configure" }
+    cwd new_resource._deploy_path
     environment new_resource.environment
     action :nothing
   end

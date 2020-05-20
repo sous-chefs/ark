@@ -7,7 +7,7 @@ describe Ark::GeneralOwner do
   let(:resource) do
     double(owner: 'owner',
            group: 'group',
-           path: '/resource/path')
+           _deploy_path: '/resource/path')
   end
 
   it 'generates the correct command for windows file ownership' do

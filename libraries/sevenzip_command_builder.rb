@@ -5,11 +5,11 @@ module Ark
     end
 
     def dump
-      sevenzip_command_builder(resource.path, 'e')
+      sevenzip_command_builder(resource._deploy_path, 'e')
     end
 
     def cherry_pick
-      "#{sevenzip_command_builder(resource.path, 'x')} -r #{resource.creates}"
+      "#{sevenzip_command_builder(resource._deploy_path, 'x')} -r #{resource.creates}"
     end
 
     def initialize(resource)
@@ -25,7 +25,7 @@ module Ark
     end
 
     def sevenzip_command
-      return sevenzip_command_builder(resource.path, 'x') if resource.strip_components <= 0
+      return sevenzip_command_builder(resource._deploy_path, 'x') if resource.strip_components <= 0
 
       tmpdir = make_temp_directory.tr('/', '\\')
       cmd = sevenzip_command_builder(tmpdir, 'x')
@@ -38,7 +38,7 @@ module Ark
         currdir += "\\%#{count}"
       end
 
-      cmd += "(\"#{ENV.fetch('SystemRoot')}\\System32\\robocopy\" \"#{currdir}\" \"#{resource.path}\" /s /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0"
+      cmd += "(\"#{ENV.fetch('SystemRoot')}\\System32\\robocopy\" \"#{currdir}\" \"#{resource._deploy_path}\" /s /e) ^& IF %ERRORLEVEL% LEQ 3 cmd /c exit 0"
     end
 
     def sevenzip_binary
@@ -57,7 +57,7 @@ module Ark
     end
 
     def sevenzip_command_builder(dir, command)
-      "#{sevenzip_binary} #{command} \"#{resource.release_file}\"#{extension_is_tar} -o\"#{dir}\" -uy"
+      "#{sevenzip_binary} #{command} \"#{resource._release_file}\"#{extension_is_tar} -o\"#{dir}\" -uy"
     end
 
     def extension_is_tar

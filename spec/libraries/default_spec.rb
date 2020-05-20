@@ -12,7 +12,7 @@ describe_helpers Ark::ProviderHelpers do
     context 'when on windows' do
       it 'generates a icacls command' do
         with_node_attributes(platform_family: 'windows')
-        with_resource_properties(owner: 'Bobo', path: 'C:\\temp')
+        with_resource_properties(owner: 'Bobo', _deploy_path: 'C:\\temp')
 
         expect(owner_command).to eq('C:\\Windows\\System32\\icacls "C:\\temp\\*" /setowner "Bobo"')
       end
@@ -20,7 +20,7 @@ describe_helpers Ark::ProviderHelpers do
 
     context 'when not on windows' do
       it 'generates a chown command' do
-        with_resource_properties(owner: 'MouseTrap', group: 'RatCatchers', path: '/opt/rathole')
+        with_resource_properties(owner: 'MouseTrap', group: 'RatCatchers', _deploy_path: '/opt/rathole')
 
         expect(owner_command).to eq('chown -R MouseTrap:RatCatchers /opt/rathole')
       end
@@ -55,7 +55,7 @@ describe_helpers Ark::ProviderHelpers do
     it "sets the resource's release_file" do
       with_resource_properties(extension: 'tar.gz', name: 'what_is_a_good_name')
       set_dump_paths
-      expect(new_resource.release_file).to eq('/var/chef/cache/what_is_a_good_name.tar.gz')
+      expect(new_resource._release_file).to eq('/var/chef/cache/what_is_a_good_name.tar.gz')
     end
   end
 
@@ -66,12 +66,12 @@ describe_helpers Ark::ProviderHelpers do
         allow(defaults).to receive(:prefix_root_from_node_in_run_context) { '/opt/default' }
         set_put_paths
 
-        expect(new_resource.release_file).to eq('/var/chef/cache/gustav-moomoo.jar')
+        expect(new_resource._release_file).to eq('/var/chef/cache/gustav-moomoo.jar')
       end
     end
 
     context 'when the resource path has been set' do
-      it "sets the resource's release_file and path" do
+      it "sets the resource's _release_file and _deploy_path" do
         with_resource_properties(
           extension: 'jar',
           name: 'gustav-tootoo',
@@ -79,8 +79,8 @@ describe_helpers Ark::ProviderHelpers do
         )
         set_put_paths
 
-        expect(new_resource.release_file).to eq('/var/chef/cache/gustav-tootoo.jar')
-        expect(new_resource.path).to eq('/path/piece/gustav-tootoo')
+        expect(new_resource._release_file).to eq('/var/chef/cache/gustav-tootoo.jar')
+        expect(new_resource._deploy_path).to eq('/path/piece/gustav-tootoo')
       end
     end
   end
@@ -98,7 +98,7 @@ describe_helpers Ark::ProviderHelpers do
 
       set_paths
 
-      expect(new_resource.release_file).to eq('/var/chef/cache/resource_name-99.jar')
+      expect(new_resource._release_file).to eq('/var/chef/cache/resource_name-99.jar')
     end
 
     it "sets the resource's release_file" do
@@ -118,7 +118,7 @@ describe_helpers Ark::ProviderHelpers do
 
       chef_config_file_cache_path = '/var/chef/cache'
 
-      expect(new_resource.release_file).to eq("#{chef_config_file_cache_path}/resource_name-23.jar")
+      expect(new_resource._release_file).to eq("#{chef_config_file_cache_path}/resource_name-23.jar")
     end
   end
 
@@ -130,9 +130,9 @@ describe_helpers Ark::ProviderHelpers do
         with_node_attributes(platform_family: 'windows')
         with_resource_properties(
           url: 'http://website.com/windows_package.zip',
-          path: '/resource/path',
+          _deploy_path: '/resource/path',
           creates: '/resource/creates',
-          release_file: '/resource/release_file',
+          _release_file: '/resource/release_file',
           run_context: double(node: { 'ark' => { 'tar' => 'sevenzip_command' } })
         )
 
@@ -145,9 +145,9 @@ describe_helpers Ark::ProviderHelpers do
         it 'generates a cherry pick tar command with the correct options' do
           with_resource_properties(
             url: 'http://website.com/package.tar.gz',
-            path: '/resource/path',
+            _deploy_path: '/resource/path',
             creates: '/resource/creates',
-            release_file: '/resource/release_file',
+            _release_file: '/resource/release_file',
             strip_components: 0,
             run_context: double(node: { 'ark' => { 'tar' => 'tar' } })
           )
@@ -160,9 +160,9 @@ describe_helpers Ark::ProviderHelpers do
         it 'generates a cherry pick tar command with the correct options' do
           with_resource_properties(
             url: 'http://website.com/package.tar.bz2',
-            path: '/resource/path',
+            _deploy_path: '/resource/path',
             creates: '/resource/creates',
-            release_file: '/resource/release_file',
+            _release_file: '/resource/release_file',
             strip_components: 0,
             run_context: double(node: { 'ark' => { 'tar' => 'tar' } })
           )
@@ -175,9 +175,9 @@ describe_helpers Ark::ProviderHelpers do
         it 'generates a cherry pick tar command with the correct options' do
           with_resource_properties(
             url: 'http://website.com/package.txz',
-            path: '/resource/path',
+            _deploy_path: '/resource/path',
             creates: '/resource/creates',
-            release_file: '/resource/release_file',
+            _release_file: '/resource/release_file',
             strip_components: 0,
             run_context: double(node: { 'ark' => { 'tar' => 'tar' } })
           )
@@ -190,9 +190,9 @@ describe_helpers Ark::ProviderHelpers do
         it 'generates an unzip command' do
           with_resource_properties(
             url: 'http://website.com/package.zip',
-            path: '/resource/path',
+            _deploy_path: '/resource/path',
             creates: '/resource/creates',
-            release_file: '/resource/release_file',
+            _release_file: '/resource/release_file',
             run_context: double(node: { 'ark' => { 'tar' => 'unzip_command' } })
           )
 
@@ -213,8 +213,8 @@ describe_helpers Ark::ProviderHelpers do
         it 'generates a tar command' do
           with_resource_properties(
             url: 'http://website.com/package.tgz',
-            release_file: '/resource/release_file',
-            path: '/resource/path'
+            _release_file: '/resource/release_file',
+            _deploy_path: '/resource/path'
           )
 
           expect(dump_command).to eq('tar -mxf "/resource/release_file" -C "/resource/path"')
@@ -225,8 +225,8 @@ describe_helpers Ark::ProviderHelpers do
         it 'generates a tar command' do
           with_resource_properties(
             url: 'http://website.com/package.tbz',
-            release_file: '/resource/release_file',
-            path: '/resource/path'
+            _release_file: '/resource/release_file',
+            _deploy_path: '/resource/path'
           )
 
           expect(dump_command).to eq('tar -mxf "/resource/release_file" -C "/resource/path"')
@@ -237,8 +237,8 @@ describe_helpers Ark::ProviderHelpers do
         it 'generates a tar command' do
           with_resource_properties(
             url: 'http://website.com/package.tar.xz',
-            release_file: '/resource/release_file',
-            path: '/resource/path'
+            _release_file: '/resource/release_file',
+            _deploy_path: '/resource/path'
           )
 
           expect(dump_command).to eq('tar -mxf "/resource/release_file" -C "/resource/path"')
@@ -249,8 +249,8 @@ describe_helpers Ark::ProviderHelpers do
         it 'generates an unzip command' do
           with_resource_properties(
             url: 'http://website.com/package.jar',
-            release_file: '/resource/release_file',
-            path: '/resource/path'
+            _release_file: '/resource/release_file',
+            _deploy_path: '/resource/path'
           )
 
           expect(dump_command).to eq('unzip  -j -q -o "/resource/release_file" -d "/resource/path"')

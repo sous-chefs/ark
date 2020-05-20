@@ -1,15 +1,15 @@
 module Ark
   class TarCommandBuilder
     def unpack
-      "#{tar_binary} #{args} #{resource.release_file}#{strip_args}"
+      "#{tar_binary} #{args} #{resource._release_file}#{strip_args}"
     end
 
     def dump
-      "tar -mxf \"#{resource.release_file}\" -C \"#{resource.path}\""
+      "tar -mxf \"#{resource._release_file}\" -C \"#{resource._deploy_path}\""
     end
 
     def cherry_pick
-      "#{tar_binary} #{args} #{resource.release_file} -C #{resource.path} #{resource.creates}#{strip_args}"
+      "#{tar_binary} #{args} #{resource._release_file} -C #{resource._deploy_path} #{resource.creates}#{strip_args}"
     end
 
     def initialize(resource)

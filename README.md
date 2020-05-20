@@ -176,6 +176,8 @@ Extract the archive to a specified path, does not create any symbolic links.
 
   - Default: `5`
 
+N.B. Some attributes, prefixed by '_', are reserved to ark resource internal implementation. Setting any one of them wouldn't have any effect.
+
 #### Examples
 
 This example copies `ivy.tar.gz` to `/var/cache/chef/ivy-2.2.0.tar.gz`, unpacks its contents to `/usr/local/ivy-2.2.0/` -- stripping the leading directory, and symlinks `/usr/local/ivy` to `/usr/local/ivy-2.2.0`

@@ -179,6 +179,33 @@ describe_resource 'ark' do
     end
   end
 
+  describe 'install with notifies :before' do
+    let(:example_recipe) { 'ark_spec::install_notifies_before' }
+
+    it 'installs' do
+      expect(chef_run).to install_ark('test_install_notifies_before')
+      resource = chef_run.ark('test_install_notifies_before')
+      expect(resource).to notify('file[/tmp/ark_notify_before_received]').to(:create).before
+
+      expect(chef_run).to create_directory('/usr/local/test_install_notifies_before-2')
+      resource = chef_run.directory('/usr/local/test_install_notifies_before-2')
+      expect(resource).to notify('execute[unpack /var/chef/cache/test_install_notifies_before-2.tar.gz]').to(:run)
+
+      expect(chef_run).to create_remote_file('/var/chef/cache/test_install_notifies_before-2.tar.gz')
+      resource = chef_run.remote_file('/var/chef/cache/test_install_notifies_before-2.tar.gz')
+      expect(resource).to notify('execute[unpack /var/chef/cache/test_install_notifies_before-2.tar.gz]').to(:run)
+
+      expect(chef_run).not_to run_execute('unpack /var/chef/cache/test_install_notifies_before-2.tar.gz')
+      resource = chef_run.execute('unpack /var/chef/cache/test_install_notifies_before-2.tar.gz')
+      expect(resource).to notify('execute[set owner on /usr/local/test_install_notifies_before-2]').to(:run)
+
+      expect(chef_run).not_to create_file('/tmp/ark_notify_before_received')
+      expect(chef_run).not_to run_execute('set owner on /usr/local/test_install_notifies_before-2')
+      expect(chef_run).not_to create_template('/etc/profile.d/test_install_notifies_before.sh')
+      expect(chef_run).not_to run_ruby_block("adding '/usr/local/test_install_notifies_before-2/bin' to chef-client ENV['PATH']")
+    end
+  end
+
   describe 'put', wip: true do
     let(:example_recipe) { 'ark_spec::put' }
 
@@ -212,6 +239,28 @@ describe_resource 'ark' do
     end
   end
 
+  describe 'put with notifies :before' do
+    let(:example_recipe) { 'ark_spec::put_notifies_before' }
+
+    it 'puts_notifies_before' do
+      expect(chef_run).to put_ark('test_put_notifies_before')
+      resource = chef_run.ark('test_put_notifies_before')
+      expect(resource).to notify('file[/tmp/ark_notify_before_received]').to(:create).before
+
+      expect(chef_run).to create_directory('/usr/local/test_put_notifies_before')
+      resource = chef_run.directory('/usr/local/test_put_notifies_before')
+      expect(resource).to notify('execute[unpack /var/chef/cache/test_put_notifies_before.tar.gz]').to(:run)
+
+      expect(chef_run).to create_remote_file('/var/chef/cache/test_put_notifies_before.tar.gz')
+      resource = chef_run.remote_file('/var/chef/cache/test_put_notifies_before.tar.gz')
+      expect(resource).to notify('execute[unpack /var/chef/cache/test_put_notifies_before.tar.gz]').to(:run)
+
+      expect(chef_run).to_not create_file('/tmp/ark_notify_before_received')
+      expect(chef_run).to_not run_execute('unpack /var/chef/cache/test_put_notifies_before.tar.gz')
+      expect(chef_run).to_not run_execute('set owner on /usr/local/test_put_notifies_before')
+    end
+  end
+
   describe 'dump' do
     let(:example_recipe) { 'ark_spec::dump' }
 
@@ -242,6 +291,28 @@ describe_resource 'ark' do
 
       resource = chef_run.remote_file('/var/chef/cache/test_dump.zip')
       expect(resource).to notify('ruby_block[clean up /usr/local/foo_dump before unpack]')
+    end
+  end
+
+  describe 'dump with notifies :before' do
+    let(:example_recipe) { 'ark_spec::dump_notifies_before' }
+
+    it 'dumps' do
+      expect(chef_run).to dump_ark('test_dump_notifies_before')
+      resource = chef_run.ark('test_dump_notifies_before')
+      expect(resource).to notify('file[/tmp/ark_notify_before_received]').to(:create).before
+
+      expect(chef_run).to create_directory('/usr/local/foo_dump')
+      resource = chef_run.directory('/usr/local/foo_dump')
+      expect(resource).to notify('execute[unpack /var/chef/cache/test_dump_notifies_before.zip]').to(:run)
+
+      expect(chef_run).to create_remote_file('/var/chef/cache/test_dump_notifies_before.zip')
+      resource = chef_run.remote_file('/var/chef/cache/test_dump_notifies_before.zip')
+      expect(resource).to notify('execute[unpack /var/chef/cache/test_dump_notifies_before.zip]').to(:run)
+
+      expect(chef_run).to_not create_file('/tmp/ark_notify_before_received')
+      expect(chef_run).to_not run_execute('unpack /var/chef/cache/test_dump_notifies_before.zip')
+      expect(chef_run).to_not run_execute('set owner on /usr/local/foo_dump')
     end
   end
 

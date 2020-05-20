@@ -7,7 +7,7 @@ module Ark
     attr_reader :resource
 
     def command
-      "chown -R #{resource.owner}:#{resource.group} #{resource.path}"
+      "chown -R #{resource.owner}:#{resource.group} #{resource._deploy_path}"
     end
   end
 end
