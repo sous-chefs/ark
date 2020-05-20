@@ -166,6 +166,11 @@ Extract the archive to a specified path, does not create any symbolic links.
 - `group`: group of extracted directory.
 
   - Default: `root`
+- `clean_up_before_unpack`: when set to true, the content of the directory defined by `path`
+  is deleted before to unpack the archive (and only if an unpack operation will be performed). 
+  This is usefull to ensure a clean directory content after ark execution when the remote archive 
+  has  been updated since previous chef-client run whereas its version is left unchanged.
+  - Default: `false` 
 
 - `backup`: The number of backups to be kept in /var/chef/backup (for UNIX- and Linux-based platforms) or C:/chef/backup (for the Microsoft Windows platform). Set to false to prevent backups from being kept.
 
