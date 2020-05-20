@@ -642,16 +642,6 @@ action :configure do
   end
 end
 
-# Delete all files and directories inside the given directory.
-# @param path Path of the directory.
-def delete_files_and_directories_inside(path)
-  # Ensure to have only / in path (windows path separator is not supported by Dir)
-  directory_content_pattern = ::File.join(new_resource.path, "*").gsub(%r:\\:, "/")
-
-  ::Dir[directory_content_pattern].each do |path|
-    ::FileUtils.rm_rf path
-  end
-end
 action_class do
   include ::Ark::ProviderHelpers
 end
