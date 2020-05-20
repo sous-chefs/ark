@@ -45,7 +45,7 @@ property :home_dir, String
 property :autoconf_opts, Array, default: []
 property :extension, String
 property :backup, [FalseClass, Integer], default: 5
-property :clean_up_before_unpack, [TrueClass, FalseClass], default: false
+property :clean_up_before_unpack, [true, false], default: false
 
 #################
 # action :install
