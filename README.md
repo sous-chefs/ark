@@ -1,6 +1,6 @@
 # ark cookbook
 
-[![Build Status](https://travis-ci.org/chef-cookbooks/ark.svg?branch=master)](https://travis-ci.org/chef-cookbooks/ark) [![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
+[![Build Status](https://travis-ci.org/dosyfier/ark.svg?branch=master)](https://travis-ci.org/dosyfier/ark) [![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
 
 ## Overview
 
