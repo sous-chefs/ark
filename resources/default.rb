@@ -83,7 +83,7 @@ action :install do
     action :nothing
   end
 
-  if node['platform_family'] == 'windows'
+  if platform_family?('windows')
     # usually on windows there is no central directory with executables where the applications are linked
     # so ignore has_binaries for now
 

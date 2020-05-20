@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe_recipe 'ark::default' do
   def node_attributes
-    { platform: 'opensuse', version: '42.3' }
+    { platform: 'opensuse' }
   end
 
   it 'installs core packages' do

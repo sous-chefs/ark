@@ -36,7 +36,7 @@ For remote files ark supports URLs using the [remote_file](http://docs.chef.io/r
 - Fedora
 - FreeBSD
 - SmartOS
-- Mac OS X
+- macOS
 - openSUSE / SUSE Linux Enterprises
 - Windows
 
@@ -44,11 +44,10 @@ Should work on common Unix/Linux systems with typical userland utilities like ta
 
 ### Chef
 
-- Chef 13.4+
+- Chef 14+
 
 ### Cookbooks
 
-- build-essential
 - seven_zip
 
 ## Attributes

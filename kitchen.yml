@@ -3,24 +3,28 @@ driver:
 
 provisioner:
   name: chef_zero
-  chef_license: accept
   deprecations_as_errors: true
+  chef_license: accept-no-persist
+
+verifier:
+  name: inspec
 
 platforms:
+  - name: amazonlinux
+    driver_config:
+      box: mvbcoding/awslinux
+  - name: amazonlinux-2
   - name: centos-6
   - name: centos-7
-  - name: debian-8
+  - name: centos-8
   - name: debian-9
-  - name: freebsd-10
-  - name: freebsd-11
-  - name: fedora-28
-  - name: opensuse-leap-42
+  - name: debian-10
+  - name: fedora-latest
+  - name: freebsd-12
+  - name: opensuse-leap-15
   - name: sles-12-sp1
     driver:
       box: chef/sles-12-sp1-x86_64 # private box
-  - name: solaris-10
-    driver:
-      box: chef/solaris-10.11 # private box
   - name: solaris-11.3
     driver:
       box: chef/solaris-11.3 # private box
@@ -28,10 +32,10 @@ platforms:
   - name: ubuntu-18.04
   - name: windows-2008r2
     driver:
-      box: chef/windows-server-2008r2-standard # private box
+      box: tas50/windows_2008r2
   - name: windows-2012r2
     driver:
-      box: chef/windows-server-2012r2-standard # private box
+      box: tas50/windows_2012r2
 
 suites:
 - name: default
