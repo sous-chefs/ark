@@ -43,5 +43,6 @@ elsif platform_family?('fedora')
   pkgs += %w(xz-lzma-compat bzip2 tar)
 end
 pkgs += %w(shtool pkg-config) if platform_family?('debian')
+pkgs += %w(gzip) if platform_family?('suse')
 
 default['ark']['package_dependencies'] = pkgs
