@@ -45,6 +45,7 @@ property :home_dir, String
 property :autoconf_opts, Array, default: []
 property :extension, String
 property :backup, [FalseClass, Integer], default: 5
+property :clean_up_before_unpack, [TrueClass, FalseClass], default: false
 
 #################
 # action :install
@@ -56,7 +57,17 @@ action :install do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   remote_file new_resource.release_file do
@@ -64,6 +75,7 @@ action :install do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
     backup new_resource.backup
   end
@@ -140,7 +152,17 @@ action :put do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   # download
@@ -148,6 +170,7 @@ action :put do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
     backup new_resource.backup
   end
@@ -178,7 +201,17 @@ action :dump do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   # download
@@ -187,6 +220,7 @@ action :dump do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -216,7 +250,17 @@ action :unzip do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   # download
@@ -225,6 +269,7 @@ action :unzip do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -255,7 +300,17 @@ action :cherry_pick do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   # download
@@ -263,6 +318,7 @@ action :cherry_pick do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
   end
 
@@ -290,7 +346,17 @@ action :install_with_make do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   remote_file new_resource.release_file do
@@ -298,6 +364,7 @@ action :install_with_make do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -359,7 +426,17 @@ action :setup_py_build do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   remote_file new_resource.release_file do
@@ -367,6 +444,7 @@ action :setup_py_build do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -401,7 +479,17 @@ action :setup_py_install do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   remote_file new_resource.release_file do
@@ -409,6 +497,7 @@ action :setup_py_install do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -443,7 +532,17 @@ action :setup_py do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   remote_file new_resource.release_file do
@@ -451,6 +550,7 @@ action :setup_py do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
@@ -485,7 +585,17 @@ action :configure do
   directory new_resource.path do
     recursive true
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
+  end
+
+  # clean up existing path content if requested
+  ruby_block "clean up #{new_resource.path} before unpack" do
+    block do
+      delete_files_and_directories_inside(new_resource.path)
+    end
+    action :nothing
+    only_if { new_resource.clean_up_before_unpack }
   end
 
   remote_file new_resource.release_file do
@@ -493,6 +603,7 @@ action :configure do
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
+    notifies :run, "ruby_block[clean up #{new_resource.path} before unpack]"
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 

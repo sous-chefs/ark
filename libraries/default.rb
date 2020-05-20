@@ -6,10 +6,12 @@ require_relative 'unzip_command_builder'
 require_relative 'tar_command_builder'
 require_relative 'general_owner'
 require_relative 'windows_owner'
+require_relative 'dir_utils'
 
 module Ark
   module ProviderHelpers
     extend ::Ark::PlatformSpecificBuilders
+    extend ::Ark::DirUtils
 
     generates_archive_commands_for :seven_zip,
       when_the: -> { node['platform_family'] == 'windows' },

@@ -90,7 +90,7 @@ Please specify the name of the test recipe that executes your recipe:
   let(:node) { chef_run.node }
 
   def node_attributes
-    {}
+    { file_cache_path: '/var/chef/cache' }
   end
 
   let(:step_into) do
