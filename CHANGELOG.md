@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## Unreleased
+
+- resolved cookstyle error: attributes/default.rb:34:21 refactor: `ChefRedundantCode/MultiplePlatformChecks`
+
 ## 5.0.0 (2020-01-02)
 
 - Require Chef Infra Client 14+ and remove the need for the build_essential dependency - [@tas50](https://github.com/tas50)
