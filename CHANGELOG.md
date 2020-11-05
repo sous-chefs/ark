@@ -4,6 +4,7 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## Unreleased
 
+- resolved cookstyle error: libraries/sevenzip_command_builder.rb:45:28 convention: `Style/RedundantParentheses`
 - resolved cookstyle error: attributes/default.rb:34:21 refactor: `ChefRedundantCode/MultiplePlatformChecks`
 
 ## 5.0.0 (2020-01-02)
