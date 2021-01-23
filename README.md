@@ -1,6 +1,10 @@
 # ark cookbook
 
-[![Build Status](https://travis-ci.org/chef-cookbooks/ark.svg?branch=master)](https://travis-ci.org/chef-cookbooks/ark) [![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
+[![Cookbook Version](https://img.shields.io/cookbook/v/ark.svg)](https://supermarket.chef.io/cookbooks/ark)
+[![CI State](https://github.com/sous-chefs/ark/workflows/ci/badge.svg)](https://github.com/sous-chefs/ark/actions?query=workflow%3Aci)
+[![OpenCollective](https://opencollective.com/sous-chefs/backers/badge.svg)](#backers)
+[![OpenCollective](https://opencollective.com/sous-chefs/sponsors/badge.svg)](#sponsors)
+[![License](https://img.shields.io/badge/License-Apache%202.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Overview
 
@@ -26,6 +30,10 @@ The `ark` resource will:
 By default, the ark will not run again if the `:path` is not empty. Ark provides many actions to accommodate different use cases, such as `:dump`, `:cherry_pick`, `:put`, and `:install_with_make`.
 
 For remote files ark supports URLs using the [remote_file](http://docs.chef.io/resource_remote_file.html) resource. Local files are accessed with the `file://` syntax.
+
+## Maintainers
+
+This cookbook is maintained by the Sous Chefs. The Sous Chefs are a community of Chef cookbook maintainers working together to maintain important cookbooks. If you’d like to know more please visit [sous-chefs.org](https://sous-chefs.org/) or come chat with us on the Chef Community Slack in [#sous-chefs](https://chefcommunity.slack.com/messages/C2V7B88SF).
 
 ## Requirements
 
@@ -269,29 +277,27 @@ You can also supply the file extension in case the file extension can not be det
  end
 ```
 
-## License & Authors
+## Contributors
 
-- Author: Philip (flip) Kromer - Infochimps, Inc([coders@infochimps.com](mailto:coders@infochimps.com))
-- Author: Bryan W. Berry ([bryan.berry@gmail.com](mailto:bryan.berry@gmail.com))
-- Author: Denis Barishev ([denis.barishev@gmail.com](mailto:denis.barishev@gmail.com))
-- Author: Sean OMeara ([someara@chef.io](mailto:someara@chef.io))
-- Author: John Bellone ([jbellone@bloomberg.net](mailto:jbellone@bloomberg.net))
-- Copyright: 2011, Philip (flip) Kromer - Infochimps, Inc
-- Copyright: 2012, Bryan W. Berry
-- Copyright: 2012, Denis Barishev
-- Copyright: 2013-2017, Chef Software, Inc
-- Copyright: 2014, Bloomberg L.P.
+This project exists thanks to all the people who [contribute.](https://opencollective.com/sous-chefs/contributors.svg?width=890&button=false)
 
-```
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+### Backers
 
-    http://www.apache.org/licenses/LICENSE-2.0
+Thank you to all our backers!
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+![https://opencollective.com/sous-chefs#backers](https://opencollective.com/sous-chefs/backers.svg?width=600&avatarHeight=40)
+
+### Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website.
+
+![https://opencollective.com/sous-chefs/sponsor/0/website](https://opencollective.com/sous-chefs/sponsor/0/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/1/website](https://opencollective.com/sous-chefs/sponsor/1/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/2/website](https://opencollective.com/sous-chefs/sponsor/2/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/3/website](https://opencollective.com/sous-chefs/sponsor/3/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/4/website](https://opencollective.com/sous-chefs/sponsor/4/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/5/website](https://opencollective.com/sous-chefs/sponsor/5/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/6/website](https://opencollective.com/sous-chefs/sponsor/6/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/7/website](https://opencollective.com/sous-chefs/sponsor/7/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/8/website](https://opencollective.com/sous-chefs/sponsor/8/avatar.svg?avatarHeight=100)
+![https://opencollective.com/sous-chefs/sponsor/9/website](https://opencollective.com/sous-chefs/sponsor/9/avatar.svg?avatarHeight=100)

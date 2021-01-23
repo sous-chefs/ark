@@ -4,8 +4,14 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## Unreleased
 
-- resolved cookstyle error: libraries/sevenzip_command_builder.rb:45:28 convention: `Style/RedundantParentheses`
-- resolved cookstyle error: attributes/default.rb:34:21 refactor: `ChefRedundantCode/MultiplePlatformChecks`
+- Sous Chefs Adoption
+- Standardise files with files in sous-chefs/repo-management
+- Cookstyle fixes
+- Add integration testing for Windows and MacOS
+- Remove testing for Amazon Linux 201x, CentOS 6 and Ubuntu 16.04
+- Fix ChefSpec tests
+- Fix issues with `--strip-components` with the `:cherry_pick` action on MacOS
+- Ensure `/etc/profile.d` exists on MacOS if `append_env_path` is used
 
 ## 5.0.0 (2020-01-02)
 
@@ -38,8 +44,9 @@ This file is used to list changes made in each version of the ark cookbook.
 - Rewrite of resource to custom resources.
 - Remove EOL platforms from testing.
 - Update zlib URL
--
+
 ## 2.2.1 (2016-12-16)
+
 - Use Ohai root_group attribute to avoid trying to set the group to root on BSD/macOS.
 - Add missing accessor for owner property
 
