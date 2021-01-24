@@ -2,6 +2,8 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## Unreleased
+
 ## 5.1.0 - *2021-01-24*
 
 - Sous Chefs Adoption
