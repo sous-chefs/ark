@@ -9,7 +9,7 @@ module Ark
     end
 
     def cherry_pick
-      "#{tar_binary} #{args} #{resource.release_file} -C #{resource.path} #{resource.creates}#{strip_args}"
+      "#{tar_binary} #{args} #{resource.release_file} -C #{resource.path}#{strip_args} #{resource.creates}"
     end
 
     def initialize(resource)

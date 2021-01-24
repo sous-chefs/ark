@@ -64,7 +64,7 @@ describe Ark::TarCommandBuilder do
 
   describe '#cherry_pick' do
     it 'generates the correct command' do
-      expected_command = '/bin/tar xzf release_file -C path creates --strip-components=1'
+      expected_command = '/bin/tar xzf release_file -C path --strip-components=1 creates'
       expect(subject.cherry_pick).to eq(expected_command)
     end
   end
