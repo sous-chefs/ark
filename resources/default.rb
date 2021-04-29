@@ -18,41 +18,154 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+unified_mode true
 
-property :owner, String
-property :group, [String, Integer], default: 0
-property :url, String, required: true
-property :path, String
-property :full_path, String
-property :append_env_path, [true, false], default: false
-property :checksum, String, regex: /^[a-zA-Z0-9]{64}$/
-property :has_binaries, Array, default: []
-property :creates, String
-property :release_file, String, default: ''
-property :strip_leading_dir, [true, false, NilClass]
-property :strip_components, Integer, default: 1
-property :mode, [Integer, String], default: 0755
-property :prefix_root, String
-property :prefix_home, String
-property :prefix_bin, String
-property :version, String
-property :home_dir, String
-property :win_install_dir, String
-property :environment, Hash, default: {}
-property :autoconf_opts, Array, default: []
-property :make_opts, Array, default: []
-property :home_dir, String
-property :autoconf_opts, Array, default: []
-property :extension, String
-property :backup, [FalseClass, Integer], default: 5
+property :owner,
+        String,
+        default: lazy {
+          if windows?
+            wmi_property_from_query(:name, "select * from Win32_UserAccount where sid like 'S-1-5-21-%-500' and LocalAccount=True")
+          else
+            'root'
+          end
+        },
+        description: ''
 
-#################
-# action :install
-#################
+property :group,
+        [String, Integer],
+        default: 0,
+        description: ''
+
+property :url,
+        String,
+        required: true,
+        description: ''
+
+property :path,
+        String,
+        default: lazy {
+          if windows?
+            resource.win_install_dir
+          else
+            ::File.join(resource.prefix_root, "#{resource.name}-#{resource.version}")
+          end
+        },
+        description: ''
+
+property :full_path,
+        String,
+        description: ''
+
+property :append_env_path,
+        [true, false],
+        default: false,
+        description: ''
+
+property :checksum,
+        String,
+        regex: /^[a-zA-Z0-9]{64}$/,
+        description: ''
+
+property :has_binaries,
+        Array,
+        default: []
+
+property :creates,
+        String,
+        description: ''
+
+property :release_file,
+        String,
+        default: '',
+        description: ''
+        release_file_without_version
+
+            def release_file
+      release_filename = "#{resource.name}-#{resource.version}.#{resource.extension}"
+      ::File.join(file_cache_path, release_filename)
+    end
+
+    if action :put/:dump
+    def release_file_without_version
+      release_filename = "#{resource.name}.#{resource.extension}"
+      ::File.join(file_cache_path, release_filename)
+    end
+
+property :strip_leading_dir,
+        [true, false, NilClass],
+        description: ''
+
+property :strip_components,
+        Integer,
+        default: 1,
+        description: ''
+
+property :mode, [Integer, String],
+        default: 0755,
+        description: ''
+
+property :prefix_root,
+        String,
+        default: '/usr/local',
+        description: ''
+
+property :prefix_home,
+        String,
+        default: '/usr/local',
+        description: ''
+
+property :prefix_bin,
+        String,
+        default: '/usr/local/bin',
+        description: ''
+
+property :version,
+        String,
+        default: '1'
+
+property :home_dir,
+        String,
+        default: lazy {
+          prefix_home = new_resource.prefix_home
+          ::File.join(prefix_home, resource.name)
+        }
+
+property :win_install_dir,
+        String,
+        description: ''
+
+property :environment,
+        Hash,
+        default: {},
+        description: ''
+
+property :autoconf_opts,
+        Array,
+        description: ''
+
+property :make_opts,
+        Array,
+        description: ''
+
+property :home_dir,
+        String,
+        description: ''
+
+property :autoconf_opts,
+        Array,
+        description: ''
+
+property :extension,
+        String,
+        default: lazy { generate_extension_from_url(resource.url.clone) },
+        description: ''
+
+property :backup,
+        [FalseClass, Integer],
+        default: 5,
+        description: ''
+
 action :install do
-  show_deprecations
-  set_paths
-
   directory new_resource.path do
     recursive true
     action :create
@@ -60,7 +173,6 @@ action :install do
   end
 
   remote_file new_resource.release_file do
-    Chef::Log.debug('DEBUG: new_resource.release_file')
     source new_resource.url
     checksum new_resource.checksum if new_resource.checksum
     action :create
@@ -133,11 +245,7 @@ action :install do
   end
 end
 
-##############
-# action :put
-##############
 action :put do
-  show_deprecations
   set_put_paths
 
   directory new_resource.path do
@@ -171,11 +279,8 @@ action :put do
   end
 end
 
-###########################
-# action :dump
-###########################
 action :dump do
-  show_deprecations
+
   set_dump_paths
 
   directory new_resource.path do
@@ -209,11 +314,8 @@ action :dump do
   end
 end
 
-###########################
-# action :unzip
-###########################
 action :unzip do
-  show_deprecations
+
   set_dump_paths
 
   directory new_resource.path do
@@ -231,7 +333,6 @@ action :unzip do
     notifies :run, "execute[unpack #{new_resource.release_file}]"
   end
 
-  # unpack based on file extension
   execute "unpack #{new_resource.release_file}" do
     command unzip_command
     cwd new_resource.path
@@ -240,18 +341,14 @@ action :unzip do
     action :nothing
   end
 
-  # set_owner
   execute "set owner on #{new_resource.path}" do
     command owner_command
     action :nothing
   end
 end
 
-#####################
-# action :cherry_pick
-#####################
 action :cherry_pick do
-  show_deprecations
+
   set_dump_paths
   Chef::Log.debug("DEBUG: new_resource.creates #{new_resource.creates}")
 
@@ -283,11 +380,8 @@ action :cherry_pick do
   end
 end
 
-###########################
-# action :install_with_make
-###########################
 action :install_with_make do
-  show_deprecations
+
   set_paths
 
   directory new_resource.path do
@@ -317,7 +411,6 @@ action :install_with_make do
     action :nothing
   end
 
-  # set_owner
   execute "set owner on #{new_resource.path}" do
     command owner_command
     action :nothing
@@ -356,7 +449,7 @@ action :install_with_make do
 end
 
 action :setup_py_build do
-  show_deprecations
+
   set_paths
 
   directory new_resource.path do
@@ -398,7 +491,7 @@ action :setup_py_build do
 end
 
 action :setup_py_install do
-  show_deprecations
+
   set_paths
 
   directory new_resource.path do
@@ -440,7 +533,7 @@ action :setup_py_install do
 end
 
 action :setup_py do
-  show_deprecations
+
   set_paths
 
   directory new_resource.path do
@@ -482,7 +575,7 @@ action :setup_py do
 end
 
 action :configure do
-  show_deprecations
+
   set_paths
 
   directory new_resource.path do
@@ -536,4 +629,9 @@ end
 
 action_class do
   include ::Ark::ProviderHelpers
+  include Ark::Cookbook::Helpers
+
+  def windows?
+    node_in_run_context['platform_family'] == 'windows'
+  end
 end
