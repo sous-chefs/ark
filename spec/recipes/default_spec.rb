@@ -14,22 +14,4 @@ describe_recipe 'ark::default' do
   it 'does not include the seven_zip recipe' do
     expect(chef_run).not_to include_recipe('seven_zip')
   end
-
-  context 'sets default attributes' do
-    it 'apache mirror' do
-      expect(default_cookbook_attribute('apache_mirror')).to eq 'http://apache.mirrors.tds.net'
-    end
-
-    it 'prefix root' do
-      expect(default_cookbook_attribute('prefix_root')).to eq '/usr/local'
-    end
-
-    it 'prefix bin' do
-      expect(default_cookbook_attribute('prefix_bin')).to eq '/usr/local/bin'
-    end
-
-    it 'prefix home' do
-      expect(default_cookbook_attribute('prefix_home')).to eq '/usr/local'
-    end
-  end
 end

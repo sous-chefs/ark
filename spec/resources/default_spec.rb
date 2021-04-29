@@ -3,7 +3,7 @@ require './libraries/default'
 
 describe_resource 'ark' do
   describe 'install' do
-    let(:example_recipe) { 'ark_spec::install' }
+    let(:example_recipe) { 'test::install' }
 
     it 'installs' do
       expect(chef_run).to install_ark('test_install')
@@ -28,7 +28,7 @@ describe_resource 'ark' do
   end
 
   describe 'install with binaries' do
-    let(:example_recipe) { 'ark_spec::install_with_binaries' }
+    let(:example_recipe) { 'test::install_with_binaries' }
 
     it 'installs' do
       expect(chef_run).to install_ark('test_install')
@@ -58,7 +58,7 @@ describe_resource 'ark' do
 
   describe 'install with append_env_path' do
     context 'binary is not already in the environment path' do
-      let(:example_recipe) { 'ark_spec::install_with_append_env_path' }
+      let(:example_recipe) { 'test::install_with_append_env_path' }
 
       it 'installs' do
         expect(chef_run).to install_ark('test_install_with_append_env_path')
@@ -85,7 +85,7 @@ describe_resource 'ark' do
     end
 
     context 'binary is already in the environment path' do
-      let(:example_recipe) { 'ark_spec::install_with_append_env_path' }
+      let(:example_recipe) { 'test::install_with_append_env_path' }
 
       # TODO: Using the ENV is terrible -- attempts to replace it with a helper
       #   method did not work or a class with a method. Explore different ways
@@ -128,7 +128,7 @@ describe_resource 'ark' do
   describe 'install on windows' do
     include_context('seven zip installed')
 
-    let(:example_recipe) { 'ark_spec::install_windows' }
+    let(:example_recipe) { 'test::install_windows' }
 
     before(:each) do
       allow(ENV).to receive(:fetch).and_call_original
@@ -166,7 +166,7 @@ describe_resource 'ark' do
   end
 
   describe 'put' do
-    let(:example_recipe) { 'ark_spec::put' }
+    let(:example_recipe) { 'test::put' }
 
     it 'puts' do
       expect(chef_run).to put_ark('test_put')
@@ -185,7 +185,7 @@ describe_resource 'ark' do
   end
 
   describe 'dump' do
-    let(:example_recipe) { 'ark_spec::dump' }
+    let(:example_recipe) { 'test::dump' }
 
     it 'dumps' do
       expect(chef_run).to dump_ark('test_dump')
@@ -204,7 +204,7 @@ describe_resource 'ark' do
   end
 
   describe 'unzip' do
-    let(:example_recipe) { 'ark_spec::unzip' }
+    let(:example_recipe) { 'test::unzip' }
 
     it 'unzips' do
       expect(chef_run).to unzip_ark('test_unzip')
@@ -223,7 +223,7 @@ describe_resource 'ark' do
   end
 
   describe 'cherry_pick' do
-    let(:example_recipe) { 'ark_spec::cherry_pick' }
+    let(:example_recipe) { 'test::cherry_pick' }
 
     it 'cherry picks' do
       expect(chef_run).to cherry_pick_ark('test_cherry_pick')
@@ -245,7 +245,7 @@ describe_resource 'ark' do
   end
 
   describe 'setup_py_build' do
-    let(:example_recipe) { 'ark_spec::setup_py_build' }
+    let(:example_recipe) { 'test::setup_py_build' }
 
     it 'builds with python setup.py' do
       expect(chef_run).to setup_py_build_ark('test_setup_py_build')
@@ -269,7 +269,7 @@ describe_resource 'ark' do
   end
 
   describe 'setup_py_install' do
-    let(:example_recipe) { 'ark_spec::setup_py_install' }
+    let(:example_recipe) { 'test::setup_py_install' }
 
     it 'installs with python setup.py' do
       expect(chef_run).to setup_py_install_ark('test_setup_py_install')
@@ -290,7 +290,7 @@ describe_resource 'ark' do
   end
 
   describe 'setup_py' do
-    let(:example_recipe) { 'ark_spec::setup_py' }
+    let(:example_recipe) { 'test::setup_py' }
 
     it 'runs with python setup.py' do
       expect(chef_run).to setup_py_ark('test_setup_py')
@@ -311,7 +311,7 @@ describe_resource 'ark' do
   end
 
   describe 'install_with_make' do
-    let(:example_recipe) { 'ark_spec::install_with_make' }
+    let(:example_recipe) { 'test::install_with_make' }
 
     it 'installs with make' do
       expect(chef_run).to install_with_make_ark('test_install_with_make')
@@ -341,7 +341,7 @@ describe_resource 'ark' do
   end
 
   describe 'configure' do
-    let(:example_recipe) { 'ark_spec::configure' }
+    let(:example_recipe) { 'test::configure' }
 
     it 'configures' do
       expect(chef_run).to configure_ark('test_configure')

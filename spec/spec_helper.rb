@@ -81,7 +81,7 @@ RSpec.shared_context 'resource tests', type: :resource do
 Please specify the name of the test recipe that executes your recipe:
 
     let(:example_recipe) do
-      "ark_spec::put"
+      "test::put"
     end
 
 )

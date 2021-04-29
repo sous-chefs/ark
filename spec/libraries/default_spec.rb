@@ -27,30 +27,6 @@ describe_helpers Ark::ProviderHelpers do
     end
   end
 
-  describe '#show_deprecations' do
-    context 'when setting the strip_leading_dir property on the resource' do
-      it 'warns that it is deprecated when set to true' do
-        with_resource_properties(strip_leading_dir: true)
-        expect(Chef::Log).to receive(:warn)
-        show_deprecations
-      end
-
-      it 'warns that it is deprecated when set to false' do
-        with_resource_properties(strip_leading_dir: false)
-        expect(Chef::Log).to receive(:warn)
-        show_deprecations
-      end
-    end
-
-    context 'when the strip_leading_dir property is not set on the resource' do
-      it 'does not produce a warning' do
-        with_resource_properties(strip_leading_dir: nil)
-        expect(Chef::Log).not_to receive(:warn)
-        show_deprecations
-      end
-    end
-  end
-
   describe '#set_dump_paths' do
     it "sets the resource's release_file" do
       with_resource_properties(extension: 'tar.gz', name: 'what_is_a_good_name')
