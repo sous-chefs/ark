@@ -45,7 +45,7 @@ This cookbook is maintained by the Sous Chefs. The Sous Chefs are a community of
 - FreeBSD
 - SmartOS
 - macOS
-- openSUSE / SUSE Linux Enterprises
+- openSUSE/SUSE Linux Enterprises
 - Windows
 
 Should work on common Unix/Linux systems with typical userland utilities like tar, gzip, etc. May require the installation of build tools for compiling from source, but that installation is outside the scope of this cookbook.
@@ -58,21 +58,10 @@ Should work on common Unix/Linux systems with typical userland utilities like ta
 
 - seven_zip
 
-## Attributes
-
-Customize the attributes to suit site specific conventions and defaults.
-
-- `node['ark']['apache_mirror']` - if the URL is an apache mirror, use the attribute as the default. default: `http://apache.mirrors.tds.net`
-- `node['ark']['prefix_root']` - default base location if the `prefix_root` is not passed into the resource. default: `/usr/local`
-- `node['ark']['prefix_bin']` - default binary location if the `prefix_bin` is not passed into the resource. default: `/usr/local/bin`
-- `node['ark']['prefix_home']` - default home location if the `prefix_home` is not passed into the resource. default: `/usr/local`
-- `node['ark']['package_dependencies']` - prerequisite system packages that need to be installed to support ark. default: varies based on platform
-- `node['ark']['tar']` - allows overriding the default path to the tar binary, which varies based on platform
-- `node['ark']['sevenzip_binary']` - allows overriding the default path to the 7zip binary, which is determined based on registry key value
-
 ## Resources
 
 - `ark` - does the extract/build/configure
+- `ark_install` - Installs all the pacakges required for ark to work
 
 ### Actions
 

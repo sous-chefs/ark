@@ -4,6 +4,12 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## Unreleased
 
+- Update to be compatible with seven_zip 4.0+
+- Remove the default recipe
+- Increase the minimum supported Chef version to 16
+- Remove default attributes
+- Remove helpers that are now resource defaults
+
 ## 5.1.0 - *2021-01-24*
 
 - Sous Chefs Adoption
