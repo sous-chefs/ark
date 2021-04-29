@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
-## Unreleased
+## 5.1.1 - *2021-04-29*
 
 - Added a version pin on seven_zip
 
