@@ -4,6 +4,8 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## Unreleased
 
+- Added a version pin on seven_zip
+
 ## 5.1.0 - *2021-01-24*
 
 - Sous Chefs Adoption
