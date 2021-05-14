@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe_recipe 'ark::default' do
   def node_attributes
-    { platform: 'centos', version: '6.9' }
+    { platform: 'centos', version: '6' }
   end
 
   it 'installs core packages' do
@@ -12,7 +12,7 @@ end
 
 describe_recipe 'ark::default' do
   def node_attributes
-    { platform: 'centos', version: '7.3.1611' }
+    { platform: 'centos', version: '7' }
   end
 
   it 'installs core packages' do

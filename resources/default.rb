@@ -25,7 +25,7 @@ property :url, String, required: true
 property :path, String
 property :full_path, String
 property :append_env_path, [true, false], default: false
-property :checksum, regex: /^[a-zA-Z0-9]{64}$/, default: nil
+property :checksum, String, regex: /^[a-zA-Z0-9]{64}$/
 property :has_binaries, Array, default: []
 property :creates, String
 property :release_file, String, default: ''
@@ -83,8 +83,16 @@ action :install do
     action :nothing
   end
 
-  # usually on windows there is no central directory with executables where the applications are linked
-  unless node['platform_family'] == 'windows'
+  if platform_family?('windows')
+    # usually on windows there is no central directory with executables where the applications are linked
+    # so ignore has_binaries for now
+
+    # Add to PATH permanently on Windows if append_env_path
+    windows_path "#{new_resource.path}/bin" do
+      action :add
+      only_if { new_resource.append_env_path }
+    end
+  else
     # symlink binaries
     new_resource.has_binaries.each do |bin|
       link ::File.join(new_resource.prefix_bin, ::File.basename(bin)) do
@@ -96,6 +104,9 @@ action :install do
     link new_resource.home_dir do
       to new_resource.path
     end
+
+    # This directory doesn't exist by default on MacOS
+    directory '/etc/profile.d' if platform_family?('mac_os_x')
 
     # Add to path for interactive bash sessions
     template "/etc/profile.d/#{new_resource.name}.sh" do

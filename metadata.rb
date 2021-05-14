@@ -1,21 +1,26 @@
-name             'ark'
-maintainer       'Chef Software, Inc.'
-maintainer_email 'cookbooks@chef.io'
-license          'Apache-2.0'
-description      'Provides a custom resource for installing runtime artifacts in a predictable fashion'
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '3.1.0'
+name              'ark'
+maintainer        'Sous Chefs'
+maintainer_email  'help@sous-chefs.org'
+license           'Apache-2.0'
+description       'Provides a custom resource for installing runtime artifacts in a predictable fashion'
+version           '5.1.1'
+source_url        'https://github.com/sous-chefs/ark'
+issues_url        'https://github.com/sous-chefs/ark/issues'
+chef_version      '>= 14.0'
 
-recipe 'ark::default', 'Installs packages needed by the custom resource'
+supports 'amazon'
+supports 'centos'
+supports 'debian'
+supports 'freebsd'
+supports 'mac_os_x'
+supports 'opensuse'
+supports 'opensuseleap'
+supports 'oracle'
+supports 'redhat'
+supports 'scientific'
+supports 'smartos'
+supports 'suse'
+supports 'ubuntu'
+supports 'windows'
 
-%w(ubuntu debian redhat centos suse opensuse opensuseleap scientific oracle amazon windows mac_os_x smartos freebsd).each do |os|
-  supports os
-end
-
-depends 'build-essential'
-depends 'windows' # for windows os
-depends 'seven_zip' # for windows os
-
-source_url 'https://github.com/chef-cookbooks/ark'
-issues_url 'https://github.com/chef-cookbooks/ark/issues'
-chef_version '>= 12.7' if respond_to?(:chef_version)
+depends 'seven_zip', '~> 3.2.0' # for windows os

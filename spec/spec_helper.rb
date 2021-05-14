@@ -8,6 +8,7 @@ RSpec.configure do |config|
   config.alias_example_group_to :describe_resource, type: :resource
   config.file_cache_path = '/var/chef/cache'
   config.log_level = :fatal
+  config.platform = 'ubuntu'
 end
 
 def stringify_keys(hash)
