@@ -11,8 +11,8 @@ describe_recipe 'ark::default' do
     expect(chef_run).not_to install_package('gcc-c++')
   end
 
-  it 'does not include the seven_zip recipe' do
-    expect(chef_run).not_to include_recipe('seven_zip')
+  it do
+    expect(chef_run).not_to install_seven_zip_tool 'ark'
   end
 
   context 'sets default attributes' do

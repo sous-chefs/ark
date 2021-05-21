@@ -20,4 +20,4 @@
 
 package node['ark']['package_dependencies'] unless platform_family?('windows', 'mac_os_x')
 
-include_recipe 'seven_zip' if platform_family?('windows')
+seven_zip_tool 'ark' if platform_family?('windows')

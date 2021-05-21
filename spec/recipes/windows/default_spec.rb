@@ -5,7 +5,7 @@ describe_recipe 'ark::default' do
     { platform: 'windows' }
   end
 
-  it 'does include the 7-zip recipe' do
-    expect(chef_run).to include_recipe('seven_zip')
+  it do
+    expect(chef_run).to install_seven_zip_tool 'ark'
   end
 end
