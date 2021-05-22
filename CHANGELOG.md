@@ -4,6 +4,11 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## Unreleased
 
+- Chef 17 updates: enable `unified_mode` on all resources
+- Bump required Chef Infra Client to >= 15.3
+- Migrate to using `seven_zip_tool` resource directly and require `seven_zip` >= 3.1
+- Various ChefSpec fixes
+
 ## 5.1.1 - *2021-04-29*
 
 - Added a version pin on seven_zip

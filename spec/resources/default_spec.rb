@@ -136,7 +136,7 @@ describe_resource 'ark' do
     end
 
     def node_attributes
-      { platform: 'windows', version: '2008R2' }
+      { platform: 'windows', version: '10' }
     end
 
     it 'installs' do
