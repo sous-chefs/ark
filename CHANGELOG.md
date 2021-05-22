@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
-## Unreleased
+## 6.0.0 - *2021-05-22*
 
 - Chef 17 updates: enable `unified_mode` on all resources
 - Bump required Chef Infra Client to >= 15.3
