@@ -4,6 +4,8 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## Unreleased
 
+- Update location of test archive fixtures
+
 ## 6.0.1 - *2021-06-01*
 
 ## 6.0.0 - *2021-05-22*
