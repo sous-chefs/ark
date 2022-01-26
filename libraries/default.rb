@@ -12,7 +12,7 @@ module Ark
     extend ::Ark::PlatformSpecificBuilders
 
     generates_archive_commands_for :seven_zip,
-      when_the: -> { node['platform_family'] == 'windows' },
+      when_the: -> { platform_family?('windows') },
       with_klass: ::Ark::SevenZipCommandBuilder
 
     generates_archive_commands_for :unzip,
@@ -24,7 +24,7 @@ module Ark
       with_klass: ::Ark::TarCommandBuilder
 
     generates_owner_commands_for :windows,
-      when_the: -> { node['platform_family'] == 'windows' },
+      when_the: -> { platform_family?('windows') },
       with_klass: ::Ark::WindowsOwner
 
     generates_owner_commands_for :all_other_platforms,
