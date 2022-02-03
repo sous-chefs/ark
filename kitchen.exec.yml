@@ -6,7 +6,7 @@ transport:
   name: exec
 
 provisioner:
-  name: chef_zero
+  name: chef_infra
   deprecations_as_errors: true
 
 platforms:
