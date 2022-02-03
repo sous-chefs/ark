@@ -2,6 +2,8 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## Unreleased
+
 ## 6.0.4 - *2022-02-03*
 
 - Update tested platforms
