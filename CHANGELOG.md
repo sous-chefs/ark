@@ -10,6 +10,8 @@ This file is used to list changes made in each version of the ark cookbook.
 - Update tested platforms
 - Remove delivery and move to calling RSpec directly via a reusable workflow
 
+Standardise files with files in sous-chefs/repo-management
+
 ## 6.0.3 - *2021-08-30*
 
 - Standardise files with files in sous-chefs/repo-management
