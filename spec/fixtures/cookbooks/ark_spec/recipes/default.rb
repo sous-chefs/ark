@@ -93,10 +93,10 @@ ark 'foo_zip_strip' do
 end
 
 ark 'haproxy' do
-  url 'http://haproxy.1wt.eu/download/1.5/src/snapshot/haproxy-ss-20120403.tar.gz'
-  version '1.5'
-  checksum 'ba0424bf7d23b3a607ee24bbb855bb0ea347d7ffde0bec0cb12a89623cbaf911'
-  make_opts ['TARGET=linux26']
+  url 'http://www.haproxy.org/download/2.6/src/haproxy-2.6.7.tar.gz'
+  version '2.6'
+  checksum 'cff9b8b18a52bfec277f9c1887fac93c18e1b9f3eff48892255a7c6e64528b7d'
+  make_opts ['TARGET=linux-glibc']
   action :install_with_make
 end unless platform?('freebsd', 'mac_os_x')
 
@@ -137,7 +137,7 @@ ark 'test_notification' do
 end
 
 ark 'test_autogen' do
-  url 'http://zlib.net/zlib-1.2.11.tar.gz'
+  url 'http://zlib.net/zlib-1.2.13.tar.gz'
   extension 'tar.gz'
   action :configure
 end
