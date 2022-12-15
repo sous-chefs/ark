@@ -5,14 +5,11 @@ This file is used to list changes made in each version of the ark cookbook.
 ## Unreleased
 
 - Standardise files with files in sous-chefs/repo-management
+
 ## 6.0.4 - *2022-02-03*
 
 - Update tested platforms
 - Remove delivery and move to calling RSpec directly via a reusable workflow
-
-Standardise files with files in sous-chefs/repo-management
-
-Standardise files with files in sous-chefs/repo-management
 
 ## 6.0.3 - *2021-08-30*
 
@@ -168,13 +165,13 @@ Standardise files with files in sous-chefs/repo-management
 - Added support for .tar files
 - Improved overall testing:
 
-  - Removed the kitchen.cloud.yml file and gem dependencies
-  - Added integration testing in Travis with Kitchen-Docker and Travis tests now run using the nightly build of ChefDK
-  - Expanded platforms tested in the .kitchen.yml file
-  - Updated the Gemfile with the latest testing dependencies
-  - Added full Chefspec coverage
-  - Greatly expanded the ark_spec test cookbook
-  - Removed the original minitests
+   - Removed the kitchen.cloud.yml file and gem dependencies
+   - Added integration testing in Travis with Kitchen-Docker and Travis tests now run using the nightly build of ChefDK
+   - Expanded platforms tested in the .kitchen.yml file
+   - Updated the Gemfile with the latest testing dependencies
+   - Added full Chefspec coverage
+   - Greatly expanded the ark_spec test cookbook
+   - Removed the original minitests
 
 - Added standard Chef .gitignore and chefignore files
 
