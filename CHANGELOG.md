@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
-## Unreleased
+## 6.0.7 - *2023-02-13*
 
 ## 6.0.6 - *2023-02-13*
 
