@@ -4,6 +4,8 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## Unreleased
 
+- Standardise files with files in sous-chefs/repo-management
+
 ## 6.0.15 - *2023-03-02*
 
 - Remove private Chef boxes
@@ -15,25 +17,35 @@ This file is used to list changes made in each version of the ark cookbook.
 
 ## 6.0.13 - *2023-02-23*
 
-Standardise files with files in sous-chefs/repo-management
+- Standardise files with files in sous-chefs/repo-management
 
 ## 6.0.12 - *2023-02-16*
 
-Standardise files with files in sous-chefs/repo-management
+- Standardise files with files in sous-chefs/repo-management
 
 ## 6.0.11 - *2023-02-15*
 
+- Update actions/stale action to v7
+
 ## 6.0.10 - *2023-02-15*
 
-Standardise files with files in sous-chefs/repo-management
+- Standardise files with files in sous-chefs/repo-management
 
 ## 6.0.9 - *2023-02-14*
 
+- Pin Actions
+
 ## 6.0.8 - *2023-02-14*
+
+- Update actions/stale action to v7
 
 ## 6.0.7 - *2023-02-13*
 
+- Add renovate.json
+
 ## 6.0.6 - *2023-02-13*
+
+- Pin Actions
 
 ## 6.0.5 - *2022-12-15*
 
