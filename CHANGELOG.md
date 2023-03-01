@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
-## Unreleased
+## 6.0.14 - *2023-03-01*
 
 - Update workflows to 2.0.1
 - Remove mdl and replace with markdownlint-cli2
