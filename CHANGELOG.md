@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
-## Unreleased
+## 6.0.15 - *2023-03-02*
 
 - Remove private Chef boxes
 
