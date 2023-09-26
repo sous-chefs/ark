@@ -52,7 +52,7 @@ Should work on common Unix/Linux systems with typical userland utilities like ta
 
 ### Chef
 
-- Chef 14+
+- Chef 15.3+
 
 ### Cookbooks
 
@@ -87,22 +87,22 @@ Customize the attributes to suit site specific conventions and defaults.
 - `:setup_py_build`: runs the command "python setup.py build" in the extracted directory
 - `:setup_py_install`: runs the command "python setup.py install" in the extracted directory
 
-### :cherry_pick
+### Action: cherry_pick
 
 Extract a specified file from an archive and places in specified path.
 
-#### Relevant Attribute Parameters for :cherry_pick
+#### Parameters for `cherry_pick`
 
 - `path`: directory to place file in.
 - `creates`: specific file to cherry-pick.
 
-### :dump
+### Action: dump
 
 Strips all directories from the archive and dumps the contained files into a specified path.
 
 NOTE: This currently only works for zip archives
 
-#### Attribute Parameters for :dump
+#### Parameters for :dump
 
 - `path`: path to dump files to.
 - `mode`: file mode for `app_home`, as an integer.
@@ -111,11 +111,11 @@ NOTE: This currently only works for zip archives
 
 - `creates`: if you are appending files to a given directory, ark needs a condition to test whether the file has already been extracted. You can specify with creates, a file whose existence indicates the ark has previously been extracted and does not need to be extracted again.
 
-### :put
+### Action: put
 
 Extract the archive to a specified path, does not create any symbolic links.
 
-#### Attribute Parameters for :put
+#### Parameters for :put
 
 - `path`: path to extract to.
 
