@@ -2,6 +2,8 @@
 
 This file is used to list changes made in each version of the ark cookbook.
 
+## Unreleased
+
 ## 6.0.30 - *2024-07-15*
 
 Standardise files with files in sous-chefs/repo-management
