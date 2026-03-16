@@ -1,3 +1,4 @@
+require 'ostruct'
 require 'chefspec'
 require 'chefspec/berkshelf'
 
