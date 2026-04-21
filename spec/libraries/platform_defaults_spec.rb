@@ -39,22 +39,22 @@ describe Ark::PlatformDefaults do
 
     it 'returns Debian dependencies' do
       node = { 'platform_family' => 'debian', 'platform' => 'ubuntu', 'platform_version' => '24.04' }
-      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf make unzip rsync gcc autogen bzip2 xz-utils shtool pkg-config))
+      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf ca-certificates make unzip rsync gcc autogen bzip2 xz-utils shtool pkg-config))
     end
 
     it 'returns CentOS 6 dependencies' do
       node = { 'platform_family' => 'rhel', 'platform' => 'centos', 'platform_version' => '6.10' }
-      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf make unzip rsync gcc xz-lzma-compat bzip2 tar))
+      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf ca-certificates make unzip rsync gcc xz-lzma-compat bzip2 tar))
     end
 
     it 'returns CentOS 7 dependencies' do
       node = { 'platform_family' => 'rhel', 'platform' => 'centos', 'platform_version' => '7.9' }
-      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf make unzip rsync gcc xz bzip2 tar))
+      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf ca-certificates make unzip rsync gcc xz bzip2 tar))
     end
 
     it 'returns Fedora dependencies' do
       node = { 'platform_family' => 'fedora', 'platform' => 'fedora', 'platform_version' => '41' }
-      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf make unzip rsync gcc xz-lzma-compat bzip2 tar))
+      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf ca-certificates make unzip rsync gcc xz-lzma-compat bzip2 tar))
     end
 
     it 'returns FreeBSD dependencies' do
@@ -64,7 +64,7 @@ describe Ark::PlatformDefaults do
 
     it 'returns openSUSE dependencies' do
       node = { 'platform_family' => 'suse', 'platform' => 'opensuse', 'platform_version' => '15.6' }
-      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf make unzip rsync gcc xz bzip2 tar))
+      expect(described_class.package_dependencies(node)).to eq(%w(libtool autoconf ca-certificates make unzip rsync gcc xz bzip2 tar))
     end
   end
 

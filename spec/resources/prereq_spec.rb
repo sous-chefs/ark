@@ -13,7 +13,7 @@ describe_resource 'ark_prereq' do
       expect(chef_run).to install_package('default package dependencies')
 
       resource = chef_run.package('default package dependencies')
-      expect(resource.package_name).to eq(%w(libtool autoconf make unzip rsync gcc autogen bzip2 xz-utils shtool pkg-config))
+      expect(resource.package_name).to eq(%w(libtool autoconf ca-certificates make unzip rsync gcc autogen bzip2 xz-utils shtool pkg-config))
 
       expect(chef_run).not_to install_seven_zip_tool('default')
     end

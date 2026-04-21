@@ -22,6 +22,7 @@ module Ark
       return [] if platform_family?(node, 'windows', 'mac_os_x')
 
       pkgs = %w(libtool autoconf)
+      pkgs += %w(ca-certificates) unless platform_family?(node, 'freebsd') || platform?(node, 'smartos')
       pkgs += %w(make) unless platform_family?(node, 'freebsd')
       pkgs += %w(unzip rsync gcc)
       pkgs += %w(autogen) unless platform_family?(node, 'rhel', 'fedora', 'suse', 'amazon')
