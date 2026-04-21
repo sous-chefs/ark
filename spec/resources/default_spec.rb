@@ -7,6 +7,7 @@ describe_resource 'ark' do
 
     it 'installs' do
       expect(chef_run).to install_ark('test_install')
+      expect(chef_run).to install_ark_prereq('ark prerequisites for test_install')
 
       expect(chef_run).to create_directory('/usr/local/test_install-2')
       resource = chef_run.directory('/usr/local/test_install-2')
@@ -24,6 +25,15 @@ describe_resource 'ark' do
 
       expect(chef_run).not_to create_template('/etc/profile.d/test_install.sh')
       expect(chef_run).not_to run_ruby_block("adding '/usr/local/test_install-2/bin' to chef-client ENV['PATH']")
+    end
+  end
+
+  describe 'install without dependencies' do
+    let(:example_recipe) { 'ark_spec::install_without_dependencies' }
+
+    it 'skips prerequisite installation' do
+      expect(chef_run).to install_ark('test_install_without_dependencies')
+      expect(chef_run).not_to install_ark_prereq('ark prerequisites for test_install_without_dependencies')
     end
   end
 
@@ -141,6 +151,7 @@ describe_resource 'ark' do
 
     it 'installs' do
       expect(chef_run).to install_ark('test_install')
+      expect(chef_run).to install_ark_prereq('ark prerequisites for test_install')
 
       expect(chef_run).to create_directory('C:\\install')
       resource = chef_run.directory('C:\\install')

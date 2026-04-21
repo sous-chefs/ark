@@ -5,16 +5,16 @@ module Ark
     end
 
     def prefix_bin
-      resource.prefix_bin || prefix_bin_from_node_in_run_context
+      resource.prefix_bin || ::Ark::PlatformDefaults.prefix_bin
     end
 
     def prefix_root
-      resource.prefix_root || prefix_root_from_node_in_run_context
+      resource.prefix_root || ::Ark::PlatformDefaults.prefix_root
     end
 
     def home_dir
       if resource.home_dir.nil? || resource.home_dir.empty?
-        prefix_home = resource.prefix_home || prefix_home_from_node_in_run_context
+        prefix_home = resource.prefix_home || ::Ark::PlatformDefaults.prefix_home
         ::File.join(prefix_home, resource.name)
       else
         resource.home_dir
@@ -22,15 +22,14 @@ module Ark
     end
 
     def version
-      resource.version || default_version
+      resource.version || ::Ark::PlatformDefaults.version
     end
 
     def path
-      if windows?
-        resource.win_install_dir
-      else
-        ::File.join(resource.prefix_root, "#{resource.name}-#{resource.version}")
-      end
+      return resource.path unless resource.path.nil? || resource.path.empty?
+      return resource.win_install_dir if windows?
+
+      ::File.join(prefix_root, "#{resource.name}-#{version}")
     end
 
     def owner
@@ -42,16 +41,20 @@ module Ark
     end
 
     def path_without_version
-      partial_path = resource.path || prefix_root_from_node_in_run_context
+      partial_path = resource.path || prefix_root
       ::File.join(partial_path, resource.name)
     end
 
     def release_file
-      release_filename = "#{resource.name}-#{resource.version}.#{resource.extension}"
+      return resource.release_file unless resource.release_file.nil? || resource.release_file.empty?
+
+      release_filename = "#{resource.name}-#{version}.#{resource.extension}"
       ::File.join(file_cache_path, release_filename)
     end
 
     def release_file_without_version
+      return resource.release_file unless resource.release_file.nil? || resource.release_file.empty?
+
       release_filename = "#{resource.name}.#{resource.extension}"
       ::File.join(file_cache_path, release_filename)
     end
@@ -77,22 +80,6 @@ module Ark
       Regexp.last_match(2)
     end
 
-    def prefix_bin_from_node_in_run_context
-      node_in_run_context['ark']['prefix_bin']
-    end
-
-    def prefix_root_from_node_in_run_context
-      node_in_run_context['ark']['prefix_root']
-    end
-
-    def prefix_home_from_node_in_run_context
-      node_in_run_context['ark']['prefix_home']
-    end
-
-    def default_version
-      '1'
-    end
-
     def default_owner
       if windows?
         wmi_property_from_query(:name, "select * from Win32_UserAccount where sid like 'S-1-5-21-%-500' and LocalAccount=True")
@@ -104,7 +91,7 @@ module Ark
     def wmi_property_from_query(wmi_property, wmi_query)
       @wmi = ::WIN32OLE.connect('winmgmts://')
       result = @wmi.ExecQuery(wmi_query)
-      return unless result.each.count > 0
+      return unless result.each.any?
       result.each.next.send(wmi_property)
     end
 

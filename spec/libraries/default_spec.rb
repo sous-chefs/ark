@@ -62,11 +62,11 @@ describe_helpers Ark::ProviderHelpers do
   describe '#set_put_paths' do
     context 'when the resource path is not set' do
       it "sets the resource's release_file and path" do
-        with_resource_properties(extension: 'jar', name: 'gustav-moomoo')
-        allow(defaults).to receive(:prefix_root_from_node_in_run_context) { '/opt/default' }
+        with_resource_properties(extension: 'jar', name: 'gustav-moomoo', prefix_root: '/opt/default')
         set_put_paths
 
         expect(new_resource.release_file).to eq('/var/chef/cache/gustav-moomoo.jar')
+        expect(new_resource.path).to eq('/opt/default/gustav-moomoo')
       end
     end
 
@@ -120,6 +120,23 @@ describe_helpers Ark::ProviderHelpers do
 
       expect(new_resource.release_file).to eq("#{chef_config_file_cache_path}/resource_name-23.jar")
     end
+
+    it 'keeps an explicit path and release_file' do
+      with_resource_properties(
+        extension: 'jar',
+        name: 'resource_name',
+        path: '/explicit/path',
+        release_file: '/tmp/resource_name.jar'
+      )
+
+      allow(defaults).to receive(:path) { '/default/path' }
+      allow(defaults).to receive(:owner) { 'root' }
+
+      set_paths
+
+      expect(new_resource.path).to eq('/explicit/path')
+      expect(new_resource.release_file).to eq('/tmp/resource_name.jar')
+    end
   end
 
   describe '#cherry_pick_command' do
@@ -152,7 +169,7 @@ describe_helpers Ark::ProviderHelpers do
             run_context: double(node: { 'ark' => { 'tar' => 'tar' } })
           )
 
-          expect(cherry_pick_command).to eq('tar xzf /resource/release_file -C /resource/path /resource/creates')
+          expect(cherry_pick_command).to eq('/bin/tar xzf /resource/release_file -C /resource/path /resource/creates')
         end
       end
 
@@ -167,7 +184,7 @@ describe_helpers Ark::ProviderHelpers do
             run_context: double(node: { 'ark' => { 'tar' => 'tar' } })
           )
 
-          expect(cherry_pick_command).to eq('tar xjf /resource/release_file -C /resource/path /resource/creates')
+          expect(cherry_pick_command).to eq('/bin/tar xjf /resource/release_file -C /resource/path /resource/creates')
         end
       end
 
@@ -182,7 +199,7 @@ describe_helpers Ark::ProviderHelpers do
             run_context: double(node: { 'ark' => { 'tar' => 'tar' } })
           )
 
-          expect(cherry_pick_command).to eq('tar xJf /resource/release_file -C /resource/path /resource/creates')
+          expect(cherry_pick_command).to eq('/bin/tar xJf /resource/release_file -C /resource/path /resource/creates')
         end
       end
 

@@ -19,6 +19,8 @@
 # limitations under the License.
 #
 
+provides :ark
+
 property :owner, String
 property :group, [String, Integer], default: 0
 property :url, String, required: true
@@ -32,18 +34,20 @@ property :release_file, String, default: ''
 property :strip_leading_dir, [true, false, NilClass]
 property :strip_components, Integer, default: 1
 property :mode, [Integer, String], default: 0755
-property :prefix_root, String
-property :prefix_home, String
-property :prefix_bin, String
-property :version, String
+property :prefix_root, String, default: lazy { ::Ark::PlatformDefaults.prefix_root }
+property :prefix_home, String, default: lazy { ::Ark::PlatformDefaults.prefix_home }
+property :prefix_bin, String, default: lazy { ::Ark::PlatformDefaults.prefix_bin }
+property :version, String, default: lazy { ::Ark::PlatformDefaults.version }
 property :home_dir, String
 property :win_install_dir, String
 property :environment, Hash, default: {}
 property :autoconf_opts, Array, default: []
 property :make_opts, Array, default: []
-property :home_dir, String
-property :autoconf_opts, Array, default: []
 property :extension, String
+property :package_dependencies, Array, default: lazy { ::Ark::PlatformDefaults.package_dependencies(run_context.node) }
+property :install_dependencies, [true, false], default: true
+property :tar_binary, String, default: lazy { ::Ark::PlatformDefaults.tar_binary(run_context.node) }
+property :sevenzip_binary, String
 property :backup, [FalseClass, Integer], default: 5
 
 unified_mode true
@@ -52,6 +56,7 @@ unified_mode true
 # action :install
 #################
 action :install do
+  install_prerequisites
   show_deprecations
   set_paths
 
@@ -139,6 +144,7 @@ end
 # action :put
 ##############
 action :put do
+  install_prerequisites
   show_deprecations
   set_put_paths
 
@@ -177,6 +183,7 @@ end
 # action :dump
 ###########################
 action :dump do
+  install_prerequisites
   show_deprecations
   set_dump_paths
 
@@ -215,6 +222,7 @@ end
 # action :unzip
 ###########################
 action :unzip do
+  install_prerequisites
   show_deprecations
   set_dump_paths
 
@@ -253,6 +261,7 @@ end
 # action :cherry_pick
 #####################
 action :cherry_pick do
+  install_prerequisites
   show_deprecations
   set_dump_paths
   Chef::Log.debug("DEBUG: new_resource.creates #{new_resource.creates}")
@@ -289,6 +298,7 @@ end
 # action :install_with_make
 ###########################
 action :install_with_make do
+  install_prerequisites
   show_deprecations
   set_paths
 
@@ -358,6 +368,7 @@ action :install_with_make do
 end
 
 action :setup_py_build do
+  install_prerequisites
   show_deprecations
   set_paths
 
@@ -400,6 +411,7 @@ action :setup_py_build do
 end
 
 action :setup_py_install do
+  install_prerequisites
   show_deprecations
   set_paths
 
@@ -442,6 +454,7 @@ action :setup_py_install do
 end
 
 action :setup_py do
+  install_prerequisites
   show_deprecations
   set_paths
 
@@ -484,6 +497,7 @@ action :setup_py do
 end
 
 action :configure do
+  install_prerequisites
   show_deprecations
   set_paths
 
@@ -538,4 +552,13 @@ end
 
 action_class do
   include ::Ark::ProviderHelpers
+
+  def install_prerequisites
+    return unless new_resource.install_dependencies
+
+    ark_prereq "ark prerequisites for #{new_resource.name}" do
+      package_dependencies new_resource.package_dependencies
+      action :install
+    end
+  end
 end
