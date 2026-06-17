@@ -9,7 +9,7 @@ name: ci
 
 jobs:
   lint-unit:
-    uses: sous-chefs/.github/.github/workflows/lint-unit.yml@8.0.1
+    uses: sous-chefs/.github/.github/workflows/lint-unit.yml@8.0.2
     permissions:
       actions: write
       checks: write
@@ -46,9 +46,9 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Install Chef
-        uses: actionshub/chef-install@3.0.1
+        uses: actionshub/chef-install@6.0.0
       - name: Dokken
         uses: actionshub/test-kitchen@3.0.0
         env:
@@ -71,9 +71,9 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Install Chef
-        uses: actionshub/chef-install@3.0.1
+        uses: actionshub/chef-install@6.0.0
       - name: test-kitchen
         uses: actionshub/test-kitchen@3.0.0
         env:
@@ -96,9 +96,9 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Install Chef
-        uses: actionshub/chef-install@3.0.1
+        uses: actionshub/chef-install@6.0.0
       - name: test-kitchen
         uses: actionshub/test-kitchen@3.0.0
         env:
