@@ -1,0 +1,7 @@
+---
+name: default
+title: ark default integration tests
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: Verifies ark archive extraction workflows
+version: 1.0.0

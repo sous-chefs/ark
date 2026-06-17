@@ -42,7 +42,8 @@ module Ark
     end
 
     def sevenzip_binary
-      @tar_binary ||= "\"#{node['ark']['sevenzip_binary'] || sevenzip_path_from_registry}\""
+      binary = resource.sevenzip_binary if resource.respond_to?(:sevenzip_binary)
+      @tar_binary ||= "\"#{binary || sevenzip_path_from_registry}\""
     end
 
     def sevenzip_path_from_registry

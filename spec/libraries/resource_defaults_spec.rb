@@ -66,11 +66,10 @@ describe Ark::ResourceDefaults do
     end
 
     context 'when the prefix bin has not been specified' do
-      it 'uses the value on the node' do
+      it 'uses the cookbook default' do
         resource = double(prefix_bin: nil)
         defaults = described_class.new(resource)
-        allow(defaults).to receive(:prefix_bin_from_node_in_run_context) { 'node_bin' }
-        expect(defaults.prefix_bin).to eq 'node_bin'
+        expect(defaults.prefix_bin).to eq '/usr/local/bin'
       end
     end
   end
@@ -85,11 +84,10 @@ describe Ark::ResourceDefaults do
     end
 
     context 'when the prefix root has not been specified' do
-      it 'uses the value on the node' do
+      it 'uses the cookbook default' do
         resource = double(prefix_root: nil)
         defaults = described_class.new(resource)
-        allow(defaults).to receive(:prefix_root_from_node_in_run_context) { 'node_root' }
-        expect(defaults.prefix_root).to eq 'node_root'
+        expect(defaults.prefix_root).to eq '/usr/local'
       end
     end
   end
@@ -112,11 +110,10 @@ describe Ark::ResourceDefaults do
     end
 
     context 'when the prefix home has not been specified' do
-      it 'uses the value on the node' do
+      it 'uses the cookbook default' do
         resource = double(prefix_home: nil, name: 'application', home_dir: nil)
         defaults = described_class.new(resource)
-        allow(defaults).to receive(:prefix_home_from_node_in_run_context) { 'node_home' }
-        expect(defaults.home_dir).to eq 'node_home/application'
+        expect(defaults.home_dir).to eq '/usr/local/application'
       end
     end
   end
@@ -142,7 +139,7 @@ describe Ark::ResourceDefaults do
   describe '#path' do
     context 'when on windows' do
       it 'uses the windows install dir' do
-        resource = double(extension: 'tgz', win_install_dir: 'C:\\win_install_dir')
+        resource = double(path: nil, extension: 'tgz', win_install_dir: 'C:\\win_install_dir')
         defaults = described_class.new(resource)
         allow(defaults).to receive(:windows?) { true }
         expect(defaults.path).to eq 'C:\\win_install_dir'
@@ -151,10 +148,18 @@ describe Ark::ResourceDefaults do
 
     context 'when not on windows' do
       it 'gives the correct default' do
-        resource = double(name: 'application', prefix_root: 'prefix/root', version: '99')
+        resource = double(path: nil, name: 'application', prefix_root: 'prefix/root', version: '99')
         defaults = described_class.new(resource)
         allow(defaults).to receive(:windows?) { false }
         expect(defaults.path).to eq 'prefix/root/application-99'
+      end
+    end
+
+    context 'when the path is explicitly specified' do
+      it 'uses the explicit path' do
+        resource = double(path: '/explicit/path')
+        defaults = described_class.new(resource)
+        expect(defaults.path).to eq '/explicit/path'
       end
     end
   end
@@ -170,27 +175,38 @@ describe Ark::ResourceDefaults do
 
     context 'when the path is not specified' do
       it 'gives the correct default' do
-        resource = double(extension: 'tgz', name: 'filename', path: nil)
+        resource = double(extension: 'tgz', name: 'filename', path: nil, prefix_root: nil)
         defaults = described_class.new(resource)
-        allow(defaults).to receive(:prefix_root_from_node_in_run_context) { 'prefix/root' }
-        expect(defaults.path_without_version).to eq 'prefix/root/filename'
+        expect(defaults.path_without_version).to eq '/usr/local/filename'
       end
     end
   end
 
   describe '#release_file' do
     it 'gives the correct default' do
-      resource = double(extension: 'tgz', version: '1.1', name: 'filename')
+      resource = double(extension: 'tgz', version: '1.1', name: 'filename', release_file: '')
       defaults = described_class.new(resource)
       expect(defaults.release_file).to eq '/var/chef/cache/filename-1.1.tgz'
+    end
+
+    it 'uses an explicit release_file when provided' do
+      resource = double(release_file: '/tmp/archive.tgz')
+      defaults = described_class.new(resource)
+      expect(defaults.release_file).to eq '/tmp/archive.tgz'
     end
   end
 
   describe '#release_file_without_version' do
     it 'gives the correct default' do
-      resource = double(extension: 'zip', name: 'filename')
+      resource = double(extension: 'zip', name: 'filename', release_file: '')
       defaults = described_class.new(resource)
       expect(defaults.release_file_without_version).to eq '/var/chef/cache/filename.zip'
+    end
+
+    it 'uses an explicit release_file when provided' do
+      resource = double(release_file: '/tmp/archive.zip')
+      defaults = described_class.new(resource)
+      expect(defaults.release_file_without_version).to eq '/tmp/archive.zip'
     end
   end
 end
