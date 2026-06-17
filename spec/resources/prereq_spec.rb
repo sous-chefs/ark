@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe_resource 'ark_prereq' do
-  let(:example_recipe) { 'ark::default' }
+  let(:example_recipe) { 'ark_spec::prereq' }
 
   let(:step_into) do
     { step_into: ['ark_prereq'] }

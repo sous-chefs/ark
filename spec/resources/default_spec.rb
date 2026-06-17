@@ -159,6 +159,7 @@ describe_resource 'ark' do
 
       expect(chef_run).to create_remote_file('/var/chef/cache/test_install-2.tar.gz')
       resource = chef_run.remote_file('/var/chef/cache/test_install-2.tar.gz')
+      expect(resource.source).to eq(['file:///C:/fixtures/foo.tar.gz'])
       expect(resource).to notify('execute[unpack /var/chef/cache/test_install-2.tar.gz]').to(:run)
 
       expect(chef_run).not_to run_execute('unpack /var/chef/cache/test_install-2.tar.gz')

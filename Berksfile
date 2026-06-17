@@ -5,4 +5,5 @@ metadata
 group :integration do
   cookbook 'freebsd'
   cookbook 'ark_spec', path: 'spec/fixtures/cookbooks/ark_spec'
+  cookbook 'test', path: 'test/cookbooks/test'
 end

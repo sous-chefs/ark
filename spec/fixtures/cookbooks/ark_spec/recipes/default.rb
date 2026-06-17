@@ -1,7 +1,5 @@
 apt_update 'update'
 
-include_recipe 'ark'
-
 fixture_root = ::File.join(run_context.cookbook_collection['ark'].root_dir, 'files', 'default')
 
 # remove file so we can test sending notification on its creation

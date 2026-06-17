@@ -58,21 +58,14 @@ Should work on common Unix/Linux systems with typical userland utilities like ta
 
 - seven_zip
 
-## Attributes
+## Migration
 
-Customize the attributes to suit site specific conventions and defaults.
-
-- `node['ark']['apache_mirror']` - if the URL is an apache mirror, use the attribute as the default. default: `http://apache.mirrors.tds.net`
-- `node['ark']['prefix_root']` - default base location if the `prefix_root` is not passed into the resource. default: `/usr/local`
-- `node['ark']['prefix_bin']` - default binary location if the `prefix_bin` is not passed into the resource. default: `/usr/local/bin`
-- `node['ark']['prefix_home']` - default home location if the `prefix_home` is not passed into the resource. default: `/usr/local`
-- `node['ark']['package_dependencies']` - prerequisite system packages that need to be installed to support ark. default: varies based on platform
-- `node['ark']['tar']` - allows overriding the default path to the tar binary, which varies based on platform
-- `node['ark']['sevenzip_binary']` - allows overriding the default path to the 7zip binary, which is determined based on registry key value
+Ark is a custom-resource-only cookbook. The legacy `ark::default` recipe and `node['ark']` attributes have been removed. See [migration.md](migration.md) for replacements.
 
 ## Resources
 
-- `ark` - does the extract/build/configure
+- [`ark`](documentation/ark.md) - downloads, extracts, configures, builds, and installs archives.
+- [`ark_prereq`](documentation/ark_prereq.md) - installs platform prerequisites used by `ark`.
 
 ### Actions
 
@@ -123,7 +116,7 @@ Extract the archive to a specified path, does not create any symbolic links.
 
 - `append_env_path`: boolean, if true, append the `./bin` directory of the extracted directory to the global `PATH` variable for all users.
 
-### Attribute Parameters
+### Properties
 
 - `name`: name of the package, defaults to the resource name.
 - `url`: url for tarball, `.tar.gz`, `.bin` (oracle-specific), `.war`, and `.zip` currently supported. Also supports special syntax

@@ -33,11 +33,17 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[ark_spec]
+      - recipe[test::default]
+    verifier:
+      inspec_tests:
+        - path: test/integration/default
     excludes:
       - windows-latest
   - name: windows
     run_list:
-      - recipe[ark_spec::windows]
+      - recipe[test::windows]
+    verifier:
+      inspec_tests:
+        - path: test/integration/windows
     includes:
       - windows-latest

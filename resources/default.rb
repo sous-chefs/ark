@@ -68,7 +68,7 @@ action :install do
 
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -156,7 +156,7 @@ action :put do
 
   # download
   remote_file new_resource.release_file do
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -196,7 +196,7 @@ action :dump do
   # download
   remote_file new_resource.release_file do
     Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -235,7 +235,7 @@ action :unzip do
   # download
   remote_file new_resource.release_file do
     Chef::Log.debug("DEBUG: new_resource.release_file #{new_resource.release_file}")
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -274,7 +274,7 @@ action :cherry_pick do
 
   # download
   remote_file new_resource.release_file do
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[cherry_pick #{new_resource.creates} from #{new_resource.release_file}]"
@@ -310,7 +310,7 @@ action :install_with_make do
 
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -380,7 +380,7 @@ action :setup_py_build do
 
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -423,7 +423,7 @@ action :setup_py_install do
 
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -466,7 +466,7 @@ action :setup_py do
 
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -509,7 +509,7 @@ action :configure do
 
   remote_file new_resource.release_file do
     Chef::Log.debug('DEBUG: new_resource.release_file')
-    source new_resource.url
+    source remote_file_source
     checksum new_resource.checksum if new_resource.checksum
     action :create
     notifies :run, "execute[unpack #{new_resource.release_file}]"
@@ -560,5 +560,11 @@ action_class do
       package_dependencies new_resource.package_dependencies
       action :install
     end
+  end
+
+  def remote_file_source
+    return new_resource.url unless platform_family?('windows')
+
+    new_resource.url.sub(%r{\Afile://([A-Za-z]:/)}, 'file:///\1')
   end
 end
