@@ -1,0 +1,7 @@
+---
+name: windows
+title: ark Windows integration tests
+maintainer: Sous Chefs
+license: Apache-2.0
+summary: Verifies ark archive extraction on Windows
+version: 1.0.0

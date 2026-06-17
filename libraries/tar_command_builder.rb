@@ -25,14 +25,8 @@ module Ark
     end
 
     def tar_binary
-      @tar_binary ||= node['ark']['tar'] || case node['platform_family']
-                                            when 'mac_os_x', 'freebsd'
-                                              '/usr/bin/tar'
-                                            when 'smartos'
-                                              '/bin/gtar'
-                                            else
-                                              '/bin/tar'
-                                            end
+      explicit_tar_binary = resource.tar_binary if resource.respond_to?(:tar_binary)
+      @tar_binary ||= explicit_tar_binary || ::Ark::PlatformDefaults.tar_binary(node)
     end
 
     def args
