@@ -2,6 +2,10 @@
 driver: { name: exec }
 transport: { name: exec }
 
+provisioner:
+  chef_omnibus_install: false
+  require_chef_omnibus: false
+
 platforms:
   - name: macos-latest
   - name: windows-latest
