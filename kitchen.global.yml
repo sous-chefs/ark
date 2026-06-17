@@ -1,7 +1,7 @@
 ---
 provisioner:
   name: chef_infra
-  product_name: chef
+  product_name: <%= ENV['KITCHEN_PRODUCT_NAME'] || 'chef' %>
   product_version: <%= ENV['CHEF_VERSION'] || 'latest' %>
   channel: stable
   install_strategy: once
