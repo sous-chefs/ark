@@ -144,6 +144,13 @@ describe Ark::ResourceDefaults do
         allow(defaults).to receive(:windows?) { true }
         expect(defaults.path).to eq 'C:\\win_install_dir'
       end
+
+      it 'falls back to the default path when the windows install dir is not specified' do
+        resource = double(path: nil, name: 'application', prefix_root: 'prefix/root', version: '99', win_install_dir: nil)
+        defaults = described_class.new(resource)
+        allow(defaults).to receive(:windows?) { true }
+        expect(defaults.path).to eq 'prefix/root/application-99'
+      end
     end
 
     context 'when not on windows' do

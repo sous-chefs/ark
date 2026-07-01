@@ -27,7 +27,7 @@ module Ark
 
     def path
       return resource.path unless resource.path.nil? || resource.path.empty?
-      return resource.win_install_dir if windows?
+      return resource.win_install_dir if windows? && resource.win_install_dir
 
       ::File.join(prefix_root, "#{resource.name}-#{version}")
     end
