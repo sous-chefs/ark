@@ -32,6 +32,8 @@ platforms:
 
 suites:
   - name: default
+    provisioner:
+      named_run_list: default
     run_list:
       - recipe[test::default]
     verifier:
@@ -40,6 +42,8 @@ suites:
     excludes:
       - windows-latest
   - name: windows
+    provisioner:
+      named_run_list: windows
     run_list:
       - recipe[test::windows]
     verifier:
