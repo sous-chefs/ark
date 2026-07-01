@@ -82,13 +82,36 @@ jobs:
           version: "25"
       - name: test-kitchen
         uses: actionshub/test-kitchen@3.0.0
+        timeout-minutes: 30
         env:
           CHEF_LICENSE: accept-no-persist
           KITCHEN_PRODUCT_NAME: cinc
           KITCHEN_LOCAL_YAML: kitchen.exec.yml
         with:
+          action: converge
           suite: ${{ matrix.suite }}
           os: ${{ matrix.os }}
+      - name: Verify Windows archive extraction
+        shell: pwsh
+        run: |
+          $paths = @(
+            'C:\dir',
+            'C:\dir\foo1.txt',
+            'C:\dir\bin\do_foo'
+          )
+
+          foreach ($path in $paths) {
+            if (-not (Test-Path -LiteralPath $path)) {
+              throw "Expected path missing: $path"
+            }
+          }
+      - name: Clean up Windows test artifacts
+        if: always()
+        shell: pwsh
+        run: |
+          Remove-Item -LiteralPath 'C:\dir' -Recurse -Force -ErrorAction SilentlyContinue
+          Remove-LocalUser -Name foobarbaz -ErrorAction SilentlyContinue
+          Remove-LocalGroup -Name foobar -ErrorAction SilentlyContinue
 
   integration-macos:
     needs: lint-unit
